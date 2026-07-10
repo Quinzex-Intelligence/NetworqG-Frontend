@@ -205,24 +205,24 @@ export const palettes = [
     name: 'Reversed Ocean Blue',
     label: 'Palette 7',
     bg: '#FFFFFF', // Pure white
-    bg2: '#FFFFFF', // White cards/surfaces
-    gold: '#E2A100', // Yellow accent (readable on light)
+    bg2: '#F4F6F9', // Very soft bluish-gray for sections/cards alternate (originally '#FFFFFF')
+    gold: '#F59E0B', // Bright clean orange-gold (originally '#E2A100')
     gold2: '#D97706', // Slightly darker gold
     goldDeep: '#B45309',
-    ink: '#04385F', // Blue text (Ocean blue color)
-    mute: '#64748B', // Slate gray for muted text
-    line: 'rgba(4, 56, 95, 0.12)', // Subtle blue borders
-    cardBg: 'rgba(255, 255, 255, 0.85)',
-    glassBg: 'rgba(255, 255, 255, 0.60)',
-    navBg: 'rgba(255, 255, 255, 0.75)',
+    ink: '#0B2C4D', // Deep slate-navy text (originally '#04385F')
+    mute: '#4A5568', // Slate gray for muted text (originally '#64748B')
+    line: 'rgba(11, 44, 77, 0.08)', // Subtle slate navy borders (originally 'rgba(4, 56, 95, 0.12)')
+    cardBg: '#FFFFFF', // Solid white cards over soft background (originally 'rgba(255, 255, 255, 0.85)')
+    glassBg: 'rgba(244, 246, 249, 0.70)', // Light glassbg (originally 'rgba(255, 255, 255, 0.60)')
+    navBg: 'rgba(255, 255, 255, 0.80)', // White transparent nav (originally 'rgba(255, 255, 255, 0.75)')
     drawerBg: '#FFFFFF',
-    caseCoverGrad: 'radial-gradient(circle at 80% 20%, rgba(226,161,0,0.12), transparent 55%), radial-gradient(circle at 20% 80%, rgba(226,161,0,0.15), transparent 55%), linear-gradient(135deg,#FFFFFF,#FFFFFF)',
+    caseCoverGrad: 'radial-gradient(circle at 80% 20%, rgba(245,158,11,0.12), transparent 55%), radial-gradient(circle at 20% 80%, rgba(245,158,11,0.15), transparent 55%), linear-gradient(135deg,#FFFFFF,#FFFFFF)',
     preloaderBg: '#FFFFFF',
     burgerBg: 'rgba(255, 255, 255, 0.85)',
-    accentRgb: '226, 161, 0',
+    accentRgb: '245, 158, 11', // rgb of F59E0B (originally '226, 161, 0')
     bgRgb: '255, 255, 255',
-    bg2Rgb: '255, 255, 255',
-    preview: ['#FFFFFF', '#04385F'],
+    bg2Rgb: '244, 246, 249', // rgb of F4F6F9
+    preview: ['#FFFFFF', '#0B2C4D'],
     // Globe configuration: vivid ocean blue on white — high contrast
     globeDots: [0.04, 0.28, 0.55],      // Strong ocean blue dots
     globeWire: '#6ba8cc',               // Visible mid-blue wireframe grid
