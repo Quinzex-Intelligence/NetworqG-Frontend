@@ -334,9 +334,14 @@ export default function App() {
 
     set({
       globeX: HERO.x, globeY: HERO.y, globeScale: HERO.s,
-      globeOpacity: 1, arcsOpacity: 1, citiesOpacity: 1, morphOpacity: 0,
+      globeOpacity: currentPage === 'home' ? 1 : 0,
+      arcsOpacity: currentPage === 'home' ? 1 : 0,
+      citiesOpacity: currentPage === 'home' ? 1 : 0,
+      morphOpacity: 0,
       bShatter: 0, bOrbit: 0, bConstellation: 0, bField: 0, bVortex: 0, bWave: 0, bHelix: 0, bText: 0
     });
+
+    if (currentPage !== 'home') return;
 
     // ─── Single resize handler ───────────────────────────────────────────────
     const onResize = () => {

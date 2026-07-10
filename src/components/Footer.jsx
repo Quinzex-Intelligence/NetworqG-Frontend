@@ -1,10 +1,15 @@
 import React from 'react';
+import { useTheme } from '../ThemeContext';
 
 export default function Footer({ onLinkClick, onPageChange }) {
+  const { active } = useTheme();
+  
   const handleNavClick = (e, id) => {
     e.preventDefault();
     onLinkClick(id);
   };
+
+  const logoSrc = active.id === 'reversed-ocean-blue' ? '/logo-full.svg' : '/logo-full-inverted.svg';
 
   return (
     <footer id="footer" className="relative border-t border-line foot-grad pt-20 pb-72">
@@ -12,7 +17,7 @@ export default function Footer({ onLinkClick, onPageChange }) {
         <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-10 pb-16">
           <div className="max-w-md">
             <div className="mb-5 flex items-center">
-              <img src="/logo-full-inverted.svg" alt="Networq Global Logo" className="h-8 w-auto" />
+              <img src={logoSrc} alt="Networq Global Logo" className="h-8 w-auto" />
             </div>
             <p className="text-mute text-sm">
               A worldwide digital marketing agency, headquartered in New York with hubs in London, Dubai and Singapore.

@@ -25,6 +25,15 @@ export const palettes = [
     bgRgb: '4, 56, 95',
     bg2Rgb: '5, 75, 110',
     preview: ['#04385F', '#FEC74E'],
+    // Globe configuration: blended ocean theme (blues/whites)
+    globeDots: [0.65, 0.85, 1.0],
+    globeWire: '#0f5a94',
+    globeHalo: '#1d76be',
+    globeOutline: '#aae0ff',
+    globeOutlineHalo: '#1d76be',
+    globeCity: '#ffffff',
+    globeArc: '#85d0ff',
+    globeEarth: '#021e35',
   },
   {
     id: 'midnight-gold',
@@ -49,6 +58,15 @@ export const palettes = [
     bgRgb: '13, 13, 13',
     bg2Rgb: '26, 26, 26',
     preview: ['#0D0D0D', '#D4AF37'],
+    // Globe configuration: gold & black
+    globeDots: [0.96, 0.78, 0.32],
+    globeWire: '#4a3e21',
+    globeHalo: '#8a6d25',
+    globeOutline: '#f5d580',
+    globeOutlineHalo: '#a88530',
+    globeCity: '#f5d77a',
+    globeArc: '#d4a847',
+    globeEarth: '#060606',
   },
   {
     id: 'emerald-night',
@@ -73,6 +91,15 @@ export const palettes = [
     bgRgb: '7, 26, 18',
     bg2Rgb: '13, 43, 30',
     preview: ['#071A12', '#2ECC71'],
+    // Globe configuration: emerald green
+    globeDots: [0.3, 0.85, 0.5],
+    globeWire: '#0a3d25',
+    globeHalo: '#135232',
+    globeOutline: '#3ddc84',
+    globeOutlineHalo: '#227c4b',
+    globeCity: '#3ddc84',
+    globeArc: '#2ecc71',
+    globeEarth: '#030c08',
   },
   {
     id: 'crimson-dusk',
@@ -97,6 +124,15 @@ export const palettes = [
     bgRgb: '26, 5, 8',
     bg2Rgb: '45, 11, 16',
     preview: ['#1A0508', '#E84560'],
+    // Globe configuration: crimson red
+    globeDots: [0.95, 0.35, 0.45],
+    globeWire: '#4d0f17',
+    globeHalo: '#6b1d28',
+    globeOutline: '#ff5c7a',
+    globeOutlineHalo: '#9e2d3d',
+    globeCity: '#ff5c7a',
+    globeArc: '#e84560',
+    globeEarth: '#0a0204',
   },
   {
     id: 'violet-haze',
@@ -121,6 +157,15 @@ export const palettes = [
     bgRgb: '14, 6, 24',
     bg2Rgb: '24, 10, 44',
     preview: ['#0E0618', '#A855F7'],
+    // Globe configuration: violet purple
+    globeDots: [0.72, 0.45, 0.98],
+    globeWire: '#341154',
+    globeHalo: '#4d237a',
+    globeOutline: '#c084fc',
+    globeOutlineHalo: '#7137b3',
+    globeCity: '#c084fc',
+    globeArc: '#a855f7',
+    globeEarth: '#06020c',
   },
   {
     id: 'arctic-steel',
@@ -145,6 +190,48 @@ export const palettes = [
     bgRgb: '10, 22, 40',
     bg2Rgb: '17, 33, 64',
     preview: ['#0A1628', '#38BDF8'],
+    // Globe configuration: arctic blue
+    globeDots: [0.35, 0.78, 0.98],
+    globeWire: '#102d4d',
+    globeHalo: '#1b4875',
+    globeOutline: '#7dd3fc',
+    globeOutlineHalo: '#296a9e',
+    globeCity: '#7dd3fc',
+    globeArc: '#38bdf8',
+    globeEarth: '#040a12',
+  },
+  {
+    id: 'reversed-ocean-blue',
+    name: 'Reversed Ocean Blue',
+    label: 'Palette 7',
+    bg: '#FFFFFF', // Pure white
+    bg2: '#FFFFFF', // White cards/surfaces
+    gold: '#E2A100', // Yellow accent (readable on light)
+    gold2: '#D97706', // Slightly darker gold
+    goldDeep: '#B45309',
+    ink: '#04385F', // Blue text (Ocean blue color)
+    mute: '#64748B', // Slate gray for muted text
+    line: 'rgba(4, 56, 95, 0.12)', // Subtle blue borders
+    cardBg: 'rgba(255, 255, 255, 0.85)',
+    glassBg: 'rgba(255, 255, 255, 0.60)',
+    navBg: 'rgba(255, 255, 255, 0.75)',
+    drawerBg: '#FFFFFF',
+    caseCoverGrad: 'radial-gradient(circle at 80% 20%, rgba(226,161,0,0.12), transparent 55%), radial-gradient(circle at 20% 80%, rgba(226,161,0,0.15), transparent 55%), linear-gradient(135deg,#FFFFFF,#FFFFFF)',
+    preloaderBg: '#FFFFFF',
+    burgerBg: 'rgba(255, 255, 255, 0.85)',
+    accentRgb: '226, 161, 0',
+    bgRgb: '255, 255, 255',
+    bg2Rgb: '255, 255, 255',
+    preview: ['#FFFFFF', '#04385F'],
+    // Globe configuration: vivid ocean blue on white — high contrast
+    globeDots: [0.04, 0.28, 0.55],      // Strong ocean blue dots
+    globeWire: '#6ba8cc',               // Visible mid-blue wireframe grid
+    globeHalo: '#2563eb',               // Rich blue atmospheric glow
+    globeOutline: '#083e66',            // Very dark navy continent outlines
+    globeOutlineHalo: '#3b82f6',        // Electric blue outline bloom
+    globeCity: '#d97706',               // Amber/gold cities
+    globeArc: '#1d4ed8',                // Vivid blue arcs
+    globeEarth: '#deedf7',              // Light ice-blue sphere (not white — gives depth)
   },
 ];
 

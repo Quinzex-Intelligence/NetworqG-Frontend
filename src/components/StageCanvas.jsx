@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { useTheme } from '../ThemeContext';
 
 // ---------------------------------------------------------------------------
 // Compact world-outline dataset: array of polylines, each polyline is an array
@@ -146,6 +147,12 @@ const WORLD_OUTLINES = (() => {
 
 export default function StageCanvas({ stageRef }) {
   const canvasRef = useRef(null);
+  const { active } = useTheme();
+  const themeRef = useRef(active);
+
+  useEffect(() => {
+    themeRef.current = active;
+  }, [active]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -184,16 +191,32 @@ export default function StageCanvas({ stageRef }) {
     globeGroup.rotation.y = 2.932;
     scene.add(globeGroup);
 
+    const initialTheme = themeRef.current || {};
+    const initDots = initialTheme.globeDots || [0.96, 0.78, 0.32];
+    const isLight = initialTheme.id === 'reversed-ocean-blue';
+
+    const curColors = {
+      dotR: initDots[0], dotG: initDots[1], dotB: initDots[2],
+      wire: new THREE.Color(initialTheme.globeWire || 0xd4a847),
+      halo: new THREE.Color(initialTheme.globeHalo || 0xd4a847),
+      outline: new THREE.Color(initialTheme.globeOutline || 0xf5d580),
+      outlineHalo: new THREE.Color(initialTheme.globeOutlineHalo || 0xd4a847),
+      city: new THREE.Color(initialTheme.globeCity || 0xf5d77a),
+      arc: new THREE.Color(initialTheme.globeArc || 0xd4a847),
+      earth: new THREE.Color(initialTheme.globeEarth || 0x07090e),
+      lightMode: isLight ? 1.0 : 0.0,
+    };
+
     // Inner dark sphere
     const earthGeom = new THREE.SphereGeometry(2, 64, 64);
-    const earthMat = new THREE.MeshBasicMaterial({ color: 0x07090e, transparent: true, opacity: 0.92, depthWrite: false });
+    const earthMat = new THREE.MeshBasicMaterial({ color: curColors.earth, transparent: true, opacity: 0.92, depthWrite: false });
     const earth = new THREE.Mesh(earthGeom, earthMat);
     earth.renderOrder = 0;
     globeGroup.add(earth);
 
     // Wire lat/lon
     const wireGeom = new THREE.SphereGeometry(2.003, 40, 28);
-    const wireMat = new THREE.MeshBasicMaterial({ color: 0xd4a847, wireframe: true, transparent: true, opacity: 0.10, depthWrite: false });
+    const wireMat = new THREE.MeshBasicMaterial({ color: curColors.wire, wireframe: true, transparent: true, opacity: isLight ? 0.04 : 0.10, depthWrite: false });
     const wire = new THREE.Mesh(wireGeom, wireMat);
     wire.renderOrder = 1;
     globeGroup.add(wire);
@@ -210,6 +233,7 @@ export default function StageCanvas({ stageRef }) {
     const helixPos = new Float32Array(DOTS * 3);
     const textPos = new Float32Array(DOTS * 3);
     const colors = new Float32Array(DOTS * 3);
+    const brights = new Float32Array(DOTS);
 
     const phi = Math.PI * (3 - Math.sqrt(5));
     let count = 0;
@@ -266,9 +290,10 @@ export default function StageCanvas({ stageRef }) {
       fieldPos[k * 3 + 2] = (Math.random() - 0.5) * 3 - 1;
 
       const bright = 0.6 + Math.random() * 0.4;
-      colors[k * 3] = 0.96 * bright;
-      colors[k * 3 + 1] = 0.78 * bright;
-      colors[k * 3 + 2] = 0.32 * bright;
+      brights[count] = bright;
+      colors[k * 3] = curColors.dotR * bright;
+      colors[k * 3 + 1] = curColors.dotG * bright;
+      colors[k * 3 + 2] = curColors.dotB * bright;
       count++;
     }
 
@@ -395,11 +420,15 @@ export default function StageCanvas({ stageRef }) {
     const dots = new THREE.Points(dotsGeom, dotsMat);
     scene.add(dots);
 
-    // Halo shader
+    // Halo shader — uLightMode=0 is dark (additive glow), uLightMode=1 is light (soft shadow ring)
     const haloGeom = new THREE.SphereGeometry(2.22, 48, 48);
     const haloMat = new THREE.ShaderMaterial({
       transparent: true,
-      uniforms: { c: { value: new THREE.Color(0xd4a847) } },
+      uniforms: {
+        c: { value: curColors.halo },
+        uLightMode: { value: curColors.lightMode },
+        uOpacity: { value: 1.0 }
+      },
       vertexShader: `
         varying vec3 vN;
         void main() {
@@ -410,9 +439,13 @@ export default function StageCanvas({ stageRef }) {
       fragmentShader: `
         varying vec3 vN;
         uniform vec3 c;
+        uniform float uLightMode;
+        uniform float uOpacity;
         void main() {
-          float i = pow(1.0 - abs(vN.z), 3.0);
-          gl_FragColor = vec4(c, i * 0.55);
+          float rim = pow(1.0 - abs(vN.z), 3.0);
+          // Dark mode: additive glow. Light mode: soft directional shadow.
+          float alpha = mix(rim * 0.55, rim * 0.18, uLightMode);
+          gl_FragColor = vec4(c, alpha * uOpacity);
         }
       `,
       blending: THREE.AdditiveBlending,
@@ -444,11 +477,13 @@ export default function StageCanvas({ stageRef }) {
 
     // Custom shader: glowing disc per particle
     // Front hemisphere = full brightness; back = dim (translucent globe effect, always visible)
-    // NO time-based animation — fully static opacity per frame = zero flicker
+    // uLightMode=0 → additive (dark bg); uLightMode=1 → normal blend (light bg)
     const outlineMat = new THREE.ShaderMaterial({
       uniforms: {
-        uColor: { value: new THREE.Color(0xf5d580) },
-        uSize:  { value: 8.0 * renderer.getPixelRatio() }
+        uColor:     { value: curColors.outline },
+        uSize:      { value: 8.0 * renderer.getPixelRatio() },
+        uLightMode: { value: curColors.lightMode },
+        uOpacity:   { value: 1.0 }
       },
       vertexShader: `
         uniform float uSize;
@@ -466,19 +501,25 @@ export default function StageCanvas({ stageRef }) {
       `,
       fragmentShader: `
         uniform vec3 uColor;
+        uniform float uLightMode;
+        uniform float uOpacity;
         varying float vDepth;
         void main() {
           vec2 uv = gl_PointCoord - 0.5;
           float d = length(uv);
           if (d > 0.5) discard;
           float glow = pow(smoothstep(0.5, 0.0, d), 1.6);
-          // Front hemisphere: 95% opacity. Back: 12% (ghosted through globe).
-          float fade = 0.12 + 0.88 * max(0.0, vDepth);
-          gl_FragColor = vec4(uColor * (0.9 + glow * 0.4), glow * fade);
+          // Dark: front 95%, back 12%; Light: front 90%, back 8% — no additive wash
+          float frontAlpha = mix(0.88, 0.90, uLightMode);
+          float backAlpha  = mix(0.12, 0.08, uLightMode);
+          float fade = backAlpha + frontAlpha * max(0.0, vDepth);
+          // Dark mode: boost colour with glow; Light mode: keep colour flat for crisp look
+          vec3 col = uColor * mix(0.9 + glow * 0.4, 1.0, uLightMode);
+          gl_FragColor = vec4(col, glow * fade * uOpacity);
         }
       `,
       transparent: true,
-      blending: THREE.AdditiveBlending,
+      blending: THREE.NormalBlending,
       depthWrite: false,
       depthTest: false,
     });
@@ -490,8 +531,10 @@ export default function StageCanvas({ stageRef }) {
     // Outer soft-glow halo — same depth-fade, no time animation
     const outlineHaloMat = new THREE.ShaderMaterial({
       uniforms: {
-        uColor: { value: new THREE.Color(0xd4a847) },
-        uSize:  { value: 20.0 * renderer.getPixelRatio() }
+        uColor:     { value: curColors.outlineHalo },
+        uSize:      { value: 20.0 * renderer.getPixelRatio() },
+        uLightMode: { value: curColors.lightMode },
+        uOpacity:   { value: 1.0 }
       },
       vertexShader: `
         uniform float uSize;
@@ -507,19 +550,22 @@ export default function StageCanvas({ stageRef }) {
       `,
       fragmentShader: `
         uniform vec3 uColor;
+        uniform float uLightMode;
+        uniform float uOpacity;
         varying float vDepth;
         void main() {
           vec2 uv = gl_PointCoord - 0.5;
           float d = length(uv);
           if (d > 0.5) discard;
           float glow = pow(max(0.0, 1.0 - d * 2.0), 2.2);
-          // Front: 42% opacity bloom. Back: 5% barely visible.
+          // Dark: 42% bloom; Light: 15% soft glow
+          float bloomStr = mix(0.42, 0.15, uLightMode);
           float fade = 0.05 + 0.95 * max(0.0, vDepth);
-          gl_FragColor = vec4(uColor, glow * 0.42 * fade);
+          gl_FragColor = vec4(uColor, glow * bloomStr * fade * uOpacity);
         }
       `,
       transparent: true,
-      blending: THREE.AdditiveBlending,
+      blending: THREE.NormalBlending,
       depthWrite: false,
       depthTest: false,
     });
@@ -552,7 +598,11 @@ export default function StageCanvas({ stageRef }) {
     const cityRings = [];
     const ringGeom = new THREE.RingGeometry(0.03, 0.05, 24);
     const sphereMiniGeom = new THREE.SphereGeometry(0.024, 12, 12);
-    const cityMiniMat = new THREE.MeshBasicMaterial({ color: 0xf5d77a });
+    const cityMiniMat = new THREE.MeshBasicMaterial({
+      color: curColors.city,
+      transparent: true,
+      opacity: 1.0
+    });
 
     cities.forEach(c => {
       const v = llToVec(c.lat, c.lon, 2.02);
@@ -561,7 +611,7 @@ export default function StageCanvas({ stageRef }) {
       globeGroup.add(m);
 
       const ringMat = new THREE.MeshBasicMaterial({
-        color: 0xf5d77a,
+        color: curColors.city,
         transparent: true,
         opacity: 0.7,
         side: THREE.DoubleSide
@@ -585,7 +635,7 @@ export default function StageCanvas({ stageRef }) {
       const curve = new THREE.QuadraticBezierCurve3(s, m, e);
       const pts = curve.getPoints(60);
       const g = new THREE.BufferGeometry().setFromPoints(pts);
-      const mat = new THREE.LineBasicMaterial({ color: 0xd4a847, transparent: true, opacity: 0 });
+      const mat = new THREE.LineBasicMaterial({ color: curColors.arc, transparent: true, opacity: 0 });
       const line = new THREE.Line(g, mat);
       arcsGroup.add(line);
       return line;
@@ -660,12 +710,14 @@ export default function StageCanvas({ stageRef }) {
 
     const morphLive = new Float32Array(MORPH_N * 3);
     morphLive.set(SHAPES[0]);
+    const morphBrights = new Float32Array(MORPH_N);
     const morphColors = new Float32Array(MORPH_N * 3);
     for (let i = 0; i < MORPH_N; i++) {
       const b = 0.7 + Math.random() * 0.3;
-      morphColors[i * 3] = 0.96 * b;
-      morphColors[i * 3 + 1] = 0.78 * b;
-      morphColors[i * 3 + 2] = 0.32 * b;
+      morphBrights[i] = b;
+      morphColors[i * 3] = curColors.dotR * b;
+      morphColors[i * 3 + 1] = curColors.dotG * b;
+      morphColors[i * 3 + 2] = curColors.dotB * b;
     }
 
     const morphGeom = new THREE.BufferGeometry();
@@ -687,7 +739,7 @@ export default function StageCanvas({ stageRef }) {
     for (let i = 0; i < 3; i++) {
       const ring = new THREE.Mesh(
         new THREE.TorusGeometry(2.0 + i * 0.35, 0.005, 12, 160),
-        new THREE.MeshBasicMaterial({ color: 0xd4a847, transparent: true, opacity: 0 })
+        new THREE.MeshBasicMaterial({ color: curColors.arc, transparent: true, opacity: 0 })
       );
       ring.rotation.x = Math.PI / 2 + i * 0.3;
       ring.rotation.y = i * 0.4;
@@ -819,10 +871,123 @@ export default function StageCanvas({ stageRef }) {
       globeGroup.rotation.y += 0.0018;
       globeGroup.rotation.x = pCurY * 0.4 + Math.sin(t * 0.25) * 0.04;
 
-      // Sync outline opacity with globe opacity (color set at init, just scale by globeOpacity)
-      const op = cur.globeOpacity;
-      outlineMat.uniforms.uColor.value.setRGB(0.96 * op, 0.84 * op, 0.48 * op);
-      outlineHaloMat.uniforms.uColor.value.setRGB(0.83 * op, 0.66 * op, 0.28 * op);
+      // Dynamic color interpolation
+      const activeTheme = themeRef.current || {};
+      const targetDots = activeTheme.globeDots || [0.96, 0.78, 0.32];
+      const targetWire = new THREE.Color(activeTheme.globeWire || 0xd4a847);
+      const targetHalo = new THREE.Color(activeTheme.globeHalo || 0xd4a847);
+      const targetOutline = new THREE.Color(activeTheme.globeOutline || 0xf5d580);
+      const targetOutlineHalo = new THREE.Color(activeTheme.globeOutlineHalo || 0xd4a847);
+      const targetCity = new THREE.Color(activeTheme.globeCity || 0xf5d77a);
+      const targetArc = new THREE.Color(activeTheme.globeArc || 0xd4a847);
+      const targetEarth = new THREE.Color(activeTheme.globeEarth || 0x07090e);
+      const targetLightMode = activeTheme.id === 'reversed-ocean-blue' ? 1.0 : 0.0;
+
+      const cEase = 0.05;
+      let colorsNeedUpdate = false;
+
+      const dR = targetDots[0] - curColors.dotR;
+      const dG = targetDots[1] - curColors.dotG;
+      const dB = targetDots[2] - curColors.dotB;
+
+      if (Math.abs(dR) > 0.0001 || Math.abs(dG) > 0.0001 || Math.abs(dB) > 0.0001) {
+        curColors.dotR += dR * cEase;
+        curColors.dotG += dG * cEase;
+        curColors.dotB += dB * cEase;
+        colorsNeedUpdate = true;
+      }
+
+      curColors.wire.lerp(targetWire, cEase);
+      curColors.halo.lerp(targetHalo, cEase);
+      curColors.outline.lerp(targetOutline, cEase);
+      curColors.outlineHalo.lerp(targetOutlineHalo, cEase);
+      curColors.city.lerp(targetCity, cEase);
+      curColors.arc.lerp(targetArc, cEase);
+      curColors.earth.lerp(targetEarth, cEase);
+      curColors.lightMode += (targetLightMode - curColors.lightMode) * cEase;
+
+      // Apply colors to materials
+      earthMat.color.copy(curColors.earth);
+      wireMat.color.copy(curColors.wire);
+      haloMat.uniforms.c.value.copy(curColors.halo);
+      haloMat.uniforms.uLightMode.value = curColors.lightMode;
+      cityMiniMat.color.copy(curColors.city);
+      cityRings.forEach(r => {
+        r.material.color.copy(curColors.city);
+      });
+      arcs.forEach(a => {
+        a.line.material.color.copy(curColors.arc);
+      });
+      morphRings.forEach(r => {
+        r.material.color.copy(curColors.arc);
+      });
+
+      // Pass lightMode to outline shaders and dynamically switch blending modes
+      outlineMat.uniforms.uLightMode.value = curColors.lightMode;
+      outlineHaloMat.uniforms.uLightMode.value = curColors.lightMode;
+
+      const targetBlending = curColors.lightMode > 0.5 ? THREE.NormalBlending : THREE.AdditiveBlending;
+      if (outlineMat.blending !== targetBlending) {
+        outlineMat.blending = targetBlending;
+        outlineMat.needsUpdate = true;
+      }
+      if (outlineHaloMat.blending !== targetBlending) {
+        outlineHaloMat.blending = targetBlending;
+        outlineHaloMat.needsUpdate = true;
+      }
+      if (haloMat.blending !== targetBlending) {
+        haloMat.blending = targetBlending;
+        haloMat.needsUpdate = true;
+      }
+
+      if (colorsNeedUpdate) {
+        const dotsColorsArr = dotsGeom.attributes.color.array;
+        for (let i = 0; i < count; i++) {
+          const k = i * 3;
+          const b = brights[i];
+          dotsColorsArr[k] = curColors.dotR * b;
+          dotsColorsArr[k + 1] = curColors.dotG * b;
+          dotsColorsArr[k + 2] = curColors.dotB * b;
+        }
+        dotsGeom.attributes.color.needsUpdate = true;
+
+        const morphColorsArr = morphGeom.attributes.color.array;
+        for (let i = 0; i < MORPH_N; i++) {
+          const k = i * 3;
+          const b = morphBrights[i];
+          morphColorsArr[k] = curColors.dotR * b;
+          morphColorsArr[k + 1] = curColors.dotG * b;
+          morphColorsArr[k + 2] = curColors.dotB * b;
+        }
+        morphGeom.attributes.color.needsUpdate = true;
+      }
+
+      // Sync outline color/opacity with globe opacity and scroll Y
+      const abstractActive = Math.max(
+        cur.bWave,
+        cur.bConstellation,
+        cur.bHelix,
+        cur.bVortex,
+        cur.bText,
+        cur.bField,
+        cur.bShatter,
+        cur.bOrbit
+      );
+      // We only show outlines, wire, and earth on the main hero section (when abstract shape is inactive)
+      const heroFactor = Math.max(0, 1 - abstractActive);
+      const scrollY = window.scrollY || 0;
+      const heroScrollOpacity = Math.max(0, 1 - scrollY / 300); // fade out completely within 300px scroll
+      const op = cur.globeOpacity * heroFactor * heroScrollOpacity;
+
+      outlineMat.uniforms.uColor.value.copy(curColors.outline);
+      outlineMat.uniforms.uOpacity.value = op;
+      outlinePts.visible = op > 0.005;
+
+      outlineHaloMat.uniforms.uColor.value.copy(curColors.outlineHalo);
+      outlineHaloMat.uniforms.uOpacity.value = op;
+      outlineHaloPts.visible = op > 0.005;
+
+      haloMat.uniforms.uOpacity.value = op;
 
       // Position dots: lerp toward bottom-center when forming text, otherwise follow globe
       const textBlend = cur.bText;
@@ -844,26 +1009,41 @@ export default function StageCanvas({ stageRef }) {
       const rotX = globeGroup.rotation.x * (1 - textBlend);
       dots.rotation.set(rotX, rotY, 0);
 
-      // In text mode, boost particle size for legibility
-      dotsMat.size = 0.028 + textBlend * 0.022;
+      // In text mode, boost particle size for legibility.
+      // On light themes, use a slightly larger dot so they're crisp on white.
+      const baseSize = 0.028 + curColors.lightMode * 0.012;
+      dotsMat.size = baseSize + textBlend * 0.022;
 
       // Opacities
       const textBoost = cur.bText * 0.5;
-      dotsMat.opacity = Math.min(1.0, (0.55 + 0.45 * Math.max(
+      // Light theme: force full opacity so navy dots are crisp on white
+      const dotOpacity = 0.55 + 0.45 * Math.max(
         cur.globeOpacity,
         cur.bField * 0.6 + cur.bConstellation * 0.7 + cur.bShatter * 0.7 + cur.bOrbit * 0.7 + cur.bVortex * 0.7 + cur.bWave * 0.7 + cur.bHelix * 0.7 + cur.bText * 0.9
-      )) + textBoost);
-      earth.material.opacity = 0.92 * cur.globeOpacity;
-      earth.visible = cur.globeOpacity > 0.01;
-      wire.material.opacity = 0.10 * cur.globeOpacity;
-      wire.visible = cur.globeOpacity > 0.01;
-      halo.visible = cur.globeOpacity > 0.2;
+      );
+      dotsMat.opacity = Math.min(1.0, Math.max(dotOpacity, curColors.lightMode) + textBoost);
+      earth.material.opacity = op; // full opacity sphere — color handles the look
+      earth.visible = op > 0.01;
+      // On light bg: very faint wireframe; on dark bg: 10%
+      wire.material.opacity = op * (0.10 - curColors.lightMode * 0.06);
+      wire.visible = op > 0.01;
+      halo.visible = op > 0.2;
+
+      // Cities & Arcs are allowed on the hero (scrollY < 300) OR constellation section (bConstellation > 0.01)
+      const citiesAllowed = (scrollY < 300) || (cur.bConstellation > 0.01);
+      const currentCitiesOpacity = citiesAllowed ? cur.citiesOpacity : 0;
+      const currentArcsOpacity = citiesAllowed ? cur.arcsOpacity : 0;
+
+      // Sync city mini sphere opacity
+      cityMiniMat.opacity = currentCitiesOpacity;
+      cityMiniMat.visible = currentCitiesOpacity > 0.01;
 
       // Pulse city rings
       cityRings.forEach(r => {
         const s = 1 + (Math.sin(t * 2 + r.userData.phase) + 1) * 0.6;
         r.scale.setScalar(s);
-        r.material.opacity = Math.max(0, (0.7 - (s - 1) * 0.55) * cur.citiesOpacity);
+        r.material.opacity = Math.max(0, (0.7 - (s - 1) * 0.55) * currentCitiesOpacity);
+        r.visible = currentCitiesOpacity > 0.01;
       });
 
       // Arc trails
@@ -872,8 +1052,9 @@ export default function StageCanvas({ stageRef }) {
         if (!a) return;
         a.t += a.speed;
         if (a.t > 1.3) a.t = -0.1;
-        const op = Math.sin(Math.min(1, Math.max(0, a.t)) * Math.PI);
-        line.material.opacity = op * 0.9 * cur.arcsOpacity;
+        const lineOp = Math.sin(Math.min(1, Math.max(0, a.t)) * Math.PI);
+        line.material.opacity = lineOp * 0.9 * currentArcsOpacity;
+        line.visible = currentArcsOpacity > 0.01;
       });
 
       if (dotsNeedUpdate) {

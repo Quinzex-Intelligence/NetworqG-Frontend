@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import PalettePicker from './PalettePicker';
+import { useTheme } from '../ThemeContext';
 
 // Header component – responsive navigation adhering to brand guidelines
 export default function Header({ onPageChange }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { active } = useTheme();
 
   const handleLogoClick = (e) => {
     e.preventDefault();
@@ -24,13 +26,15 @@ export default function Header({ onPageChange }) {
     { id: 'contact', label: 'Contact' },
   ];
 
+  const logoSrc = active.id === 'reversed-ocean-blue' ? '/logo-full.svg' : '/logo-full-inverted.svg';
+
   return (
     <>
       <header id="nav" className="fixed top-0 left-0 right-0 z-50 nav-blur">
         <div className="max-w-[1400px] mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
           {/* Logo */}
           <a href="#top" className="flex items-center group" data-cursor="link" onClick={handleLogoClick}>
-            <img src="/logo-full-inverted.svg" alt="Networq Global Logo" className="h-8 md:h-9 w-auto" />
+            <img src={logoSrc} alt="Networq Global Logo" className="h-8 md:h-9 w-auto" />
           </a>
 
           {/* Desktop / Tablet navigation */}

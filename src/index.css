@@ -291,11 +291,10 @@ footer {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--gold-2);
+  background: var(--ink);
   pointer-events: none;
   z-index: 9999;
   will-change: transform;
-  mix-blend-mode: screen;
 }
 
 .cursor-ring {
@@ -305,17 +304,19 @@ footer {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 1px solid rgba(245, 215, 122, 0.55);
+  border: 1.5px solid var(--ink);
+  opacity: 0.5;
   pointer-events: none;
   z-index: 9998;
   will-change: transform, width, height;
-  transition: width .25s ease, height .25s ease, border-color .25s ease;
+  transition: width .25s ease, height .25s ease, border-color .25s ease, opacity .25s ease;
 }
 
 .cursor-link {
   width: 56px;
   height: 56px;
   border-color: var(--gold-2);
+  opacity: 0.85;
 }
 
 @media (max-width: 1024px) {
