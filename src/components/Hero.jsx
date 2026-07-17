@@ -33,24 +33,26 @@ export default function Hero({ onStartProjectClick, onSeeWorkClick }) {
       <div className="deco-dot" style={{ top: '22%', left: '48%' }} data-parallax="0.7"></div>
       <div className="deco-dot" style={{ top: '72%', left: '8%' }} data-parallax="0.45"></div>
 
-      <div className="relative max-w-[1400px] mx-auto px-6 lg:px-10 pt-20 lg:pt-24 pb-32 drift-up">
-        <div className="rounded-3xl p-8 md:p-10 max-w-4xl relative z-10">
-          <div className="flex items-center gap-3 mb-6" data-anim="fade-up">
-            <span className="gold-dot eyebrow">Because every click should lead somewhere</span>
+      <div className="relative w-full px-6 lg:px-10 pt-20 lg:pt-24 pb-10 drift-up flex flex-col min-h-[100svh]">
+        <div className="rounded-3xl p-0 md:p-2 max-w-3xl relative z-10 flex-1 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center gap-3 mb-6" data-anim="fade-up">
+              <span className="gold-dot eyebrow">Because every click should lead somewhere</span>
+            </div>
+            <h1
+              className="font-display text-[32px] sm:text-[54px] lg:text-[76px] leading-[1.05] tracking-tight"
+              data-split=""
+              data-parallax="-0.08"
+            >
+              Crafting <span className="gold-grad italic">outstanding</span><br />
+              digital solutions for<br />
+              your business, <span className="gold-grad italic">across the globe!</span>
+            </h1>
+            <p className="mt-6 max-w-xl text-ink/70 text-base" data-anim="fade-up" data-parallax="-0.04">
+              Networq is all about taking you to the next level in the market with brilliance and creativity.
+            </p>
           </div>
-          <h1
-            className="font-display text-[32px] sm:text-[54px] lg:text-[76px] leading-[1.05] tracking-tight max-w-4xl"
-            data-split=""
-            data-parallax="-0.08"
-          >
-            Crafting <span className="gold-grad italic">outstanding</span><br />
-            digital solutions for<br />
-            your business, <span className="gold-grad italic">across the globe!</span>
-          </h1>
-          <p className="mt-6 max-w-xl text-ink/70 text-base" data-anim="fade-up" data-parallax="-0.04">
-            Networq is all about taking you to the next level in the market with brilliance and creativity.
-          </p>
-          <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-start gap-4 max-w-sm sm:max-w-none" data-anim="fade-up">
+          <div className="mt-8 pb-16 flex flex-col sm:flex-row items-stretch sm:items-center justify-start gap-4" data-anim="fade-up">
             <button
               onClick={onStartProjectClick}
               data-cursor="link"

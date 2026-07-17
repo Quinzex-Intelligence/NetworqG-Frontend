@@ -1,7 +1,10 @@
 import React from 'react';
 import { work } from '../data';
+import { useTheme } from '../ThemeContext';
 
 export default function Work({ onRequestCaseBookClick }) {
+  const { active } = useTheme();
+  const gold = active.gold;
   const handleRequestClick = (e) => {
     e.preventDefault();
     onRequestCaseBookClick('contact');
@@ -52,8 +55,8 @@ export default function Work({ onRequestCaseBookClick }) {
                   <svg className="absolute inset-0 w-full h-full" viewBox="0 0 600 380" preserveAspectRatio="none" data-parallax="0.2">
                     <defs>
                       <linearGradient id={`g${i}`} x1="0" y1="0" x2="1" y2="1">
-                        <stop offset="0%" stopColor="#FEC74E" stopOpacity="0.9" />
-                        <stop offset="100%" stopColor="rgba(254, 199, 78, 0.2)" stopOpacity="0.2" />
+                        <stop offset="0%" stopColor={gold} stopOpacity="0.9" />
+                        <stop offset="100%" stopColor={gold} stopOpacity="0.2" />
                       </linearGradient>
                     </defs>
                     {Array.from({ length: 6 }).map((_, k) => (
@@ -74,8 +77,9 @@ export default function Work({ onRequestCaseBookClick }) {
                     />
                     <path
                       d={`M30 ${300 - i * 10} C 200 ${200 - i * 10}, 360 ${260 - i * 10}, 580 ${200 + i * 10}`}
-                      stroke="rgba(212,168,71,0.45)"
+                      stroke={gold}
                       strokeWidth="0.8"
+                      strokeOpacity="0.45"
                       fill="none"
                     />
                   </svg>

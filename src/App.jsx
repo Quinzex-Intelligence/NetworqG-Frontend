@@ -22,11 +22,15 @@ import FAQ from './components/FAQ';
 import ServicePage from './components/ServicePage';
 import CareersPage from './components/CareersPage';
 import ContactPage from './components/ContactPage';
+import AboutPage from './components/AboutPage';
+import WorkPage from './components/WorkPage';
+import ServicesPage from './components/ServicesPage';
 
 export default function App() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [preloaderDone, setPreloaderDone] = useState(false);
   const [currentPage, setCurrentPage] = useState('home');
+  const [transitionState, setTransitionState] = useState('idle'); // idle, fading-out, fading-in
   const lenisRef = useRef(null);
 
   // Shared mutable ref for Three.js canvas targets — bypasses React render cycle on every scroll tick
@@ -47,16 +51,59 @@ export default function App() {
 
   const handleNavScroll = (id) => {
     if (currentPage !== 'home') {
-      setCurrentPage('home');
-      setTimeout(() => {
-        const targetEl = document.getElementById(id);
-        if (targetEl && lenisRef.current) {
-          lenisRef.current.scrollTo(targetEl, { duration: 1.1 });
-        }
-      }, 150);
+      navigateToPage({ type: 'home-scroll', sectionId: id });
     } else {
       scrollToSection(id);
     }
+  };
+
+  const navigateToPage = (pageName) => {
+    if (pageName === currentPage || transitionState !== 'idle') return;
+    
+    setTransitionState('fading-out');
+    
+    // Temporary speed up of WebGL particles (warp effect)
+    gsap.to(stageRef.current, {
+      warpSpeed: 1.0,
+      duration: 0.25,
+      ease: 'power2.inOut'
+    });
+
+    // Hold page transition and change state at midpoint
+    setTimeout(() => {
+      if (typeof pageName === 'string') {
+        setCurrentPage(pageName);
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      } else if (pageName && pageName.type === 'home-scroll') {
+        setCurrentPage('home');
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        setTimeout(() => {
+          const targetEl = document.getElementById(pageName.sectionId);
+          if (targetEl && lenisRef.current) {
+            lenisRef.current.scrollTo(targetEl, { duration: 1.1 });
+          }
+        }, 80);
+      }
+      
+      // Set fading-in: content is at scale(1.02) opacity 0, transition:none
+      setTransitionState('fading-in');
+
+      // Decelerate particles back to normal speed
+      gsap.to(stageRef.current, {
+        warpSpeed: 0,
+        duration: 0.35,
+        ease: 'power2.out'
+      });
+
+      // Wait two animation frames so the browser commits fading-in paint
+      // before we add the CSS transition back for the smooth fade-in to idle
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setTransitionState('idle');
+        });
+      });
+
+    }, 250);
   };
 
   // Called when the preloader animation finishes — safe to start all scroll/GSAP logic
@@ -79,12 +126,48 @@ export default function App() {
     // js-ready already set; ScrollTrigger already registered above
 
     if (currentPage !== 'home') {
-      Object.assign(stageRef.current, {
+      let targetStage = {
         bShatter: 0, bOrbit: 0, bConstellation: 0, bField: 0, bVortex: 0, bWave: 0, bHelix: 0, bText: 0,
-        globeX: 0, globeY: 0, globeScale: 0.75,
-        globeOpacity: 0.5, arcsOpacity: 0.4, citiesOpacity: 0.5,
+        globeX: 0, globeY: -0.2, globeScale: 0.85,
+        globeOpacity: 0.6, arcsOpacity: 0.4, citiesOpacity: 0.5,
         morphOpacity: 0
-      });
+      };
+
+      if (currentPage === 'careers') {
+        targetStage.bHelix = 0.7;
+      } else if (currentPage === 'contact') {
+        targetStage.bVortex = 0.7;
+      } else if (currentPage === 'about') {
+        targetStage.bConstellation = 0.7;
+      } else if (currentPage === 'work') {
+        targetStage.bField = 0.7;
+      } else if (currentPage === 'services') {
+        targetStage.bOrbit = 0.7;
+      } else if (currentPage === 'service-brand-creative') {
+        targetStage.bOrbit = 0.7;
+      } else if (currentPage === 'service-social-media') {
+        targetStage.bShatter = 0.7;
+      } else if (currentPage === 'service-performance-marketing') {
+        targetStage.bVortex = 0.7;
+      } else if (currentPage === 'service-seo-services') {
+        targetStage.bField = 0.7;
+      } else if (currentPage === 'service-website-services') {
+        targetStage.bWave = 0.7;
+      } else if (currentPage === 'service-content-marketing') {
+        targetStage.bConstellation = 0.7;
+      } else if (currentPage === 'service-video-multimedia') {
+        targetStage.bHelix = 0.7;
+      } else if (currentPage === 'service-email-automation') {
+        targetStage.bVortex = 0.7;
+      } else if (currentPage === 'service-business-growth') {
+        targetStage.bHelix = 0.7;
+      } else if (currentPage === 'service-local-business') {
+        targetStage.bOrbit = 0.7;
+      } else if (currentPage === 'service-emerging-services') {
+        targetStage.bField = 0.7;
+      }
+
+      Object.assign(stageRef.current, targetStage);
 
       const lenis = new Lenis({
         duration: 1.1,
@@ -107,13 +190,35 @@ export default function App() {
         scrub: 0.5,
         fastScrollEnd: true,
         onUpdate: ({ progress: p }) => {
-          Object.assign(stageRef.current, {
+          const mainShape = currentPage === 'careers' ? 'bHelix'
+                          : currentPage === 'contact' ? 'bVortex'
+                          : currentPage === 'about' ? 'bConstellation'
+                          : currentPage === 'work' ? 'bField'
+                          : currentPage === 'services' ? 'bOrbit'
+                          : currentPage === 'service-brand-creative' ? 'bOrbit'
+                          : currentPage === 'service-social-media' ? 'bShatter'
+                          : currentPage === 'service-performance-marketing' ? 'bVortex'
+                          : currentPage === 'service-seo-services' ? 'bField'
+                          : currentPage === 'service-website-services' ? 'bWave'
+                          : currentPage === 'service-content-marketing' ? 'bConstellation'
+                          : currentPage === 'service-video-multimedia' ? 'bHelix'
+                          : currentPage === 'service-email-automation' ? 'bVortex'
+                          : currentPage === 'service-business-growth' ? 'bHelix'
+                          : currentPage === 'service-local-business' ? 'bOrbit'
+                          : currentPage === 'service-emerging-services' ? 'bField'
+                          : '';
+
+          let updateObj = {
             bText: p,
-            globeOpacity: 0.5 * (1 - p),
+            globeOpacity: 0.6 * (1 - p),
             citiesOpacity: 0.5 * (1 - p),
             arcsOpacity: 0.4 * (1 - p),
-            globeScale: 0.75 + p * 0.25
-          });
+            globeScale: 0.85 + p * 0.15
+          };
+          if (mainShape) {
+            updateObj[mainShape] = 0.7 * (1 - p);
+          }
+          Object.assign(stageRef.current, updateObj);
         }
       });
 
@@ -581,6 +686,12 @@ export default function App() {
             ? 'CAREERS'
             : currentPage === 'contact'
             ? 'CONTACT'
+            : currentPage === 'about'
+            ? 'ABOUT'
+            : currentPage === 'work'
+            ? 'WORK'
+            : currentPage === 'services'
+            ? 'SERVICES'
             : 'SERVICES'}
         </div>
         <StageCanvas stageRef={stageRef} />
@@ -589,42 +700,51 @@ export default function App() {
         )}
         <Header
           onLinkClick={handleNavScroll}
-          onPageChange={setCurrentPage}
+          onPageChange={navigateToPage}
           currentPage={currentPage}
         />
-        <main id="main">
-          {currentPage === 'home' ? (
-            <>
-              <Hero
-                onStartProjectClick={() => scrollToSection('contact')}
-                onSeeWorkClick={() => scrollToSection('work')}
+        <div className={`transition-content tr-${transitionState}`}>
+          <main id="main">
+            {currentPage === 'home' ? (
+              <>
+                <Hero
+                  onStartProjectClick={() => navigateToPage('contact')}
+                  onSeeWorkClick={() => scrollToSection('work')}
+                />
+                <Services
+                  onEngageClick={handleNavScroll}
+                  onServiceClick={(serviceId) => navigateToPage(`service-${serviceId}`)}
+                />
+                <Logos />
+                <Stats />
+                <Process />
+                <Work onRequestCaseBookClick={scrollToSection} />
+                <About />
+                <Insights />
+                <FAQ />
+                <Contact />
+              </>
+            ) : currentPage === 'careers' ? (
+              <CareersPage onBackClick={() => navigateToPage('home')} />
+            ) : currentPage === 'contact' ? (
+              <ContactPage onBackClick={() => navigateToPage('home')} />
+            ) : currentPage === 'about' ? (
+              <AboutPage onBackClick={() => navigateToPage('home')} onContactClick={() => navigateToPage('contact')} />
+            ) : currentPage === 'work' ? (
+              <WorkPage onBackClick={() => navigateToPage('home')} onRequestCaseBookClick={navigateToPage} />
+            ) : currentPage === 'services' ? (
+              <ServicesPage onBackClick={() => navigateToPage('home')} onServiceClick={(serviceId) => navigateToPage(`service-${serviceId}`)} onContactClick={navigateToPage} />
+            ) : currentPage.startsWith('service-') ? (
+              <ServicePage
+                serviceId={currentPage.replace('service-', '')}
+                onBackClick={() => navigateToPage('home')}
+                onContactClick={() => navigateToPage('contact')}
+                onServiceClick={(page) => navigateToPage(page)}
               />
-              <Services
-                onEngageClick={handleNavScroll}
-                onServiceClick={(serviceId) => setCurrentPage(`service-${serviceId}`)}
-              />
-              <Logos />
-              <Stats />
-              <Process />
-              <Work onRequestCaseBookClick={scrollToSection} />
-              <About />
-              <Insights />
-              <FAQ />
-              <Contact />
-            </>
-          ) : currentPage === 'careers' ? (
-            <CareersPage onBackClick={() => setCurrentPage('home')} />
-          ) : currentPage === 'contact' ? (
-            <ContactPage onBackClick={() => setCurrentPage('home')} />
-          ) : currentPage.startsWith('service-') ? (
-            <ServicePage
-              serviceId={currentPage.replace('service-', '')}
-              onBackClick={() => setCurrentPage('home')}
-              onContactClick={() => setCurrentPage('contact')}
-            />
-          ) : null}
-          <Footer onLinkClick={handleNavScroll} onPageChange={setCurrentPage} />
-        </main>
+            ) : null}
+            <Footer onLinkClick={handleNavScroll} onPageChange={navigateToPage} isSubpage={currentPage !== 'home'} />
+          </main>
+        </div>
       </div>
     </>
   );

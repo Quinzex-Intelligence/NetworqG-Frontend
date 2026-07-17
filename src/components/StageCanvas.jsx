@@ -757,7 +757,8 @@ export default function StageCanvas({ stageRef }) {
       globeX: 1.6, globeY: 0.3, globeScale: 1.0,
       globeOpacity: 1, arcsOpacity: 1, citiesOpacity: 1,
       morphOpacity: 0, morphIndex: 0,
-      morphPosX: 0, morphPosY: 0, morphScale: 1
+      morphPosX: 0, morphPosY: 0, morphScale: 1,
+      warpSpeed: 0
     };
 
     function updateDots() {
@@ -868,7 +869,7 @@ export default function StageCanvas({ stageRef }) {
       globeGroup.position.x = cur.globeX + pCurX * 0.4;
       globeGroup.position.y = cur.globeY + pCurY * 0.3;
       globeGroup.scale.setScalar(cur.globeScale);
-      globeGroup.rotation.y += 0.0018;
+      globeGroup.rotation.y += 0.0018 + cur.warpSpeed * 0.05;
       globeGroup.rotation.x = pCurY * 0.4 + Math.sin(t * 0.25) * 0.04;
 
       // Dynamic color interpolation
@@ -1065,7 +1066,7 @@ export default function StageCanvas({ stageRef }) {
       morphGroup.position.x = cur.morphPosX + pCurX * 0.3;
       morphGroup.position.y = cur.morphPosY + pCurY * 0.25;
       morphGroup.scale.setScalar(cur.morphScale);
-      morphGroup.rotation.y += 0.004;
+      morphGroup.rotation.y += 0.004 + cur.warpSpeed * 0.08;
       morphGroup.rotation.x = Math.sin(t * 0.4) * 0.2;
       morphRings.forEach((r, j) => {
         r.rotation.z += 0.002 * (j + 1);
