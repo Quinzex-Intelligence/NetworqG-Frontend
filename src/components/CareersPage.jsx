@@ -41,7 +41,7 @@ export default function CareersPage({ onBackClick }) {
 
   const fetchJobs = async () => {
     try {
-      const res = await fetch('http://localhost:8080/api/jobs/public');
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/api/jobs/public`);
       if (res.ok) {
         const data = await res.json();
         setJobs(data.content || []);
@@ -86,7 +86,7 @@ export default function CareersPage({ onBackClick }) {
       submissionData.append('phone', formData.phone);
       submissionData.append('resume', resumeFile);
 
-      const res = await fetch(`http://localhost:8080/api/jobs/${selectedJob.id}/apply`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/api/jobs/${selectedJob.id}/apply`, {
         method: 'POST',
         body: submissionData
       });

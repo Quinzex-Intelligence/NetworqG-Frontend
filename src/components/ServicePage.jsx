@@ -780,7 +780,7 @@ export default function ServicePage({ serviceId, onBackClick, onContactClick, on
     // If it's a dynamic service (not in static keys)
     if (!serviceDetails[serviceId]) {
       setLoadingDynamic(true);
-      fetch('http://localhost:8080/api/services/active')
+      fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/api/services/active`)
         .then(res => res.ok ? res.json() : [])
         .then(activeServices => {
           const service = activeServices.find(s => s.id === serviceId);

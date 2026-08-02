@@ -23,7 +23,7 @@ export default function LoginPage({ onBackClick }) {
 
   const handleGoogleLogin = () => {
     sessionStorage.setItem('logging_in', 'true');
-    window.location.href = 'http://localhost:8080/api/auth/login';
+    window.location.href = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/api/auth/login`;
   };
 
   return (

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '../ThemeContext';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+
 export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
   const { active } = useTheme();
   const logoSrc = active.id === 'reversed-ocean-blue' ? '/logo-full.svg' : '/logo-full-inverted.svg';
@@ -53,9 +55,9 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
   // --- API CALLS FOR JOBS ---
   const fetchJobs = async () => {
     try {
-      let url = `http://localhost:8080/api/jobs?page=${jobPage}&size=10&sort=createdDate,desc`;
+      let url = `${API_BASE_URL}/api/jobs?page=${jobPage}&size=10&sort=createdDate,desc`;
       if (jobSearch.trim()) {
-        url = `http://localhost:8080/api/jobs/search?jobName=${encodeURIComponent(jobSearch)}&page=${jobPage}&size=10`;
+        url = `${API_BASE_URL}/api/jobs/search?jobName=${encodeURIComponent(jobSearch)}&page=${jobPage}&size=10`;
       }
       const res = await fetch(url, { credentials: 'include' });
       if (res.ok) {
@@ -78,7 +80,7 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
     e.preventDefault();
     try {
       const isEdit = !!editingJob;
-      const url = 'http://localhost:8080/api/jobs';
+      const url = `${API_BASE_URL}/api/jobs`;
       const method = isEdit ? 'PUT' : 'POST';
       
       const payload = {
@@ -117,7 +119,7 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
   const handleDeleteJobs = async (idsToDelete) => {
     if (!window.confirm(`Are you sure you want to delete ${idsToDelete.length} position(s)?`)) return;
     try {
-      const res = await fetch('http://localhost:8080/api/jobs', {
+      const res = await fetch(`${API_BASE_URL}/api/jobs`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(idsToDelete),
@@ -155,7 +157,7 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
   // --- API CALLS FOR SERVICES ---
   const fetchServices = async () => {
     try {
-      const res = await fetch(`http://localhost:8080/api/services?page=${servicePage}&size=10&sort=displayOrder,asc`, {
+      const res = await fetch(`${API_BASE_URL}/api/services?page=${servicePage}&size=10&sort=displayOrder,asc`, {
         credentials: 'include'
       });
       if (res.ok) {
@@ -173,8 +175,8 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
     try {
       const isEdit = !!editingService;
       const url = isEdit 
-        ? `http://localhost:8080/api/services/${editingService.id}`
-        : 'http://localhost:8080/api/services';
+        ? `${API_BASE_URL}/api/services/${editingService.id}`
+        : `${API_BASE_URL}/api/services`;
       
       const formData = new FormData();
       formData.append('title', serviceFormData.title);
@@ -217,7 +219,7 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
   const handleDeleteService = async (id) => {
     if (!window.confirm('Are you sure you want to delete this capability?')) return;
     try {
-      const res = await fetch(`http://localhost:8080/api/services/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/services/${id}`, {
         method: 'DELETE',
         credentials: 'include'
       });
@@ -248,7 +250,7 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
   // --- LOGOUT ---
   const handleLogout = async () => {
     try {
-      const res = await fetch('http://localhost:8080/api/auth/logout', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/logout`, {
         method: 'POST',
         credentials: 'include'
       });
