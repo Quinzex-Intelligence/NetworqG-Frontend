@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTheme } from '../ThemeContext';
 
-export default function Footer({ onLinkClick, onPageChange, isSubpage = false }) {
+export default function Footer({ onLinkClick, onPageChange, isSubpage = false, isAuthenticated }) {
   const { active } = useTheme();
 
   const logoSrc = active.id === 'reversed-ocean-blue' ? '/logo-full.svg' : '/logo-full-inverted.svg';
@@ -138,6 +138,17 @@ export default function Footer({ onLinkClick, onPageChange, isSubpage = false })
           <div className="flex flex-wrap items-center gap-6">
             <a href="#" className="hover:text-gold transition-colors duration-300">Privacy Policy</a>
             <a href="#" className="hover:text-gold transition-colors duration-300">Terms of Service</a>
+            <span className="hidden sm:inline" style={{ opacity: 0.3 }}>|</span>
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                onPageChange?.(isAuthenticated ? 'admin' : 'login');
+              }}
+              className="hover:text-gold transition-colors duration-300 text-gold-2"
+            >
+              {isAuthenticated ? 'Admin Dashboard' : 'Admin Portal'}
+            </a>
             <span
               className="hidden sm:inline"
               style={{ color: 'var(--gold)', opacity: 0.6 }}

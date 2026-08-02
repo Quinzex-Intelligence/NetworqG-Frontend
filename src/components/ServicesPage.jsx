@@ -1,14 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { services } from '../data';
+import { services as staticServices } from '../data';
 
 export default function ServicesPage({ onBackClick, onServiceClick, onContactClick }) {
   const [animate, setAnimate] = useState(false);
+  const [dynamicServices, setDynamicServices] = useState([]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
     const timer = setTimeout(() => setAnimate(true), 600);
+    fetchActiveServices();
     return () => clearTimeout(timer);
   }, []);
+
+  const fetchActiveServices = async () => {
+    try {
+      const res = await fetch('http://localhost:8080/api/services/active');
+      if (res.ok) {
+        const data = await res.json();
+        setDynamicServices(data || []);
+      }
+    } catch (err) {
+      console.error('Failed to fetch active services:', err);
+    }
+  };
 
   const serviceIdMap = {
     "01": "brand-creative",
@@ -23,6 +37,24 @@ export default function ServicesPage({ onBackClick, onServiceClick, onContactCli
     "10": "local-business",
     "11": "emerging-services"
   };
+
+  // Combine static and dynamic services
+  const combinedServices = [
+    ...staticServices.map(s => ({
+      n: s.n,
+      t: s.t,
+      d: s.d,
+      id: serviceIdMap[s.n],
+      isStatic: true
+    })),
+    ...dynamicServices.map((s, index) => ({
+      n: String(staticServices.length + 1 + index).padStart(2, '0'),
+      t: s.title,
+      d: s.shortDescription,
+      id: s.id,
+      isStatic: false
+    }))
+  ];
 
   return (
     <div className="subpage-container relative overflow-hidden pt-24 pb-32">
@@ -67,13 +99,13 @@ export default function ServicesPage({ onBackClick, onServiceClick, onContactCli
           }`}
           style={{ transitionDelay: '200ms' }}
         >
-          {services.map((s, i) => (
+          {combinedServices.map((s, i) => (
             <div
               key={s.n}
               className="glow-card p-6 lg:p-8 rounded-2xl border border-line flex flex-col justify-between cursor-pointer"
               style={{ transitionDelay: `${i * 40}ms` }}
               data-cursor="link"
-              onClick={() => onServiceClick?.(serviceIdMap[s.n])}
+              onClick={() => onServiceClick?.(s.id)}
             >
               <div>
                 <div className="flex items-center justify-between mb-6">

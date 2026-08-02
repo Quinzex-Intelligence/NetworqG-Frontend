@@ -25,13 +25,81 @@ import ContactPage from './components/ContactPage';
 import AboutPage from './components/AboutPage';
 import WorkPage from './components/WorkPage';
 import ServicesPage from './components/ServicesPage';
+import LoginPage from './components/LoginPage';
+import AdminDashboard from './components/AdminDashboard';
 
 export default function App() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [preloaderDone, setPreloaderDone] = useState(false);
-  const [currentPage, setCurrentPage] = useState('home');
+  const [preloaderDone, setPreloaderDone] = useState(() => {
+    const isLoggingIn = sessionStorage.getItem('logging_in') === 'true';
+    const savedPage = sessionStorage.getItem('current_page');
+    let showedToday = false;
+    try {
+      const lastShowedDate = localStorage.getItem('ng-last-preloader-date');
+      const todayDate = new Date().toDateString();
+      showedToday = lastShowedDate === todayDate;
+    } catch (e) {}
+    return isLoggingIn || savedPage === 'admin' || savedPage === 'login' || showedToday;
+  });
+  const [currentPage, setCurrentPage] = useState(() => {
+    return sessionStorage.getItem('current_page') || 'home';
+  });
   const [transitionState, setTransitionState] = useState('idle'); // idle, fading-out, fading-in
+  const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
   const lenisRef = useRef(null);
+
+  const checkAuth = async () => {
+    try {
+      const res = await fetch('http://localhost:8080/api/auth/me', { credentials: 'include' });
+      if (res.ok) {
+        const data = await res.json();
+        setUser(data);
+        setIsAuthenticated(true);
+        if (sessionStorage.getItem('logging_in') === 'true') {
+          sessionStorage.removeItem('logging_in');
+          setCurrentPage('admin');
+          sessionStorage.setItem('current_page', 'admin');
+          setPreloaderDone(true);
+        }
+      } else {
+        if (sessionStorage.getItem('logging_in') === 'true') {
+          sessionStorage.removeItem('logging_in');
+          setPreloaderDone(true);
+          setCurrentPage('login');
+          sessionStorage.setItem('current_page', 'login');
+        }
+        setUser(null);
+        setIsAuthenticated(false);
+      }
+    } catch (err) {
+      if (sessionStorage.getItem('logging_in') === 'true') {
+        sessionStorage.removeItem('logging_in');
+        setPreloaderDone(true);
+        setCurrentPage('login');
+        sessionStorage.setItem('current_page', 'login');
+      }
+      setUser(null);
+      setIsAuthenticated(false);
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  // Redirect handling
+  useEffect(() => {
+    if (!preloaderDone) return;
+    if (currentPage === 'login' && isAuthenticated) {
+      navigateToPage('admin');
+    } else if (currentPage === 'admin' && !isAuthenticated && !authLoading) {
+      navigateToPage('login');
+    }
+  }, [currentPage, isAuthenticated, authLoading, preloaderDone]);
 
   // Shared mutable ref for Three.js canvas targets — bypasses React render cycle on every scroll tick
   const stageRef = useRef({
@@ -73,9 +141,11 @@ export default function App() {
     setTimeout(() => {
       if (typeof pageName === 'string') {
         setCurrentPage(pageName);
+        sessionStorage.setItem('current_page', pageName);
         window.scrollTo({ top: 0, behavior: 'instant' });
       } else if (pageName && pageName.type === 'home-scroll') {
         setCurrentPage('home');
+        sessionStorage.setItem('current_page', 'home');
         window.scrollTo({ top: 0, behavior: 'instant' });
         setTimeout(() => {
           const targetEl = document.getElementById(pageName.sectionId);
@@ -108,6 +178,9 @@ export default function App() {
 
   // Called when the preloader animation finishes — safe to start all scroll/GSAP logic
   const handlePreloaderComplete = useCallback(() => {
+    try {
+      localStorage.setItem('ng-last-preloader-date', new Date().toDateString());
+    } catch (e) {}
     setPreloaderDone(true);
   }, []);
 
@@ -143,6 +216,21 @@ export default function App() {
         targetStage.bField = 0.7;
       } else if (currentPage === 'services') {
         targetStage.bOrbit = 0.7;
+      } else if (currentPage === 'login') {
+        targetStage.bVortex = 0.85;
+        targetStage.bHelix = 0.2;
+        targetStage.globeX = 0;
+        targetStage.globeY = 0;
+        targetStage.globeScale = 0.85;
+        targetStage.globeOpacity = 0.35;
+        targetStage.arcsOpacity = 0.15;
+        targetStage.citiesOpacity = 0.15;
+      } else if (currentPage === 'admin') {
+        targetStage.bConstellation = 0.8;
+        targetStage.globeX = 0;
+        targetStage.globeY = -0.3;
+        targetStage.globeScale = 0.6;
+        targetStage.globeOpacity = 0.1;
       } else if (currentPage === 'service-brand-creative') {
         targetStage.bOrbit = 0.7;
       } else if (currentPage === 'service-social-media') {
@@ -446,6 +534,24 @@ export default function App() {
       bShatter: 0, bOrbit: 0, bConstellation: 0, bField: 0, bVortex: 0, bWave: 0, bHelix: 0, bText: 0
     });
 
+    if (currentPage === 'login') {
+      set({
+        globeX: 0, globeY: 0, globeScale: 0.85,
+        globeOpacity: 0.35, arcsOpacity: 0.15, citiesOpacity: 0.15,
+        bVortex: 0.85, bHelix: 0.2
+      });
+      return;
+    }
+
+    if (currentPage === 'admin') {
+      set({
+        globeX: 0, globeY: -0.3, globeScale: 0.6,
+        globeOpacity: 0.1, arcsOpacity: 0, citiesOpacity: 0,
+        bConstellation: 0.8
+      });
+      return;
+    }
+
     if (currentPage !== 'home') return;
 
     // ─── Single resize handler ───────────────────────────────────────────────
@@ -692,17 +798,24 @@ export default function App() {
             ? 'WORK'
             : currentPage === 'services'
             ? 'SERVICES'
+            : currentPage === 'login'
+            ? 'SECURITY PORTAL'
+            : currentPage === 'admin'
+            ? 'ADMIN DIRECTORY'
             : 'SERVICES'}
         </div>
         <StageCanvas stageRef={stageRef} />
         {currentPage === 'home' && (
           <ScrollRail activeIndex={activeIndex} onDotClick={scrollToSection} />
         )}
-        <Header
-          onLinkClick={handleNavScroll}
-          onPageChange={navigateToPage}
-          currentPage={currentPage}
-        />
+        {currentPage !== 'admin' && currentPage !== 'login' && (
+          <Header
+            onLinkClick={handleNavScroll}
+            onPageChange={navigateToPage}
+            currentPage={currentPage}
+            isAuthenticated={isAuthenticated}
+          />
+        )}
         <div className={`transition-content tr-${transitionState}`}>
           <main id="main">
             {currentPage === 'home' ? (
@@ -734,6 +847,14 @@ export default function App() {
               <WorkPage onBackClick={() => navigateToPage('home')} onRequestCaseBookClick={navigateToPage} />
             ) : currentPage === 'services' ? (
               <ServicesPage onBackClick={() => navigateToPage('home')} onServiceClick={(serviceId) => navigateToPage(`service-${serviceId}`)} onContactClick={navigateToPage} />
+            ) : currentPage === 'login' ? (
+              <LoginPage onBackClick={() => navigateToPage('home')} />
+            ) : currentPage === 'admin' ? (
+              <AdminDashboard
+                user={user}
+                onLogoutSuccess={() => { setUser(null); setIsAuthenticated(false); navigateToPage('home'); }}
+                onBackClick={() => navigateToPage('home')}
+              />
             ) : currentPage.startsWith('service-') ? (
               <ServicePage
                 serviceId={currentPage.replace('service-', '')}
@@ -742,7 +863,9 @@ export default function App() {
                 onServiceClick={(page) => navigateToPage(page)}
               />
             ) : null}
-            <Footer onLinkClick={handleNavScroll} onPageChange={navigateToPage} isSubpage={currentPage !== 'home'} />
+            {currentPage !== 'login' && currentPage !== 'admin' && (
+              <Footer onLinkClick={handleNavScroll} onPageChange={navigateToPage} isSubpage={currentPage !== 'home'} isAuthenticated={isAuthenticated} />
+            )}
           </main>
         </div>
       </div>

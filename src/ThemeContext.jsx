@@ -13,7 +13,7 @@ export const palettes = [
     ink: '#F5F0E8',
     mute: '#F5F0E8',
     line: 'rgba(212, 175, 55, 0.20)',
-    cardBg: 'rgba(26, 26, 26, 0.75)',
+    cardBg: 'rgba(15, 15, 15, 0.94)',
     glassBg: 'rgba(20, 20, 20, 0.55)',
     navBg: 'rgba(13, 13, 13, 0.75)',
     drawerBg: '#1A1A1A',

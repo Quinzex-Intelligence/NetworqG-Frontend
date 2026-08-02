@@ -1572,18 +1572,17 @@ body.js-ready [data-stagger="3d"].is-in > * {
 
 /* Glowing card interactive styles */
 .glow-card {
-  background: var(--card-bg, rgba(var(--bg2-rgb), 0.65));
+  background: var(--card-bg, rgba(15, 15, 15, 0.94));
   border: 1px solid var(--line);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.4s ease;
   will-change: transform, box-shadow;
 }
 
 .glow-card:hover {
-  transform: translateY(-5px) scale(1.01);
-  border-color: rgba(var(--accent-rgb), 0.45);
-  box-shadow: 0 20px 40px -15px rgba(var(--accent-rgb), 0.15), inset 0 0 10px rgba(var(--accent-rgb), 0.05);
+  border-color: rgba(var(--accent-rgb), 0.55);
+  box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.15);
 }
 
 /* Subpage grid section structure */

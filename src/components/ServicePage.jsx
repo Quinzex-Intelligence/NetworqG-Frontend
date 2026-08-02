@@ -767,7 +767,8 @@ export default function ServicePage({ serviceId, onBackClick, onContactClick, on
   const [openFaqIdx, setOpenFaqIdx] = useState(null);
   const [animate, setAnimate] = useState(false);
   const [hoveredOffer, setHoveredOffer] = useState(null);
-  const data = serviceDetails[serviceId];
+  const [dynamicData, setDynamicData] = useState(null);
+  const [loadingDynamic, setLoadingDynamic] = useState(false);
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -776,29 +777,84 @@ export default function ServicePage({ serviceId, onBackClick, onContactClick, on
     setOpenFaqIdx(null);
     const timer = setTimeout(() => setAnimate(true), 400);
 
+    // If it's a dynamic service (not in static keys)
+    if (!serviceDetails[serviceId]) {
+      setLoadingDynamic(true);
+      fetch('http://localhost:8080/api/services/active')
+        .then(res => res.ok ? res.json() : [])
+        .then(activeServices => {
+          const service = activeServices.find(s => s.id === serviceId);
+          if (service) {
+            setDynamicData({
+              t: service.title,
+              sub: `${service.title} built for dynamic reach.`,
+              desc: service.longDescription || service.shortDescription,
+              images: service.images || [],
+              importance: [
+                "Custom tailored strategies built from the ground up for modern businesses.",
+                "Strategic deployment across key channels and marketing assets.",
+                "High fidelity rendering and optimized deployment workflows.",
+                "Scale analytics and deep performance tracing dashboards.",
+                "Continuous iterations backed by empirical ROI and marketing analytics."
+              ],
+              offers: [
+                { t: "Tailored Architecture", d: "Sleek, performant, and custom built implementation matching your exact brand voice." },
+                { t: "Dynamic Integration", d: "Connecting your custom dashboard directly with backend data pipelines and asset delivery." },
+                { t: "Continuous Delivery", d: "Agile iterations, automated deployments, and continuous performance optimization." }
+              ],
+              faqs: [
+                { q: "How is this service customized?", a: "Each implementation is mapped entirely to your brand requirements and display metrics." },
+                { q: "What is the typical timeline?", a: "Depending on scale, delivery varies between 2 to 6 weeks from ideation to launch." }
+              ]
+            });
+          } else {
+            setDynamicData(null);
+          }
+          setLoadingDynamic(false);
+        })
+        .catch(() => {
+          setDynamicData(null);
+          setLoadingDynamic(false);
+        });
+    } else {
+      setDynamicData(null);
+    }
+
     // Stagger fade up entries on mount
     if (containerRef.current) {
       const el = containerRef.current;
-      gsap.fromTo(el.querySelectorAll('.gsap-fade-up'),
-        { opacity: 0, y: 32 },
-        { 
-          opacity: 1, 
-          y: 0, 
-          duration: 0.95, 
-          ease: 'power3.out', 
-          stagger: 0.08,
-          delay: 0.35
-        }
-      );
+      setTimeout(() => {
+        gsap.fromTo(el.querySelectorAll('.gsap-fade-up'),
+          { opacity: 0, y: 32 },
+          { 
+            opacity: 1, 
+            y: 0, 
+            duration: 0.95, 
+            ease: 'power3.out', 
+            stagger: 0.08,
+            delay: 0.1
+          }
+        );
+      }, 50);
     }
 
     return () => clearTimeout(timer);
   }, [serviceId]);
 
+  const data = serviceDetails[serviceId] || dynamicData;
+
+  if (loadingDynamic) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-xs font-mono text-gold-2 bg-[var(--bg)]">
+        LOADING BRAND CAPABILITY...
+      </div>
+    );
+  }
+
   if (!data) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-gold-2">
-        Service not found.
+      <div className="min-h-screen flex items-center justify-center text-gold-2 font-mono text-xs bg-[var(--bg)]">
+        SERVICE PORTFOLIO NOT FOUND.
       </div>
     );
   }
@@ -928,6 +984,24 @@ export default function ServicePage({ serviceId, onBackClick, onContactClick, on
                 {serviceId === 'business-growth' && <BusinessGrowthMockup />}
                 {serviceId === 'local-business' && <LocalBusinessMockup />}
                 {serviceId === 'emerging-services' && <EmergingServicesMockup />}
+                
+                {/* Dynamic Service Mockup Collage */}
+                {!GLYPHS[serviceId] && data.images && data.images.length > 0 && (
+                  <TiltCard className="w-full max-w-md p-6 bg-opacity-40 backdrop-blur-lg border border-line">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-[var(--gold)]/5 rounded-full blur-xl pointer-events-none" />
+                    <div className="font-mono text-[9px] text-gold uppercase tracking-[0.2em] mb-4 pb-2 border-b border-line flex justify-between">
+                      <span>Brand Assets</span>
+                      <span>{data.images.length} Files</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      {data.images.slice(0, 3).map((img, idx) => (
+                        <div key={img.id} className={`rounded-xl border border-line overflow-hidden bg-bg/50 relative group ${idx === 0 && data.images.length > 1 ? 'col-span-2 aspect-[16/9]' : 'aspect-square'}`}>
+                          <img src={img.imageUrl} alt={`Asset ${idx + 1}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                        </div>
+                      ))}
+                    </div>
+                  </TiltCard>
+                )}
               </div>
             </div>
           </div>

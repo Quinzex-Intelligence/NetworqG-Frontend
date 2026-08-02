@@ -15,7 +15,7 @@ const SERVICE_NAV = [
   { id: 'emerging-services',     label: 'Emerging & AI',          icon: '⬡', desc: 'AI tools & automation' },
 ];
 
-export default function Header({ onPageChange, onLinkClick }) {
+export default function Header({ onPageChange, onLinkClick, currentPage, isAuthenticated }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
@@ -202,6 +202,20 @@ export default function Header({ onPageChange, onLinkClick }) {
             >
               Contact
             </a>
+
+            {/* Admin/Sign-in */}
+            <a
+              href="#"
+              data-cursor="link"
+              className="nav-link px-3 py-2 rounded-lg hover:text-gold transition-colors duration-300 font-mono text-[13px] uppercase tracking-wider"
+              style={{ color: 'var(--gold-2)' }}
+              onClick={(e) => {
+                e.preventDefault();
+                onPageChange(isAuthenticated ? 'admin' : 'login');
+              }}
+            >
+              {isAuthenticated ? 'Dashboard' : 'Sign In'}
+            </a>
           </nav>
 
           {/* Right-side controls */}
@@ -302,6 +316,20 @@ export default function Header({ onPageChange, onLinkClick }) {
               onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); onPageChange('contact'); }}
             >
               Contact
+            </a>
+
+            {/* Admin/Sign-in Mobile */}
+            <a
+              href="#"
+              className="mobile-menu-link hover:text-gold transition-colors duration-300 font-mono text-[13px] uppercase tracking-wider"
+              style={{ color: 'var(--gold-2)' }}
+              onClick={(e) => {
+                e.preventDefault();
+                setMobileMenuOpen(false);
+                onPageChange(isAuthenticated ? 'admin' : 'login');
+              }}
+            >
+              {isAuthenticated ? 'Dashboard' : 'Sign In'}
             </a>
 
 
