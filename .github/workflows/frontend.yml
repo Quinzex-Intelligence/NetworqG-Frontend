@@ -1,0 +1,177 @@
+name: React Frontend CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+env:
+  AWS_REGION: ap-south-2
+  EC2_TARGET_DIR: /var/www/frontend
+
+jobs:
+
+###############################################################################
+# BUILD
+###############################################################################
+  build:
+    name: Build React App
+    runs-on: ubuntu-latest
+
+    outputs:
+      release_tag: ${{ steps.release_tag.outputs.tag }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Create .env
+        run: |
+          echo "${{ secrets.REACT_ENV_FILE }}" > .env
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Application
+        run: npm run build
+
+      - name: Verify Build
+        run: |
+          ls -la
+          ls -la dist
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: dist
+
+      - name: Generate Release Tag
+        id: release_tag
+        run: |
+          echo "tag=frontend-${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+
+###############################################################################
+# RELEASE
+###############################################################################
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: build
+
+    outputs:
+      release_tag: ${{ needs.build.outputs.release_tag }}
+
+    steps:
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: dist
+
+      - name: Archive Build
+        run: |
+          tar -czf frontend.tar.gz -C dist .
+
+      - name: Verify Archive
+        run: ls -lh frontend.tar.gz
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.build.outputs.release_tag }}
+          name: Frontend Release ${{ github.sha }}
+          files: frontend.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+###############################################################################
+# DEPLOY
+###############################################################################
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    needs: release
+
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Verify AWS Identity
+        run: aws sts get-caller-identity
+
+      - name: Verify SSM Instance
+        run: |
+          aws ssm describe-instance-information \
+          --query "InstanceInformationList[*].InstanceId"
+
+      - name: Deploy via SSM
+        id: deploy
+
+        run: |
+
+          COMMAND_ID=$(aws ssm send-command \
+            --instance-ids "${{ secrets.EC2_INSTANCE_ID }}" \
+            --document-name "AWS-RunShellScript" \
+            --comment "Frontend Deployment" \
+            --parameters "commands=[
+            \"set -e\",
+
+            \"echo ===== START DEPLOY =====\",
+
+            \"RELEASE_URL=https://github.com/${{ github.repository }}/releases/download/${{ needs.release.outputs.release_tag }}/frontend.tar.gz\",
+
+            \"echo Download URL: \$RELEASE_URL\",
+
+            \"rm -rf /tmp/frontend\",
+
+            \"mkdir -p /tmp/frontend\",
+
+            \"curl -L \$RELEASE_URL -o /tmp/frontend/frontend.tar.gz\",
+
+            \"ls -lh /tmp/frontend\",
+
+            \"mkdir -p $EC2_TARGET_DIR\",
+
+            \"rm -rf $EC2_TARGET_DIR/*\",
+
+            \"tar -xzf /tmp/frontend/frontend.tar.gz -C $EC2_TARGET_DIR\",
+
+            \"rm -rf /tmp/frontend\",
+
+            \"echo Files after deployment:\",
+
+            \"ls -la $EC2_TARGET_DIR\",
+
+            \"sudo systemctl reload nginx || true\",
+
+            \"echo ===== DEPLOY COMPLETE =====\"
+
+            ]" \
+            --query "Command.CommandId" \
+            --output text)
+
+          echo "COMMAND_ID=$COMMAND_ID"
+          echo "COMMAND_ID=$COMMAND_ID" >> "$GITHUB_ENV"
+
+      - name: Wait for Deployment
+        run: sleep 15
+
+      - name: Check Deployment Status
+        run: |
+          aws ssm list-command-invocations \
+          --command-id "$COMMAND_ID" \
+          --details
