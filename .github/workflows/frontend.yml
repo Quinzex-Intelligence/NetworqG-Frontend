@@ -1,4 +1,4 @@
-name: React Frontend CI/CD
+name: Build and Deploy Frontend
 
 on:
   push:
@@ -6,88 +6,145 @@ on:
       - main
 
 permissions:
-  contents: read
+  contents: write
 
 env:
+  AWS_REGION: ap-south-2
   EC2_TARGET_DIR: /var/www/frontend
 
 jobs:
-
   build-and-deploy:
-    name: Build & Deploy React
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # Create .env
       - name: Create .env
         run: |
           echo "${{ secrets.REACT_ENV_FILE }}" > .env
 
+      # Setup Node
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
 
-      - name: Verify Node
+      # Verify Node
+      - name: Verify Node Version
         run: |
           node -v
           npm -v
 
+      # Install Dependencies
       - name: Install Dependencies
         run: npm install
 
+      # Build
       - name: Build React
         run: npm run build
 
+      # Verify Build
       - name: Verify Build
         run: |
           ls -la
           ls -la dist
 
-      - name: Create Deployment Archive
+      # Archive
+      - name: Create Archive
         run: |
           tar -czf frontend.tar.gz -C dist .
-
-      - name: Verify Archive
-        run: |
           ls -lh frontend.tar.gz
 
-      - name: Copy Archive to EC2
-        uses: appleboy/scp-action@v0.1.7
+      # Release Tag
+      - name: Set Release Tag
+        run: |
+          echo "RELEASE_TAG=frontend-${GITHUB_SHA}" >> $GITHUB_ENV
+
+      # Create Release
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          source: "frontend.tar.gz"
-          target: "/tmp"
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: Frontend Release ${{ github.sha }}
+          files: frontend.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Deploy on EC2
-        uses: appleboy/ssh-action@v1.2.2
+      # Configure AWS
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          script: |
-            set -e
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
-            echo "===== START DEPLOY ====="
+      # Verify AWS
+      - name: Verify AWS Identity
+        run: aws sts get-caller-identity
 
-            sudo mkdir -p /var/www/frontend
+      # Verify SSM
+      - name: Verify SSM
+        run: |
+          aws ssm describe-instance-information \
+            --region $AWS_REGION \
+            --query "InstanceInformationList[*].InstanceId"
 
-            sudo rm -rf /var/www/frontend/*
+      # Deploy
+      - name: Deploy via SSM
+        id: deploy
+        run: |
+          COMMAND_ID=$(aws ssm send-command \
+            --instance-ids "${{ secrets.EC2_INSTANCE_ID }}" \
+            --document-name "AWS-RunShellScript" \
+            --comment "Frontend Deployment" \
+            --parameters "commands=[
+            \"set -e\",
+            \"echo ===== START DEPLOY =====\",
+            \"RELEASE_URL=https://github.com/${{ github.repository }}/releases/download/${{ env.RELEASE_TAG }}/frontend.tar.gz\",
+            \"echo Download URL: \$RELEASE_URL\",
+            \"mkdir -p /tmp/frontend\",
+            \"rm -rf /tmp/frontend/*\",
 
-            sudo tar -xzf /tmp/frontend.tar.gz -C /var/www/frontend
+            \"for i in {1..10}; do curl -L \$RELEASE_URL -o /tmp/frontend/frontend.tar.gz && break; echo Waiting for GitHub Release...; sleep 5; done\",
 
-            rm -f /tmp/frontend.tar.gz
+            \"ls -lh /tmp/frontend\",
 
-            echo "Files deployed:"
-            ls -la /var/www/frontend
+            \"sudo mkdir -p $EC2_TARGET_DIR\",
 
-            sudo nginx -t
+            \"sudo rm -rf $EC2_TARGET_DIR/*\",
 
-            sudo systemctl reload nginx
+            \"sudo tar -xzf /tmp/frontend/frontend.tar.gz -C $EC2_TARGET_DIR\",
 
-            echo "===== DEPLOY COMPLETE ====="
+            \"rm -rf /tmp/frontend\",
+
+            \"echo Deployment Complete\",
+
+            \"ls -la $EC2_TARGET_DIR\",
+
+            \"sudo nginx -t\",
+
+            \"sudo systemctl reload nginx\",
+
+            \"echo ===== FINISHED =====\"
+
+            ]" \
+            --query "Command.CommandId" \
+            --output text)
+
+          echo "COMMAND_ID=$COMMAND_ID"
+          echo "COMMAND_ID=$COMMAND_ID" >> $GITHUB_ENV
+
+      # Wait
+      - name: Wait for Deployment
+        run: sleep 15
+
+      # Status
+      - name: Check Deployment Status
+        run: |
+          aws ssm list-command-invocations \
+            --command-id "$COMMAND_ID" \
+            --details \
+            --region $AWS_REGION
