@@ -69,51 +69,35 @@ const WORLD_OUTLINES = (() => {
     [[30,42],[32,42],[34,42],[36,42],[38,44],[40,44],[42,44],[44,44],[46,44],[48,44],[50,46],[52,46],[54,45],[56,44],[58,44],[60,44],[62,44],[64,44],[66,44],[68,44],[70,44],[72,44],[74,44],[76,44],[78,42],[80,44],[82,46],[84,48],[86,50],[88,52],[90,52],[92,52],[94,52],[96,52],[98,52],[100,52],[102,52],[104,52],[106,52],[108,52],[110,52],[112,52],[114,52],[116,52],[118,52],[120,52],[122,52],[124,52],[126,52],[128,52],[130,52],[132,52],[134,52],[136,52],[138,52],[140,52],[142,52],[144,52],[146,52],[148,52],[150,52],[152,52],[154,52],[156,52],[158,52],[160,54],[162,56],[164,58],[166,60],[168,60],[170,60],[170,62],[168,64],[166,64],[164,66],[162,66],[160,68],[158,70],[155,70],[150,70],[145,70],[140,70],[135,68],[130,64],[125,62],[120,60],[115,60],[110,60],[105,60],[100,60],[95,60],[90,60],[85,60],[80,60],[75,60],[70,60],[65,61],[60,62],[55,64],[50,65],[45,66],[40,68],[36,70],[30,70]],
 
     // Middle East
-    [[30,42],[30,38],[32,36],[34,34],[36,32],[36,30],[38,28],[40,26],[42,22],[44,22],[46,22],[48,22],[50,24],[52,24],[54,24],[56,24],[58,22],[60,22],[60,24],[62,26],[64,26],[66,28],[68,28],[70,28],[72,28],[74,28],[76,28],[78,28],[80,28],[82,28],[84,28],[86,28],[88,26],[90,26],[92,26],[94,26],[96,26],[98,28],[100,28],[102,28],[104,28],[106,28],[108,28],[110,28]],
+    [[30,42],[30,38],[32,36],[34,34],[36,32],[36,30],[38,28],[40,26],[42,22],[44,22],[46,22],[48,22],[50,24],[52,24],[54,24],[56,24],[58,22],[60,22],[60,24],[62,26],[58,32],[52,36],[46,38],[40,40],[34,42],[30,42]],
 
-    // ── INDIA (official boundary per India's claim, includes J&K and Ladakh) ──
-    // Clockwise: W coast (Gujarat → Kanyakumari tip) → E coast (up to Bengal)
-    // → NE states (Myanmar border) → Arunachal LAC → Nepal border
-    // → Uttarakhand/Himachal → J&K (Kashmir Valley at ~36°N) → Ladakh LAC
-    // → Pakistan/Rajasthan/Gujarat border → back to start
-    [[68.2,23.5],[68.6,22.7],[69.2,22.3],[70.0,21.6],[71.0,21.0],[71.8,20.6],
-     [72.3,20.1],[72.7,20.0],[72.9,18.9],[73.0,18.0],[73.2,17.0],[73.7,16.0],
-     [74.1,15.8],[74.4,15.2],[74.7,14.7],[75.1,13.9],[75.3,13.4],[75.5,13.0],
-     [75.8,12.0],[76.0,11.5],[76.2,11.0],[76.5,10.5],[76.3,10.0],[76.4,9.5],
-     [76.5,9.0],[76.6,8.8],[77.0,8.5],[77.2,8.2],[77.3,8.1],
-     // ─ East coast going north ─
-     [77.6,8.3],[78.2,8.8],[78.8,9.2],[79.4,9.8],[79.8,10.2],[80.0,10.8],
-     [79.8,11.5],[80.0,12.0],[80.2,12.5],[80.3,13.1],[80.3,13.7],[80.2,14.5],
-     [80.3,15.2],[80.7,16.0],[81.5,16.8],[82.2,17.5],[82.6,17.8],[83.3,18.3],
-     [84.0,18.7],[84.8,19.2],[85.1,19.7],[85.5,20.0],[86.0,20.3],[86.5,20.6],
-     [87.0,21.0],[87.3,21.4],[87.5,21.9],[87.9,22.0],[88.2,22.3],[88.3,22.5],
-     [88.5,21.9],[88.8,22.0],
-     // ─ Bangladesh / NE states ─
-     [88.9,22.6],[89.1,23.0],[89.8,23.5],[90.5,23.2],[91.0,23.0],[91.5,23.5],
-     [92.0,23.8],[92.5,24.0],[93.0,24.5],[93.5,25.0],[94.0,25.5],[94.5,26.0],
-     [95.5,26.8],[96.0,27.5],[96.5,28.0],[97.0,28.3],[97.4,28.7],
-     // ─ Northern border NE→NW: Arunachal LAC with China ─
-     [96.5,29.5],[95.0,29.0],[93.5,29.2],[92.5,28.5],[91.8,28.0],[91.2,27.8],
-     [90.5,27.5],[89.5,27.4],[89.0,27.3],
-     // ─ Sikkim / Nepal border ─
-     [88.8,27.8],[88.5,28.2],[88.2,28.5],[87.8,28.3],[87.0,28.1],[86.3,28.0],
-     [85.8,28.2],[85.0,28.4],[84.2,28.5],[83.5,28.7],[83.0,29.0],[82.3,29.2],
-     [81.5,29.2],[81.0,29.5],[80.5,29.7],[80.0,30.0],
-     // ─ Uttarakhand / Himachal (India-Tibet LAC) ─
-     [79.5,31.0],[79.0,31.5],[78.5,32.3],[78.0,32.7],[77.5,33.5],[76.8,34.0],
-     // ─ J&K — go NORTH to include full Kashmir Valley ─
-     [76.2,34.2],[75.8,34.5],[75.5,34.7],[74.8,35.0],[74.5,35.3],
-     [74.8,35.8],[75.5,36.0],[76.2,36.2],[76.8,36.3],
-     // ─ Ladakh: LAC with China going east then SE ─
-     [77.5,36.0],[78.2,35.8],[78.8,35.5],[79.5,35.0],[80.0,34.8],
-     [80.5,34.5],[81.0,34.2],[81.5,33.8],
-     // ─ South through Ladakh back west, then J&K-Pakistan LoC south ─
-     [80.5,33.0],[79.5,32.5],[79.0,32.0],[78.5,32.0],
-     [76.3,34.0],[75.4,33.5],[74.9,32.8],[74.3,32.0],[74.0,31.3],
-     [73.9,30.5],[74.0,29.8],[73.7,29.0],
-     // ─ Rajasthan-Pakistan border south to Gujarat ─
-     [71.9,28.0],[71.0,27.5],[70.5,26.5],[70.3,25.5],[70.1,24.5],
-     [69.5,24.0],[68.8,23.7],[68.2,23.5]],
+    // ── INDIA (Official Boundary: Kathiawar peninsula, J&K / Ladakh crown, NE states) ──
+    [[68.1,23.7],[68.8,24.2],[69.8,24.5],[71.0,24.6],[71.8,24.2],
+     [70.5,23.0],[69.2,22.5],[68.9,22.3],[69.6,21.6],[70.3,20.9],[71.0,20.7],[71.8,21.0],
+     [72.2,21.7],[72.6,22.2],[72.9,21.7],[72.8,20.5],
+     [72.8,19.0],[73.2,17.0],[73.8,15.5],[74.5,14.0],[74.8,12.8],
+     [75.6,11.2],[76.2,9.9],[76.9,8.8],[77.5,8.1],
+     [78.1,8.8],[79.3,9.3],[79.8,10.3],[79.8,11.8],[80.3,13.1],
+     [80.1,14.5],[80.8,15.8],[81.8,16.2],[82.8,17.2],[83.3,17.7],[84.2,18.8],
+     [85.0,19.4],[85.8,19.8],[86.7,20.7],[87.3,21.5],
+     [88.0,21.6],[88.8,21.6],[89.1,22.0],
+     [88.8,22.8],[88.6,24.0],[88.1,24.8],[88.2,26.3],
+     [91.3,24.0],[91.3,23.0],[91.8,22.9],[91.8,24.0],[92.4,23.8],[92.5,22.4],[92.8,21.9],
+     [93.2,23.0],[93.2,24.2],[94.3,24.3],[94.7,25.4],[95.1,26.3],
+     [96.3,27.2],[97.0,27.8],[97.4,28.2],
+     [97.0,28.6],[96.0,28.7],[95.0,29.0],[93.8,28.8],[92.5,27.8],
+     [92.1,26.8],[91.5,26.8],[89.8,26.8],
+     [88.9,27.1],[88.8,28.1],[88.6,28.0],[88.1,27.2],
+     [88.1,26.5],[86.5,26.5],[85.0,26.8],[83.5,27.4],[81.0,28.6],[80.2,28.8],
+     [80.3,29.8],[81.1,30.3],[80.2,31.3],[78.8,31.4],[77.7,30.4],
+     [77.6,31.4],[78.8,32.3],[76.8,32.8],
+     [75.8,32.4],[74.5,32.8],[74.0,33.8],[73.5,34.5],
+     [73.2,35.2],[74.0,36.2],[74.5,37.0],[75.5,37.1],
+     [77.0,36.5],[78.0,35.8],[79.0,35.5],[79.8,34.5],
+     [79.2,33.2],[78.5,32.6],
+     [75.0,32.5],[74.6,31.6],[74.4,30.5],
+     [73.8,29.8],[72.0,28.4],[70.5,27.2],[70.0,26.5],[70.2,25.0],
+     [69.5,24.5],[68.8,24.0],[68.1,23.7]],
     // Sri Lanka
     [[80.0,9.8],[80.8,9.0],[81.5,8.3],[81.8,7.5],[81.4,6.9],[80.8,6.5],
      [80.0,6.8],[79.7,7.6],[79.8,8.5],[80.0,9.8]],
@@ -121,7 +105,7 @@ const WORLD_OUTLINES = (() => {
     [[92.5,13.2],[92.7,12.5],[93.0,11.8],[93.0,13.2],[92.5,13.2]],
 
     // Southeast Asia mainland
-    [[98,18],[100,18],[102,18],[104,18],[106,18],[108,18],[110,18],[110,16],[108,14],[106,12],[104,10],[102,8],[100,6],[100,4],[102,2],[104,2],[104,4],[106,4],[108,6],[110,8],[112,10],[114,12],[116,14],[118,16],[120,18],[122,18],[124,16],[126,14],[128,12],[130,10],[130,8],[128,6],[126,4],[124,2],[122,0],[120,-2],[118,-4],[116,-4],[114,-4],[112,-4],[110,-4],[108,-6],[106,-6],[104,-6],[102,-4],[100,-2],[98,0],[96,2],[94,4],[92,6],[90,8],[88,10],[86,12],[84,14],[82,16],[80,18],[78,20],[76,22],[74,24],[72,22],[70,20],[68,18],[66,18],[66,20],[68,22],[70,22],[72,24],[74,22],[76,20],[78,18],[80,16],[82,14],[84,12],[86,10],[88,10],[90,12],[92,14],[94,16],[96,18],[98,18]],
+    [[98,18],[100,18],[102,18],[104,18],[106,18],[108,18],[110,18],[110,16],[108,14],[106,12],[104,10],[102,8],[100,6],[100,4],[102,2],[104,2],[104,4],[106,4],[108,6],[110,8],[112,10],[114,12],[116,14],[118,16],[120,18],[122,18],[124,16],[126,14],[128,12],[130,10],[130,8],[128,6],[126,4],[124,2],[122,0],[120,-2],[118,-4],[116,-4],[114,-4],[112,-4],[110,-4],[108,-6],[106,-6],[104,-6],[102,-4],[100,-2],[98,0],[96,2],[94,4],[92,6],[98,18]],
 
     // Japan
     [[130,32],[132,34],[134,35],[136,36],[138,36],[140,38],[142,38],[142,40],[140,42],[138,42],[136,42],[134,40],[132,38],[130,36],[130,34],[130,32]],
@@ -142,7 +126,7 @@ const WORLD_OUTLINES = (() => {
   ];
 
   // Return densified versions
-  return raw.map(poly => densify(poly, 1.5));
+  return raw.map(poly => densify(poly, 0.3));
 })();
 
 export default function StageCanvas({ stageRef }) {
@@ -216,7 +200,7 @@ export default function StageCanvas({ stageRef }) {
 
     // Wire lat/lon
     const wireGeom = new THREE.SphereGeometry(2.003, 40, 28);
-    const wireMat = new THREE.MeshBasicMaterial({ color: curColors.wire, wireframe: true, transparent: true, opacity: isLight ? 0.04 : 0.10, depthWrite: false });
+    const wireMat = new THREE.MeshBasicMaterial({ color: curColors.wire, wireframe: true, transparent: true, opacity: isLight ? 0.06 : 0.22, depthWrite: false });
     const wire = new THREE.Mesh(wireGeom, wireMat);
     wire.renderOrder = 1;
     globeGroup.add(wire);
@@ -243,10 +227,9 @@ export default function StageCanvas({ stageRef }) {
       const theta = phi * i;
       const x = Math.cos(theta) * r;
       const z = Math.sin(theta) * r;
-      const lat = Math.asin(y);
-      const lon = Math.atan2(z, x);
-      const mask = Math.sin(lat * 3.2) + Math.cos(lon * 2.1 + lat * 1.4) + Math.sin(lon * 4.0) * 0.6;
-      const include = mask > 0.18 || Math.random() < 0.22;
+      
+      // Completely uniform Fibonacci distribution
+      const include = true;
       
       if (!include) continue;
       
@@ -289,7 +272,7 @@ export default function StageCanvas({ stageRef }) {
       fieldPos[k * 3 + 1] = (Math.random() - 0.5) * 5;
       fieldPos[k * 3 + 2] = (Math.random() - 0.5) * 3 - 1;
 
-      const bright = 0.6 + Math.random() * 0.4;
+      const bright = 0.35 + Math.random() * 0.35;
       brights[count] = bright;
       colors[k * 3] = curColors.dotR * bright;
       colors[k * 3 + 1] = curColors.dotG * bright;
@@ -393,7 +376,7 @@ export default function StageCanvas({ stageRef }) {
       const strand = i % 2;
       const pct = i / count;
       const ht = pct * Math.PI * 12;
-      const hr = 1.25;
+      const hr = 1.0;
       const hx = Math.cos(ht + strand * Math.PI) * hr;
       const hz = Math.sin(ht + strand * Math.PI) * hr;
       const hy = (pct - 0.5) * 5.0;
@@ -410,10 +393,10 @@ export default function StageCanvas({ stageRef }) {
     dotsGeom.setAttribute('position', new THREE.BufferAttribute(livePos, 3));
     dotsGeom.setAttribute('color', new THREE.BufferAttribute(colors.subarray(0, count * 3), 3));
     const dotsMat = new THREE.PointsMaterial({
-      size: 0.028,
+      size: 0.018,
       vertexColors: true,
       transparent: true,
-      opacity: 0.95,
+      opacity: 0.52,
       sizeAttenuation: true,
       depthWrite: false
     });
@@ -443,8 +426,7 @@ export default function StageCanvas({ stageRef }) {
         uniform float uOpacity;
         void main() {
           float rim = pow(1.0 - abs(vN.z), 3.0);
-          // Dark mode: additive glow. Light mode: soft directional shadow.
-          float alpha = mix(rim * 0.55, rim * 0.18, uLightMode);
+          float alpha = mix(rim * 0.12, rim * 0.08, uLightMode);
           gl_FragColor = vec4(c, alpha * uOpacity);
         }
       `,
@@ -481,7 +463,7 @@ export default function StageCanvas({ stageRef }) {
     const outlineMat = new THREE.ShaderMaterial({
       uniforms: {
         uColor:     { value: curColors.outline },
-        uSize:      { value: 8.0 * renderer.getPixelRatio() },
+        uSize:      { value: 3.5 * renderer.getPixelRatio() },
         uLightMode: { value: curColors.lightMode },
         uOpacity:   { value: 1.0 }
       },
@@ -509,12 +491,11 @@ export default function StageCanvas({ stageRef }) {
           float d = length(uv);
           if (d > 0.5) discard;
           float glow = pow(smoothstep(0.5, 0.0, d), 1.6);
-          // Dark: front 95%, back 12%; Light: front 90%, back 8% — no additive wash
-          float frontAlpha = mix(0.88, 0.90, uLightMode);
+          // Subtle, non-overpowering opacity
+          float frontAlpha = mix(0.92, 0.90, uLightMode);
           float backAlpha  = mix(0.12, 0.08, uLightMode);
           float fade = backAlpha + frontAlpha * max(0.0, vDepth);
-          // Dark mode: boost colour with glow; Light mode: keep colour flat for crisp look
-          vec3 col = uColor * mix(0.9 + glow * 0.4, 1.0, uLightMode);
+          vec3 col = uColor * mix(0.95 + glow * 0.35, 1.0, uLightMode);
           gl_FragColor = vec4(col, glow * fade * uOpacity);
         }
       `,
@@ -532,7 +513,7 @@ export default function StageCanvas({ stageRef }) {
     const outlineHaloMat = new THREE.ShaderMaterial({
       uniforms: {
         uColor:     { value: curColors.outlineHalo },
-        uSize:      { value: 20.0 * renderer.getPixelRatio() },
+        uSize:      { value: 9.0 * renderer.getPixelRatio() },
         uLightMode: { value: curColors.lightMode },
         uOpacity:   { value: 1.0 }
       },
@@ -558,8 +539,8 @@ export default function StageCanvas({ stageRef }) {
           float d = length(uv);
           if (d > 0.5) discard;
           float glow = pow(max(0.0, 1.0 - d * 2.0), 2.2);
-          // Dark: 42% bloom; Light: 15% soft glow
-          float bloomStr = mix(0.42, 0.15, uLightMode);
+          // Dark: 18% bloom; Light: 10% soft glow (reduced from 42%)
+          float bloomStr = mix(0.18, 0.10, uLightMode);
           float fade = 0.05 + 0.95 * max(0.0, vDepth);
           gl_FragColor = vec4(uColor, glow * bloomStr * fade * uOpacity);
         }
@@ -597,7 +578,8 @@ export default function StageCanvas({ stageRef }) {
 
     const cityRings = [];
     const ringGeom = new THREE.RingGeometry(0.03, 0.05, 24);
-    const sphereMiniGeom = new THREE.SphereGeometry(0.024, 12, 12);
+    const sphereMiniGeom = new THREE.SphereGeometry(0.036, 16, 16);
+    const pulseGeom = new THREE.SphereGeometry(0.028, 12, 12);
     const cityMiniMat = new THREE.MeshBasicMaterial({
       color: curColors.city,
       transparent: true,
@@ -613,7 +595,7 @@ export default function StageCanvas({ stageRef }) {
       const ringMat = new THREE.MeshBasicMaterial({
         color: curColors.city,
         transparent: true,
-        opacity: 0.7,
+        opacity: 0.85,
         side: THREE.DoubleSide
       });
       const ring = new THREE.Mesh(ringGeom, ringMat);
@@ -631,21 +613,27 @@ export default function StageCanvas({ stageRef }) {
       const s = llToVec(a.lat, a.lon, 2.02), e = llToVec(b.lat, b.lon, 2.02);
       const m = s.clone().add(e).multiplyScalar(0.5);
       const d = s.distanceTo(e);
-      m.normalize().multiplyScalar(2.02 + d * 0.35);
+      m.normalize().multiplyScalar(2.02 + d * 0.38);
       const curve = new THREE.QuadraticBezierCurve3(s, m, e);
       const pts = curve.getPoints(60);
       const g = new THREE.BufferGeometry().setFromPoints(pts);
-      const mat = new THREE.LineBasicMaterial({ color: curColors.arc, transparent: true, opacity: 0 });
+      const mat = new THREE.LineBasicMaterial({ color: curColors.arc, transparent: true, opacity: 0.85 });
       const line = new THREE.Line(g, mat);
       arcsGroup.add(line);
-      return line;
+
+      const pulseMat = new THREE.MeshBasicMaterial({ color: curColors.city, transparent: true, opacity: 0.95 });
+      const pulse = new THREE.Mesh(pulseGeom, pulseMat);
+      arcsGroup.add(pulse);
+
+      return { line, curve, pulse };
     }
 
     const arcs = [];
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < 18; i++) {
       const a = cities[i % cities.length], b = cities[(i * 5 + 3) % cities.length];
       if (a === b) continue;
-      arcs.push({ line: makeArc(a, b), t: Math.random(), speed: 0.0035 + Math.random() * 0.003 });
+      const arcObj = makeArc(a, b);
+      arcs.push({ ...arcObj, t: Math.random(), speed: 0.004 + Math.random() * 0.004 });
     }
 
     // --- Morph Geometry (Process Section) ---
@@ -1025,8 +1013,8 @@ export default function StageCanvas({ stageRef }) {
       dotsMat.opacity = Math.min(1.0, Math.max(dotOpacity, curColors.lightMode) + textBoost);
       earth.material.opacity = op; // full opacity sphere — color handles the look
       earth.visible = op > 0.01;
-      // On light bg: very faint wireframe; on dark bg: 10%
-      wire.material.opacity = op * (0.10 - curColors.lightMode * 0.06);
+      // On light bg: faint wireframe; on dark bg: 24% gold grid glow
+      wire.material.opacity = op * (0.24 - curColors.lightMode * 0.12);
       wire.visible = op > 0.01;
       halo.visible = op > 0.2;
 
@@ -1041,21 +1029,29 @@ export default function StageCanvas({ stageRef }) {
 
       // Pulse city rings
       cityRings.forEach(r => {
-        const s = 1 + (Math.sin(t * 2 + r.userData.phase) + 1) * 0.6;
+        const s = 1 + (Math.sin(t * 2.5 + r.userData.phase) + 1) * 0.7;
         r.scale.setScalar(s);
-        r.material.opacity = Math.max(0, (0.7 - (s - 1) * 0.55) * currentCitiesOpacity);
+        r.material.opacity = Math.max(0, (0.85 - (s - 1) * 0.5) * currentCitiesOpacity);
         r.visible = currentCitiesOpacity > 0.01;
       });
 
-      // Arc trails
-      arcsGroup.children.forEach((line, i) => {
-        const a = arcs[i];
-        if (!a) return;
+      // Animated Arcs and traveling light pulses
+      arcs.forEach(a => {
         a.t += a.speed;
-        if (a.t > 1.3) a.t = -0.1;
-        const lineOp = Math.sin(Math.min(1, Math.max(0, a.t)) * Math.PI);
-        line.material.opacity = lineOp * 0.9 * currentArcsOpacity;
-        line.visible = currentArcsOpacity > 0.01;
+        if (a.t > 1.2) a.t = -0.1;
+        const lineOp = Math.sin(Math.min(1, Math.max(0, a.t)) * Math.PI) * currentArcsOpacity;
+        
+        a.line.material.color.copy(curColors.arc);
+        a.line.material.opacity = lineOp * 0.85;
+        a.line.visible = lineOp > 0.01;
+
+        if (a.pulse) {
+          const pt = a.curve.getPoint(Math.max(0, Math.min(1, a.t)));
+          a.pulse.position.copy(pt);
+          a.pulse.material.color.copy(curColors.city);
+          a.pulse.material.opacity = lineOp * 0.95;
+          a.pulse.visible = lineOp > 0.01;
+        }
       });
 
       if (dotsNeedUpdate) {

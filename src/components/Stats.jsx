@@ -18,7 +18,7 @@ export default function Stats() {
         <div className="mb-12 max-w-3xl drift-up card p-6 md:p-8 rounded-2xl" data-anim="fade-up">
           <div className="eyebrow mb-3">The signal, by the numbers</div>
           <h2 className="font-display text-4xl lg:text-6xl leading-[0.95] tracking-tight" data-split="">
-            The globe doesn't <span className="italic gold-grad">just spin</span>.<br />
+            The globe doesn't <span className="italic gold-grad">just spin</span>. <br className="hidden sm:inline" />
             It compounds.
           </h2>
         </div>

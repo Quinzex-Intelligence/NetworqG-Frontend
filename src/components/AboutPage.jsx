@@ -56,7 +56,7 @@ export default function AboutPage({ onBackClick, onContactClick }) {
           <div className="max-w-5xl relative z-10">
             <div className="eyebrow mb-4">Who We Are</div>
             <h1 className="font-display text-4xl sm:text-6xl lg:text-8xl leading-[0.9] tracking-tight mb-8">
-              We help brands <br />
+              We help brands <br className="hidden sm:inline" />
               <span className="italic gold-grad">grow, lead</span> and <span className="italic gold-grad">matter.</span>
             </h1>
             <p className="text-ink/80 text-lg md:text-2xl leading-relaxed max-w-3xl">

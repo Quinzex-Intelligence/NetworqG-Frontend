@@ -217,14 +217,14 @@ export default function App() {
       } else if (currentPage === 'services') {
         targetStage.bOrbit = 0.7;
       } else if (currentPage === 'login') {
-        targetStage.bVortex = 0.85;
-        targetStage.bHelix = 0.2;
+        targetStage.bVortex = 0;
+        targetStage.bConstellation = 0.3;
         targetStage.globeX = 0;
-        targetStage.globeY = 0;
-        targetStage.globeScale = 0.85;
-        targetStage.globeOpacity = 0.35;
-        targetStage.arcsOpacity = 0.15;
-        targetStage.citiesOpacity = 0.15;
+        targetStage.globeY = -0.2;
+        targetStage.globeScale = 0.7;
+        targetStage.globeOpacity = 0.15;
+        targetStage.arcsOpacity = 0.1;
+        targetStage.citiesOpacity = 0.1;
       } else if (currentPage === 'admin') {
         targetStage.bConstellation = 0.8;
         targetStage.globeX = 0;
@@ -509,9 +509,9 @@ export default function App() {
     // ─── Responsive anchor helpers ───────────────────────────────────────────
     const getHeroAnchor = () => {
       const w = window.innerWidth;
-      if (w < 640)  return { x: 0.0, y: -0.6, s: 0.62 };
-      if (w < 1024) return { x: 0.8, y:  0.0, s: 0.70 };
-      return              { x: 1.7, y:  0.0, s: 0.82 };
+      if (w < 640)  return { x: 0.85, y: 0.95, s: 0.82 };
+      if (w < 1024) return { x: 1.25, y: -0.20, s: 0.88 };
+      return              { x: 1.80, y: -0.20, s: 0.95 };
     };
     const getCornerAnchor = () => {
       const w = window.innerWidth;
@@ -560,6 +560,11 @@ export default function App() {
       CORNER = getCornerAnchor();
       applyParallax();
       ScrollTrigger.refresh();
+      set({
+        globeX: HERO.x,
+        globeY: HERO.y,
+        globeScale: HERO.s
+      });
     };
     window.addEventListener('resize', onResize);
 
@@ -785,7 +790,7 @@ export default function App() {
       {!preloaderDone && <Preloader onComplete={handlePreloaderComplete} />}
       <div className={`site-reveal${preloaderDone ? ' site-reveal--in' : ''}`}>
         <Cursor />
-        <div id="edge-chip" className={`edge-chip${currentPage !== 'home' ? ' show' : ''}`}>
+        <div id="edge-chip" className={`edge-chip${currentPage !== 'home' && currentPage !== 'login' ? ' show' : ''}`}>
           {currentPage === 'home'
             ? '00 · INDEX'
             : currentPage === 'careers'
@@ -799,7 +804,7 @@ export default function App() {
             : currentPage === 'services'
             ? 'SERVICES'
             : currentPage === 'login'
-            ? 'SECURITY PORTAL'
+            ? ''
             : currentPage === 'admin'
             ? 'ADMIN DIRECTORY'
             : 'SERVICES'}
