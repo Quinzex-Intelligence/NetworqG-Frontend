@@ -39,7 +39,7 @@ export default function App() {
       const todayDate = new Date().toDateString();
       showedToday = lastShowedDate === todayDate;
     } catch (e) {}
-    return isLoggingIn || savedPage === 'admin' || (savedPage && savedPage !== 'login' && showedToday);
+    return isLoggingIn || savedPage === 'admin' || showedToday;
   });
   const [currentPage, setCurrentPage] = useState(() => {
     const saved = sessionStorage.getItem('current_page');
@@ -130,9 +130,15 @@ export default function App() {
     }
   };
 
-  const navigateToPage = (pageName) => {
-    if (pageName === currentPage || transitionState !== 'idle') return;
+  const navigateToPage = useCallback((pageName, isPopState = false) => {
+    const targetStr = typeof pageName === 'string' ? pageName : (pageName?.type === 'home-scroll' ? 'home' : '');
+    if (!targetStr || targetStr === currentPage || transitionState !== 'idle') return;
     
+    if (!isPopState) {
+      const urlHash = targetStr === 'home' ? window.location.pathname : `#${targetStr}`;
+      window.history.pushState({ page: targetStr }, '', urlHash);
+    }
+
     setTransitionState('fading-out');
     
     // Temporary speed up of WebGL particles (warp effect)
@@ -183,7 +189,22 @@ export default function App() {
       });
 
     }, 250);
-  };
+  }, [currentPage, transitionState]);
+
+  // Sync React page navigation with browser back/forward history buttons
+  useEffect(() => {
+    if (!window.history.state) {
+      window.history.replaceState({ page: 'home' }, '', window.location.pathname);
+    }
+
+    const handlePopState = (e) => {
+      const targetPage = e.state?.page || 'home';
+      navigateToPage(targetPage, true);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [navigateToPage]);
 
   // Called when the preloader animation finishes — safe to start all scroll/GSAP logic
   const handlePreloaderComplete = useCallback(() => {
