@@ -27,6 +27,7 @@ import WorkPage from './components/WorkPage';
 import ServicesPage from './components/ServicesPage';
 import LoginPage from './components/LoginPage';
 import AdminDashboard from './components/AdminDashboard';
+import AccessDeniedPage from './components/AccessDeniedPage';
 
 export default function App() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -42,6 +43,11 @@ export default function App() {
     return isLoggingIn || savedPage === 'admin' || showedToday;
   });
   const [currentPage, setCurrentPage] = useState(() => {
+    const path = window.location.pathname || '';
+    const search = window.location.search || '';
+    if (path.includes('error') || path.includes('403') || search.includes('error') || search.includes('403') || search.includes('forbidden')) {
+      return 'access-denied';
+    }
     const saved = sessionStorage.getItem('current_page');
     if (saved === 'login') {
       sessionStorage.removeItem('current_page');
@@ -72,7 +78,8 @@ export default function App() {
         if (sessionStorage.getItem('logging_in') === 'true') {
           sessionStorage.removeItem('logging_in');
           setPreloaderDone(true);
-          setCurrentPage('login');
+          const isForbidden = res.status === 403 || window.location.search.includes('error') || window.location.pathname.includes('error');
+          setCurrentPage(isForbidden ? 'access-denied' : 'login');
           sessionStorage.removeItem('current_page');
         }
         setUser(null);
@@ -82,7 +89,8 @@ export default function App() {
       if (sessionStorage.getItem('logging_in') === 'true') {
         sessionStorage.removeItem('logging_in');
         setPreloaderDone(true);
-        setCurrentPage('login');
+        const isForbidden = window.location.search.includes('error') || window.location.pathname.includes('error');
+        setCurrentPage(isForbidden ? 'access-denied' : 'login');
         sessionStorage.removeItem('current_page');
       }
       setUser(null);
@@ -820,7 +828,7 @@ export default function App() {
       {!preloaderDone && <Preloader onComplete={handlePreloaderComplete} />}
       <div className={`site-reveal${preloaderDone ? ' site-reveal--in' : ''}`}>
         <Cursor />
-        <div id="edge-chip" className={`edge-chip${currentPage !== 'home' && currentPage !== 'login' ? ' show' : ''}`}>
+        <div id="edge-chip" className={`edge-chip${currentPage !== 'home' && currentPage !== 'login' && currentPage !== 'access-denied' ? ' show' : ''}`}>
           {currentPage === 'home'
             ? '00 · INDEX'
             : currentPage === 'careers'
@@ -833,7 +841,7 @@ export default function App() {
             ? 'WORK'
             : currentPage === 'services'
             ? 'SERVICES'
-            : currentPage === 'login'
+            : currentPage === 'login' || currentPage === 'access-denied'
             ? ''
             : currentPage === 'admin'
             ? 'ADMIN DIRECTORY'
@@ -843,7 +851,7 @@ export default function App() {
         {currentPage === 'home' && (
           <ScrollRail activeIndex={activeIndex} onDotClick={scrollToSection} />
         )}
-        {currentPage !== 'admin' && currentPage !== 'login' && (
+        {currentPage !== 'admin' && currentPage !== 'login' && currentPage !== 'access-denied' && (
           <Header
             onLinkClick={handleNavScroll}
             onPageChange={navigateToPage}
@@ -884,6 +892,11 @@ export default function App() {
               <ServicesPage onBackClick={() => navigateToPage('home')} onServiceClick={(serviceId) => navigateToPage(`service-${serviceId}`)} onContactClick={navigateToPage} />
             ) : currentPage === 'login' ? (
               <LoginPage onBackClick={() => navigateToPage('home')} />
+            ) : currentPage === 'access-denied' ? (
+              <AccessDeniedPage
+                onBackToHome={() => navigateToPage('home')}
+                onRetryLogin={() => navigateToPage('login')}
+              />
             ) : currentPage === 'admin' ? (
               <AdminDashboard
                 user={user}
@@ -898,7 +911,7 @@ export default function App() {
                 onServiceClick={(page) => navigateToPage(page)}
               />
             ) : null}
-            {currentPage !== 'login' && currentPage !== 'admin' && (
+            {currentPage !== 'login' && currentPage !== 'admin' && currentPage !== 'access-denied' && (
               <Footer onLinkClick={handleNavScroll} onPageChange={navigateToPage} isSubpage={currentPage !== 'home'} isAuthenticated={isAuthenticated} />
             )}
           </main>
