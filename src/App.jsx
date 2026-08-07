@@ -39,10 +39,15 @@ export default function App() {
       const todayDate = new Date().toDateString();
       showedToday = lastShowedDate === todayDate;
     } catch (e) {}
-    return isLoggingIn || savedPage === 'admin' || savedPage === 'login' || showedToday;
+    return isLoggingIn || savedPage === 'admin' || (savedPage && savedPage !== 'login' && showedToday);
   });
   const [currentPage, setCurrentPage] = useState(() => {
-    return sessionStorage.getItem('current_page') || 'home';
+    const saved = sessionStorage.getItem('current_page');
+    if (saved === 'login') {
+      sessionStorage.removeItem('current_page');
+      return 'home';
+    }
+    return saved || 'home';
   });
   const [transitionState, setTransitionState] = useState('idle'); // idle, fading-out, fading-in
   const [user, setUser] = useState(null);
@@ -68,7 +73,7 @@ export default function App() {
           sessionStorage.removeItem('logging_in');
           setPreloaderDone(true);
           setCurrentPage('login');
-          sessionStorage.setItem('current_page', 'login');
+          sessionStorage.removeItem('current_page');
         }
         setUser(null);
         setIsAuthenticated(false);
@@ -78,7 +83,7 @@ export default function App() {
         sessionStorage.removeItem('logging_in');
         setPreloaderDone(true);
         setCurrentPage('login');
-        sessionStorage.setItem('current_page', 'login');
+        sessionStorage.removeItem('current_page');
       }
       setUser(null);
       setIsAuthenticated(false);
@@ -141,7 +146,11 @@ export default function App() {
     setTimeout(() => {
       if (typeof pageName === 'string') {
         setCurrentPage(pageName);
-        sessionStorage.setItem('current_page', pageName);
+        if (pageName === 'login') {
+          sessionStorage.removeItem('current_page');
+        } else {
+          sessionStorage.setItem('current_page', pageName);
+        }
         window.scrollTo({ top: 0, behavior: 'instant' });
       } else if (pageName && pageName.type === 'home-scroll') {
         setCurrentPage('home');
