@@ -13,10 +13,11 @@ export const services = [
 ];
 
 export const processSteps = [
-  { n: "01", t: "Discover", time: "Weeks 1–2", d: "Stakeholder interviews, market and category audits, competitive teardown, audience research, and a hard look at where the leverage actually sits.", tags: ["Audit", "Interviews", "Category map"] },
-  { n: "02", t: "Strategize", time: "Weeks 3–4", d: "Positioning, narrative architecture, channel mix modeling and a 12-month growth plan with named owners and measurable targets.", tags: ["Positioning", "Channel mix", "Roadmap"] },
-  { n: "03", t: "Activate", time: "Weeks 5+", d: "Creative production, media launches, web and CRM rollouts. One integrated team, weekly shipping cadence, no agency hand-offs.", tags: ["Creative", "Media", "Build"] },
-  { n: "04", t: "Compound", time: "Ongoing", d: "Test-and-learn rhythm, incrementality measurement, quarterly business reviews — and a steady reallocation toward what is actually working.", tags: ["Test", "Measure", "Reallocate"] },
+  { n: "01", t: "Understand", time: "Phase 1", d: "Our first step is to understand what exactly your business requires. Our team will extensively take part in covering all the metrics to list down all the business needs.", tags: ["Metrics", "Needs", "Requirements"] },
+  { n: "02", t: "Research", time: "Phase 2", d: "Once the business requirements are drafted, we begin our research, using advanced technologies and partially paired with existing information and analyse the competition your brand will face in the market.", tags: ["Tech Research", "Competitors", "Market Analysis"] },
+  { n: "03", t: "Ideate", time: "Phase 3", d: "And once the research is thorough, we ensure to build a plan that will cater to all your business needs, our goals and your vision.", tags: ["Action Plan", "Goals", "Vision Alignment"] },
+  { n: "04", t: "Design", time: "Phase 4", d: "Now we get to the main part, we create and design the necessary content, websites and campaign plans, making sure it’s met all the market standards.", tags: ["UI/UX Design", "Content", "Standards"] },
+  { n: "05", t: "Results", time: "Phase 5", d: "We track and optimise your websites, social media, and all the content, and deliver only the best for your businesses.", tags: ["Optimization", "Analytics", "Delivery"] }
 ];
 
 export const work = [

@@ -1,10 +1,25 @@
 import React from 'react';
 import { services } from '../data';
 
-export default function Services({ onEngageClick }) {
+export default function Services({ onEngageClick, onServiceClick }) {
   const handleEngage = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     onEngageClick('contact');
+  };
+
+  const serviceIdMap = {
+    "01": "brand-creative",
+    "02": "social-media",
+    "03": "performance-marketing",
+    "04": "seo-services",
+    "05": "website-services",
+    "06": "content-marketing",
+    "07": "video-multimedia",
+    "08": "email-automation",
+    "09": "business-growth",
+    "10": "local-business",
+    "11": "emerging-services"
   };
 
   return (
@@ -40,23 +55,29 @@ export default function Services({ onEngageClick }) {
             Blending advanced technology and never-ending creativity, we aim to build all things that will make your brand, the talk of the town (or the world!)
           </p>
         </div>
-        <div id="services-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-[var(--line)]" data-stagger="3d">
+        <div id="services-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-t border-l border-line" data-stagger="3d">
           {services.map((s) => (
-            <div key={s.n} className="bg-ink p-6 lg:p-8 svc-tile lift" data-cursor="link">
+            <div
+              key={s.n}
+              className="bg-ink p-6 lg:p-8 svc-tile lift cursor-pointer border-r border-b border-line"
+              data-cursor="link"
+              onClick={() => onServiceClick?.(serviceIdMap[s.n])}
+            >
               <div className="flex items-center justify-between mb-6">
                 <span className="font-mono text-xs text-gold">{s.n}</span>
-                <span className="text-gold svc-arrow">↗</span>
               </div>
               <h3 className="font-display text-xl lg:text-2xl mb-2">{s.t}</h3>
               <p className="text-mute text-xs">{s.d}</p>
               <div className="mt-6 hairline"></div>
-              <a
-                href="#contact"
-                className="inline-flex items-center gap-2 mt-4 text-[10px] text-gold-2 font-mono uppercase tracking-widest hover:text-gold transition-colors duration-300"
-                onClick={handleEngage}
-              >
-                Engage <span aria-hidden="true">→</span>
-              </a>
+              <div className="flex items-center mt-4">
+                <a
+                  href="#contact"
+                  className="inline-flex items-center gap-2 text-[10px] text-gold-2 font-mono uppercase tracking-widest hover:text-gold transition-colors duration-300"
+                  onClick={handleEngage}
+                >
+                  Engage <span aria-hidden="true">→</span>
+                </a>
+              </div>
             </div>
           ))}
         </div>

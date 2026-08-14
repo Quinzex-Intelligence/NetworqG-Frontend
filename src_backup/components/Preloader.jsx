@@ -18,6 +18,7 @@ import gsap from 'gsap';
 export default function Preloader({ onComplete }) {
   const rootRef   = useRef(null);
   const lettersRef = useRef([]);
+  const word2Ref  = useRef(null);
   const barRef    = useRef(null);
   const tagRef    = useRef(null);
   const progressRef = useRef(null);
@@ -30,15 +31,15 @@ export default function Preloader({ onComplete }) {
 
     const root     = rootRef.current;
     const letters  = lettersRef.current.filter(Boolean);
+    const word2    = word2Ref.current;
     const bar      = barRef.current;
     const tag      = tagRef.current;
     const progress = progressRef.current;
     const numEl    = numRef.current;
 
     // ── Synchronously set initial states before first paint tick ────────────
-    // GSAP's fromTo sets the "from" values on its first rAF tick (async).
-    // Using gsap.set() here is synchronous — no flash on first render frame.
     gsap.set(letters, { clipPath: 'inset(0 100% 0 0)', y: 20, opacity: 0 });
+    gsap.set(word2, { opacity: 0, y: 12 });
     gsap.set(bar, { scaleX: 0, transformOrigin: 'left center' });
     gsap.set(tag, { opacity: 0, y: 14 });
     gsap.set(progress, { scaleX: 0, transformOrigin: 'left center' });
@@ -94,6 +95,14 @@ export default function Preloader({ onComplete }) {
       { scaleX: 0 },
       { scaleX: 1, duration: 0.8, ease: 'power3.inOut', transformOrigin: 'left center' },
       0.95
+    );
+
+    // ── GLOBAL subtitle fades up after NETWORQ is done ──────────────────────
+    tl.fromTo(
+      word2,
+      { opacity: 0, y: 12 },
+      { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' },
+      1.1
     );
 
     // ── Tag line ────────────────────────────────────────────────────────────
@@ -162,6 +171,7 @@ export default function Preloader({ onComplete }) {
   // 7 horizontal bands for venetian-blind exit
   const BANDS = Array.from({ length: 7 });
   const WORD  = 'NETWORQ';
+  const WORD2 = 'GLOBAL';
 
   return (
     <div ref={rootRef} className="pl-root" aria-hidden="true">
@@ -195,13 +205,25 @@ export default function Preloader({ onComplete }) {
       <div className="pl-stage">
 
 
-        {/* Brand word */}
-        <div className="pl-word" aria-label="NETWORQ">
+        {/* Brand word — NETWORQ */}
+        <div className="pl-word" aria-label="NETWORQ GLOBAL">
           {WORD.split('').map((char, i) => (
             <span
               key={i}
               ref={el => { lettersRef.current[i] = el; }}
               className="pl-letter"
+              style={{ '--i': i }}
+            >
+              {char}
+            </span>
+          ))}
+        </div>
+        {/* Sub-brand word — GLOBAL */}
+        <div ref={word2Ref} className="pl-word pl-word-sub" aria-hidden="true" style={{ opacity: 0 }}>
+          {WORD2.split('').map((char, i) => (
+            <span
+              key={i}
+              className="pl-letter pl-letter-sub"
               style={{ '--i': i }}
             >
               {char}

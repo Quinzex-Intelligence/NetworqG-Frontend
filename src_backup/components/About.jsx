@@ -19,7 +19,7 @@ export default function About() {
         <div className="grid lg:grid-cols-12 gap-12">
           <div className="lg:col-span-5 drift-up card p-6 md:p-8 rounded-2xl border border-line">
             <div className="eyebrow mb-3" data-anim="fade-up">
-              04 — The Studio
+              03 — The Studio
             </div>
             <h2
               className="font-display text-4xl lg:text-5xl leading-[1] tracking-tight"
@@ -62,9 +62,9 @@ export default function About() {
                         className="aspect-square w-full rounded-lg mb-4 relative overflow-hidden ring-gold"
                         style={{
                           background: `
-                            radial-gradient(circle at 30% 30%, rgba(245,215,122,0.35), transparent 55%),
-                            radial-gradient(circle at 70% 80%, rgba(138,107,31,0.45), transparent 55%),
-                            linear-gradient(135deg,#0b0d13,#181a22)
+                            radial-gradient(circle at 30% 30%, rgba(var(--accent-rgb),0.35), transparent 55%),
+                            radial-gradient(circle at 70% 80%, rgba(var(--accent-rgb),0.45), transparent 55%),
+                            linear-gradient(135deg, var(--bg-2), var(--bg-2))
                           `
                         }}
                       >
