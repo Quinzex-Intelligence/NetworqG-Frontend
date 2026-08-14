@@ -64,10 +64,13 @@ function TiltCard({ children, className = '', style = {}, delay = 0 }) {
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={`relative overflow-hidden transition-all duration-300 ease-out border border-[var(--line)] bg-[var(--bg-2)]/90 backdrop-blur-md rounded-2xl ${className}`}
+      className={`relative overflow-hidden transition-all duration-300 ease-out border border-[var(--line)] bg-[rgba(18,18,18,0.92)] rounded-2xl ${className}`}
       style={{
         transformStyle: 'preserve-3d',
         willChange: 'transform',
+        backdropFilter: 'blur(28px)',
+        WebkitBackdropFilter: 'blur(28px)',
+        boxShadow: '0 16px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)',
         ...style
       }}
     >
@@ -1095,20 +1098,14 @@ export default function ServicePage({ serviceId, onBackClick, onContactClick, on
                 onMouseLeave={() => setHoveredOffer(null)}
                 data-cursor="link"
               >
-                {/* Index */}
-                <span
-                  className="font-mono text-[10px] uppercase tracking-[0.2em] mb-4 block transition-colors duration-300"
-                  style={{ color: hoveredOffer === idx ? 'var(--gold)' : 'var(--mute)' }}
-                >
-                  {String(idx + 1).padStart(2, '0')} · SERVICE
-                </span>
-
-                {/* Icon glyph */}
-                <div className="text-2xl mb-4 transition-transform duration-300 group-hover:scale-125" style={{ color: 'var(--gold)' }}>
-                  {glyph}
+                {/* Icon glyph + Title side by side */}
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="text-2xl shrink-0 transition-transform duration-300 group-hover:scale-125" style={{ color: 'var(--gold)' }}>
+                    {glyph}
+                  </span>
+                  <h3 className="font-display text-xl text-[var(--ink)] leading-tight">{offer.t}</h3>
                 </div>
 
-                <h3 className="font-display text-xl mb-3 text-[var(--ink)] leading-tight">{offer.t}</h3>
                 <p className="text-[var(--mute)] text-sm leading-relaxed">{offer.d}</p>
 
                 {/* Bottom accent */}
@@ -1134,15 +1131,17 @@ export default function ServicePage({ serviceId, onBackClick, onContactClick, on
               {data.plans.map((plan, idx) => (
                 <div
                   key={idx}
-                  className={`rounded-3xl border p-8 relative transition-all duration-300 hover:-translate-y-2 ${
+                  className={`rounded-3xl p-8 relative transition-all duration-300 hover:-translate-y-2 ${
                     idx === 1 ? 'scale-[1.03]' : ''
                   }`}
                   style={{
-                    borderColor: idx === 1 ? 'var(--gold)' : 'rgba(var(--accent-rgb), 0.16)',
+                    border: idx === 1 ? '1px solid var(--gold)' : '1px solid rgba(var(--accent-rgb), 0.22)',
                     background: idx === 1
-                      ? 'linear-gradient(135deg, rgba(var(--accent-rgb), 0.07) 0%, var(--bg-2) 100%)'
-                      : 'var(--bg-2)',
-                    boxShadow: idx === 1 ? '0 0 40px rgba(var(--accent-rgb), 0.1)' : 'none',
+                      ? 'linear-gradient(135deg, rgba(28, 28, 28, 0.94) 0%, rgba(18, 18, 18, 0.96) 100%)'
+                      : 'rgba(18, 18, 18, 0.92)',
+                    backdropFilter: 'blur(28px)',
+                    WebkitBackdropFilter: 'blur(28px)',
+                    boxShadow: idx === 1 ? '0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(var(--accent-rgb), 0.15)' : '0 16px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)',
                   }}
                 >
                   {idx === 1 && (
@@ -1188,10 +1187,13 @@ export default function ServicePage({ serviceId, onBackClick, onContactClick, on
         {(data.whyChoose || data.whyChoosePoints) && (
           <section className="mb-24 gsap-fade-up">
             <div
-              className="relative overflow-hidden rounded-3xl border p-10 md:p-14"
+              className="relative overflow-hidden rounded-3xl p-10 md:p-14"
               style={{
-                borderColor: 'rgba(var(--accent-rgb), 0.16)',
-                background: 'linear-gradient(135deg, rgba(var(--accent-rgb), 0.04) 0%, var(--bg-2) 60%, rgba(var(--accent-rgb), 0.02) 100%)',
+                border: '1px solid rgba(var(--accent-rgb), 0.28)',
+                background: 'linear-gradient(135deg, rgba(22, 22, 22, 0.88) 0%, rgba(16, 16, 16, 0.94) 50%, rgba(10, 10, 10, 0.96) 100%)',
+                backdropFilter: 'blur(36px)',
+                WebkitBackdropFilter: 'blur(36px)',
+                boxShadow: '0 30px 80px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 50px rgba(var(--accent-rgb), 0.08)',
               }}
             >
               {/* Decorative large glyph */}
@@ -1248,14 +1250,15 @@ export default function ServicePage({ serviceId, onBackClick, onContactClick, on
 
         {/* ─── FAQ ───────────────────────────────────────────────────── */}
         <section className="mb-24 gsap-fade-up">
-          <div className="flex items-center gap-4 mb-10">
-            <span className="w-8 h-px" style={{ background: 'var(--gold)' }} />
-            <h2 className="font-display text-2xl md:text-4xl text-[var(--gold)]">
+          <div className="flex items-center justify-center gap-4 mb-10 text-center">
+            <span className="w-8 h-px hidden sm:inline-block" style={{ background: 'var(--gold)' }} />
+            <h2 className="font-display text-2xl md:text-4xl text-[var(--gold)] text-center">
               Frequently Asked Questions
             </h2>
+            <span className="w-8 h-px hidden sm:inline-block" style={{ background: 'var(--gold)' }} />
           </div>
 
-          <div className="space-y-3 max-w-4xl">
+          <div className="space-y-3 max-w-4xl mx-auto">
             {data.faqs.map((faq, idx) => {
               const isOpen = openFaqIdx === idx;
               return (
@@ -1304,8 +1307,11 @@ export default function ServicePage({ serviceId, onBackClick, onContactClick, on
           <div
             className="relative overflow-hidden rounded-3xl p-12 md:p-16 text-center"
             style={{
-              background: 'linear-gradient(135deg, rgba(var(--accent-rgb), 0.1) 0%, rgba(var(--accent-rgb), 0.05) 50%, var(--bg-2) 100%)',
-              border: '1px solid rgba(var(--accent-rgb), 0.12)',
+              background: 'linear-gradient(135deg, rgba(22, 22, 22, 0.88) 0%, rgba(16, 16, 16, 0.94) 50%, rgba(10, 10, 10, 0.96) 100%)',
+              border: '1px solid rgba(var(--accent-rgb), 0.28)',
+              boxShadow: '0 30px 80px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 50px rgba(var(--accent-rgb), 0.08)',
+              backdropFilter: 'blur(36px)',
+              WebkitBackdropFilter: 'blur(36px)',
             }}
           >
             {/* Background glyph */}

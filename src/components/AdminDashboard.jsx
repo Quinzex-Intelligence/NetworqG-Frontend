@@ -7,9 +7,10 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
   const { active } = useTheme();
   const logoSrc = active.id === 'reversed-ocean-blue' ? '/logo-full.svg' : '/logo-full-inverted.svg';
 
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview', 'jobs', 'services'
+  const [activeTab, setActiveTab] = useState('overview'); // 'overview', 'jobs', 'services', 'blogs'
   const [jobs, setJobs] = useState([]);
   const [services, setServices] = useState([]);
+  const [blogs, setBlogs] = useState([]);
   
   // Job states
   const [jobPage, setJobPage] = useState(0);
@@ -39,6 +40,24 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
   });
   const [serviceImages, setServiceImages] = useState([]);
 
+  // Blog / Field Notes states
+  const [blogPage, setBlogPage] = useState(0);
+  const [blogTotalPages, setBlogTotalPages] = useState(0);
+  const [blogSearch, setBlogSearch] = useState('');
+  const [showBlogForm, setShowBlogForm] = useState(false);
+  const [editingBlog, setEditingBlog] = useState(null);
+  const [blogFormData, setBlogFormData] = useState({
+    title: '',
+    author: '',
+    tag: 'Playbook',
+    readTime: '5 min read',
+    shortDescription: '',
+    content: '',
+    active: true,
+    displayOrder: 0
+  });
+  const [blogCoverImage, setBlogCoverImage] = useState(null);
+
   // Toast notifications
   const [toast, setToast] = useState(null);
 
@@ -50,7 +69,8 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
   useEffect(() => {
     fetchJobs();
     fetchServices();
-  }, [jobPage, servicePage]);
+    fetchBlogs();
+  }, [jobPage, servicePage, blogPage]);
 
   // --- API CALLS FOR JOBS ---
   const fetchJobs = async () => {
@@ -247,6 +267,115 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
     setShowServiceForm(true);
   };
 
+  // --- API CALLS FOR BLOGS / FIELD NOTES ---
+  const [blogNextCursor, setBlogNextCursor] = useState(null);
+  const [blogHasMore, setBlogHasMore] = useState(false);
+
+  const fetchBlogs = async (cursorCreatedAt = null, cursorId = null) => {
+    try {
+      let url = `${API_BASE_URL}/api/blogs/active?limit=10`;
+      if (cursorCreatedAt && cursorId) {
+        url += `&cursorCreatedAt=${encodeURIComponent(cursorCreatedAt)}&cursorId=${encodeURIComponent(cursorId)}`;
+      }
+      let res = await fetch(url, { credentials: 'include' });
+      if (!res.ok) {
+        res = await fetch(`${API_BASE_URL}/api/blogs`, { credentials: 'include' });
+      }
+      if (res.ok) {
+        const data = await res.json();
+        const items = data.blogs || data.content || (Array.isArray(data) ? data : []);
+        setBlogs(items);
+        setBlogHasMore(!!data.hasMore);
+        setBlogNextCursor(data.nextCursor || null);
+        setBlogTotalPages(1);
+      }
+    } catch (err) {
+      showToast('Error connecting to blogs API', 'error');
+    }
+  };
+
+  const handleBlogSearchSubmit = (e) => {
+    e.preventDefault();
+    fetchBlogs();
+  };
+
+  const handleCreateOrUpdateBlog = async (e) => {
+    e.preventDefault();
+    try {
+      const isEdit = !!editingBlog;
+      const url = isEdit
+        ? `${API_BASE_URL}/api/blogs/${editingBlog.id}`
+        : `${API_BASE_URL}/api/blogs`;
+
+      if (!isEdit && !blogCoverImage) {
+        showToast('Blog image is required for new articles', 'error');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('title', blogFormData.title);
+      formData.append('description', blogFormData.description);
+      formData.append('active', blogFormData.active);
+
+      if (blogCoverImage) {
+        formData.append('image', blogCoverImage);
+      }
+
+      const res = await fetch(url, {
+        method: isEdit ? 'PUT' : 'POST',
+        body: formData,
+        credentials: 'include'
+      });
+
+      if (res.ok) {
+        showToast(isEdit ? 'Blog updated successfully!' : 'Blog created successfully!');
+        setShowBlogForm(false);
+        setEditingBlog(null);
+        setBlogFormData({
+          title: '',
+          description: '',
+          active: true
+        });
+        setBlogCoverImage(null);
+        fetchBlogs();
+      } else {
+        const errText = await res.text();
+        showToast(`Failed: ${errText}`, 'error');
+      }
+    } catch (err) {
+      showToast('Error saving article', 'error');
+    }
+  };
+
+  const handleDeleteBlog = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this article?')) return;
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/blogs/${id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      if (res.ok) {
+        showToast('Article deleted successfully');
+        fetchBlogs();
+      } else {
+        showToast('Failed to delete article', 'error');
+      }
+    } catch (err) {
+      showToast('Error deleting article', 'error');
+    }
+  };
+
+  const startEditBlog = (blog) => {
+    setEditingBlog(blog);
+    setBlogFormData({
+      title: blog.title || '',
+      description: blog.description || '',
+      active: blog.active !== false
+    });
+    setBlogCoverImage(null);
+    setShowBlogForm(true);
+  };
+
   // --- LOGOUT ---
   const handleLogout = async () => {
     try {
@@ -394,6 +523,15 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
             >
               <span>⚙️</span> Capabilities Portfolio
             </button>
+
+            <button
+              onClick={() => setActiveTab('blogs')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-medium uppercase tracking-wider transition-all text-left ${
+                activeTab === 'blogs' ? 'bg-neutral-900 text-gold border-l-2 border-gold' : 'text-neutral-400 hover:bg-neutral-900/50 hover:text-white'
+              }`}
+            >
+              <span>📰</span> Field Notes & Blogs
+            </button>
           </nav>
         </div>
 
@@ -458,6 +596,12 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
               </div>
 
               <div className="p-6 rounded-2xl border border-neutral-900 bg-[#0d0d0d] flex flex-col justify-between">
+                <span className="text-neutral-500 text-[10px] font-bold uppercase tracking-wider">Dispatches & Articles</span>
+                <span className="text-3xl font-light text-gold mt-4">{blogs.length}</span>
+                <span className="text-[10px] text-neutral-400 mt-2">Published field notes</span>
+              </div>
+
+              <div className="p-6 rounded-2xl border border-neutral-900 bg-[#0d0d0d] flex flex-col justify-between">
                 <span className="text-neutral-500 text-[10px] font-bold uppercase tracking-wider">Link Health</span>
                 <div className="flex items-center gap-2 mt-4 text-emerald-400 font-semibold text-sm">
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -466,23 +610,15 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
                 <span className="text-[10px] text-neutral-400 mt-2">Server API connection ok</span>
               </div>
 
-              <div className="p-6 rounded-2xl border border-neutral-900 bg-[#0d0d0d] flex flex-col justify-between">
-                <span className="text-neutral-500 text-[10px] font-bold uppercase tracking-wider">Storage Node</span>
-                <div className="flex items-center gap-2 mt-4 text-neutral-200 text-sm">
-                  AWS S3
-                </div>
-                <span className="text-[10px] text-neutral-400 mt-2">networkq-test-01</span>
-              </div>
-
             </div>
 
             {/* Quick Actions Panel */}
             <div className="p-8 rounded-2xl border border-neutral-900 bg-[#0d0d0d] flex flex-col md:flex-row justify-between items-center gap-6">
               <div>
-                <h3 className="text-base font-semibold text-white">Need to upload new capabilities?</h3>
-                <p className="text-xs text-neutral-400 mt-1">Directly register new active services and upload portfolios.</p>
+                <h3 className="text-base font-semibold text-white">Need to publish new field notes or capabilities?</h3>
+                <p className="text-xs text-neutral-400 mt-1">Directly create insights dispatches, register services, or list careers.</p>
               </div>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-3">
                 <button
                   onClick={() => {
                     setEditingJob(null);
@@ -500,9 +636,29 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
                     setServiceImages([]);
                     setShowServiceForm(true);
                   }}
-                  className="px-5 py-2.5 rounded-full btn-primary-gold text-xs font-semibold uppercase tracking-wider cursor-pointer"
+                  className="px-5 py-2.5 rounded-full border border-neutral-800 text-xs font-semibold uppercase tracking-wider text-neutral-300 hover:text-white hover:border-neutral-700 transition-colors cursor-pointer"
                 >
                   + Add Service
+                </button>
+                <button
+                  onClick={() => {
+                    setEditingBlog(null);
+                    setBlogFormData({
+                      title: '',
+                      author: user?.name || 'Networq Editorial',
+                      tag: 'Playbook',
+                      readTime: '5 min read',
+                      shortDescription: '',
+                      content: '',
+                      active: true,
+                      displayOrder: 0
+                    });
+                    setBlogCoverImage(null);
+                    setShowBlogForm(true);
+                  }}
+                  className="px-5 py-2.5 rounded-full btn-primary-gold text-xs font-semibold uppercase tracking-wider cursor-pointer"
+                >
+                  + Add Article
                 </button>
               </div>
             </div>
@@ -754,6 +910,174 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
           </div>
         )}
 
+        {/* ==================== BLOGS / FIELD NOTES TAB ==================== */}
+        {activeTab === 'blogs' && (
+          <div className="space-y-6">
+            
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div>
+                <h1 className="text-2xl font-semibold text-white tracking-tight">Field Notes & Intelligence</h1>
+                <p className="text-xs text-neutral-400 mt-1">Publish and curate articles, research notes, and market signals.</p>
+              </div>
+
+              <button
+                onClick={() => {
+                  setEditingBlog(null);
+                  setBlogFormData({
+                    title: '',
+                    author: user?.name || 'Networq Editorial',
+                    tag: 'Playbook',
+                    readTime: '5 min read',
+                    shortDescription: '',
+                    content: '',
+                    active: true,
+                    displayOrder: 0
+                  });
+                  setBlogCoverImage(null);
+                  setShowBlogForm(true);
+                }}
+                className="px-6 py-2.5 rounded-full btn-primary-gold text-xs font-semibold uppercase tracking-wider cursor-pointer"
+              >
+                + New Article
+              </button>
+            </div>
+
+            {/* Search and Filters */}
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 p-4 rounded-xl border border-neutral-900 bg-[#0d0d0d]">
+              <form onSubmit={handleBlogSearchSubmit} className="flex gap-2 w-full sm:w-80">
+                <input
+                  type="text"
+                  placeholder="Search articles by title..."
+                  className="w-full bg-neutral-950 border border-neutral-800 px-4 py-2 rounded-lg text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-gold"
+                  value={blogSearch}
+                  onChange={(e) => setBlogSearch(e.target.value)}
+                />
+                <button type="submit" className="px-4 py-2 bg-neutral-900 border border-neutral-800 rounded-lg text-xs font-semibold hover:border-gold transition-colors">
+                  Search
+                </button>
+              </form>
+              <div className="text-[11px] font-mono text-neutral-500">
+                Total Records: <span className="text-gold">{blogs.length}</span>
+              </div>
+            </div>
+
+            {/* Blogs Table / Card Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {blogs.length === 0 ? (
+                <div className="col-span-full p-12 text-center border border-dashed border-neutral-900 rounded-2xl bg-[#0d0d0d]">
+                  <span className="text-2xl block mb-2">📰</span>
+                  <p className="text-xs text-neutral-400">No article dispatches found in the database.</p>
+                  <button
+                    onClick={() => {
+                      setEditingBlog(null);
+                      setBlogFormData({
+                        title: '',
+                        author: user?.name || 'Networq Editorial',
+                        tag: 'Playbook',
+                        readTime: '5 min read',
+                        shortDescription: '',
+                        content: '',
+                        active: true,
+                        displayOrder: 0
+                      });
+                      setBlogCoverImage(null);
+                      setShowBlogForm(true);
+                    }}
+                    className="mt-4 px-5 py-2 rounded-full btn-primary-gold text-xs font-semibold uppercase tracking-wider cursor-pointer"
+                  >
+                    + Publish First Article
+                  </button>
+                </div>
+              ) : (
+                blogs.map((blog) => (
+                  <div key={blog.id} className="p-6 rounded-2xl border border-neutral-900 bg-[#0d0d0d] flex flex-col justify-between hover:border-neutral-800 transition-colors">
+                    <div>
+                      {/* Thumbnail or Badge */}
+                      <div className="aspect-[16/9] w-full rounded-xl overflow-hidden mb-4 bg-neutral-950 border border-neutral-900 relative">
+                        {blog.coverImage || (blog.images && blog.images[0]?.imageUrl) ? (
+                          <img
+                            src={blog.coverImage || blog.images[0].imageUrl}
+                            alt={blog.title}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-neutral-700 text-xs font-mono">
+                            No Cover Image
+                          </div>
+                        )}
+                        <span className="absolute top-2 left-2 px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-black/70 border border-neutral-700 text-gold">
+                          {blog.tag || blog.category || 'Note'}
+                        </span>
+                        <span className={`absolute top-2 right-2 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest ${
+                          blog.active !== false ? 'bg-emerald-950/80 text-emerald-400 border border-emerald-500/30' : 'bg-neutral-900/90 text-neutral-500 border border-neutral-800'
+                        }`}>
+                          {blog.active !== false ? 'Published' : 'Draft'}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2 text-[10px] font-mono text-neutral-500 mb-1">
+                        <span>{blog.author || 'Networq Editorial'}</span>
+                      </div>
+
+                      <h3 className="text-base font-semibold text-white mb-2 leading-snug line-clamp-2">
+                        {blog.title || blog.t}
+                      </h3>
+
+                      <p className="text-xs text-neutral-400 line-clamp-3 mb-4 leading-relaxed">
+                        {blog.shortDescription || blog.description || blog.d || blog.content}
+                      </p>
+                    </div>
+
+                    <div className="pt-4 border-t border-neutral-900 flex items-center justify-between">
+                      <span className="text-[10px] font-mono text-neutral-500">
+                        {blog.createdDate ? new Date(blog.createdDate).toLocaleDateString() : 'Recent'}
+                      </span>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => startEditBlog(blog)}
+                          className="px-3 py-1.5 rounded border border-neutral-800 text-[10px] text-gold hover:border-gold transition-colors cursor-pointer"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteBlog(blog.id)}
+                          className="px-3 py-1.5 rounded border border-red-500/20 text-[10px] text-red-400 hover:border-red-500 transition-colors cursor-pointer"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Pagination Controls */}
+            {blogTotalPages > 1 && (
+              <div className="flex justify-center gap-2 pt-4">
+                <button
+                  disabled={blogPage === 0}
+                  onClick={() => setBlogPage(p => p - 1)}
+                  className="px-4 py-2 border border-neutral-800 rounded-lg text-xs font-mono disabled:opacity-30 cursor-pointer"
+                >
+                  ← Previous
+                </button>
+                <span className="px-4 py-2 text-xs font-mono text-neutral-500">
+                  Page {blogPage + 1} of {blogTotalPages}
+                </span>
+                <button
+                  disabled={blogPage >= blogTotalPages - 1}
+                  onClick={() => setBlogPage(p => p + 1)}
+                  className="px-4 py-2 border border-neutral-800 rounded-lg text-xs font-mono disabled:opacity-30 cursor-pointer"
+                >
+                  Next →
+                </button>
+              </div>
+            )}
+
+          </div>
+        )}
+
       </main>
 
       {/* ==================== FORM OVERLAY MODALS ==================== */}
@@ -933,6 +1257,92 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
                   className="px-6 py-2.5 rounded-full btn-primary-gold text-xs font-semibold uppercase tracking-wider cursor-pointer"
                 >
                   {editingService ? 'Update Service' : 'Create Service'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 3. Blog Creation / Edit Modal */}
+      {showBlogForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4 sm:p-6 admin-modal overflow-y-auto">
+          <div className="w-full max-w-3xl bg-[#0d0d0d] border border-neutral-800 rounded-3xl p-6 sm:p-8 shadow-2xl relative my-auto max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-4 mb-6 border-b border-neutral-900">
+              <h3 className="text-lg font-semibold text-white">
+                {editingBlog ? 'Edit Field Note / Article Dispatch' : 'Publish New Article Dispatch'}
+              </h3>
+              <button
+                onClick={() => { setShowBlogForm(false); setEditingBlog(null); }}
+                className="text-neutral-500 hover:text-white text-sm font-mono cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+            
+            <form onSubmit={handleCreateOrUpdateBlog} className="space-y-6">
+              <label className="block">
+                <span className="text-[10px] uppercase tracking-wider text-neutral-500 font-semibold block mb-2">Blog Title</span>
+                <input
+                  type="text"
+                  className="w-full bg-neutral-950 border border-neutral-800 px-4 py-2.5 rounded-xl text-xs text-white focus:outline-none focus:border-gold"
+                  placeholder="e.g. What survives the AI search shift"
+                  value={blogFormData.title}
+                  onChange={(e) => setBlogFormData({ ...blogFormData, title: e.target.value })}
+                  required
+                />
+              </label>
+
+              <label className="block">
+                <span className="text-[10px] uppercase tracking-wider text-neutral-500 font-semibold block mb-2">Blog Description / Content</span>
+                <textarea
+                  rows="8"
+                  className="w-full bg-neutral-950 border border-neutral-800 p-4 rounded-xl text-xs text-white focus:outline-none focus:border-gold font-sans leading-relaxed"
+                  placeholder="Enter the full blog description or article content..."
+                  value={blogFormData.description}
+                  onChange={(e) => setBlogFormData({ ...blogFormData, description: e.target.value })}
+                  required
+                />
+              </label>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={blogFormData.active}
+                    onChange={(e) => setBlogFormData({ ...blogFormData, active: e.target.checked })}
+                    className="rounded border-neutral-800 bg-neutral-950 text-gold w-4 h-4 focus:ring-0 focus:ring-offset-0"
+                  />
+                  <span className="text-xs text-neutral-300 font-medium">Active (visible on website)</span>
+                </label>
+
+                <label className="block">
+                  <span className="text-[10px] uppercase tracking-wider text-neutral-500 block mb-1">
+                    Blog Image {!editingBlog && <span className="text-red-400">*</span>}
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/jpg"
+                    className="file:mr-4 file:py-1.5 file:px-3.5 file:rounded-full file:border-0 file:text-[10px] file:font-semibold file:bg-gold/15 file:text-gold file:cursor-pointer hover:file:bg-gold/25 text-xs text-neutral-500"
+                    onChange={(e) => setBlogCoverImage(e.target.files[0] || null)}
+                    required={!editingBlog}
+                  />
+                </label>
+              </div>
+
+              <div className="flex gap-3 justify-end pt-4 border-t border-neutral-900">
+                <button
+                  type="button"
+                  onClick={() => { setShowBlogForm(false); setEditingBlog(null); }}
+                  className="px-5 py-2.5 rounded-full border border-neutral-800 text-xs font-semibold uppercase tracking-wider text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 rounded-full btn-primary-gold text-xs font-semibold uppercase tracking-wider cursor-pointer"
+                >
+                  {editingBlog ? 'Update Blog' : 'Create Blog'}
                 </button>
               </div>
             </form>

@@ -39,8 +39,8 @@ export default function FAQ() {
       className="relative py-20 lg:py-24 border-t border-line overflow-hidden"
     >
       <div className="max-w-[1000px] mx-auto px-6 lg:px-10">
-        <div className="card p-6 md:p-8 rounded-2xl mb-12" data-anim="fade-up">
-          <div className="eyebrow mb-3">Questions & Answers</div>
+        <div className="card p-6 md:p-8 rounded-2xl mb-12 text-center flex flex-col items-center justify-center" data-anim="fade-up">
+          {/* <div className="eyebrow mb-3">Questions & Answers</div> */}
           <h2 className="font-display text-4xl lg:text-6xl leading-[0.95] tracking-tight">
             Frequently Asked <span className="italic gold-grad">Questions</span>
           </h2>

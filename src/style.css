@@ -6,6 +6,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Squaresharps';
+  src: url('/fonts/SquarishSansCT.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* These legacy vars now delegate to the active theme palette */
   --color--brand-color: var(--gold, #FEC74E);
@@ -14,6 +22,7 @@
   --color--inner-shadow-color: rgba(var(--bg2-rgb, 5,75,110), 0.18);
   --color--gradient-color-02: rgba(var(--bg2-rgb, 5,75,110), 0);
 
-  --main-font: 'Squarish Sans', sans-serif;
-  --pragraph-font: 'Squarish Sans', sans-serif;
+  --main-font: 'Plus Jakarta Sans', sans-serif;
+  --pragraph-font: 'Plus Jakarta Sans', sans-serif;
+  --display-font: 'Outfit', 'Plus Jakarta Sans', sans-serif;
 }

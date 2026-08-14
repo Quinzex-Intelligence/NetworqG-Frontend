@@ -254,7 +254,7 @@ export default function CareersPage({ onBackClick }) {
                       name="fullName"
                       value={formData.fullName}
                       onChange={handleInputChange}
-                      placeholder="Ada Lovelace"
+                      placeholder="e.g. Alexander Vance"
                       required
                       disabled={formStatus === 'sending'}
                     />
@@ -267,7 +267,7 @@ export default function CareersPage({ onBackClick }) {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      placeholder="you@domain.com"
+                      placeholder="alex@enterprise.com"
                       required
                       disabled={formStatus === 'sending'}
                     />
@@ -280,7 +280,7 @@ export default function CareersPage({ onBackClick }) {
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      placeholder="+1 (555) 012-3456"
+                      placeholder="+1 (555) 019-2834"
                       required
                       disabled={formStatus === 'sending'}
                     />

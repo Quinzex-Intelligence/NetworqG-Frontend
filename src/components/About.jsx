@@ -19,7 +19,7 @@ export default function About() {
         <div className="grid lg:grid-cols-12 gap-12">
           <div className="lg:col-span-5 drift-up card p-6 md:p-8 rounded-2xl border border-line">
             <div className="eyebrow mb-3" data-anim="fade-up">
-              04 — The Studio
+              03 — The Studio
             </div>
             <h2
               className="font-display text-4xl lg:text-5xl leading-[1] tracking-tight"

@@ -3,10 +3,9 @@ import React from 'react';
 const SECTIONS = [
   { id: 'top', label: 'hero' },
   { id: 'services', label: 'services' },
-  { id: 'stats', label: 'stats' },
   { id: 'process', label: 'process' },
-  { id: 'work', label: 'work' },
-  { id: 'about', label: 'about' },
+  // { id: 'work', label: 'work' },
+  // { id: 'about', label: 'about' },
   { id: 'insights', label: 'insights' },
   { id: 'contact', label: 'contact' },
 ];

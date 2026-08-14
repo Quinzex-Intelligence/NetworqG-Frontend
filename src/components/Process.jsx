@@ -7,7 +7,7 @@ export default function Process() {
       id="process"
       data-section="process"
       data-scene="process"
-      data-edge-chip="03 · THE METHOD"
+      data-edge-chip="02 · THE METHOD"
       className="relative border-t border-line"
     >
       <div id="process-pin" className="relative h-[300vh]">
@@ -76,12 +76,6 @@ export default function Process() {
 
             <div className="order-1 lg:order-2 h-[60vh] lg:h-[80vh] relative">
               <div id="process-anchor" className="absolute inset-0"></div>
-              <div className="absolute top-4 right-4 font-mono text-[10px] text-gold tracking-widest">
-                PHASE <span id="phase-num">01</span> / 05
-              </div>
-              {/* <div className="absolute bottom-4 right-4 font-mono text-[10px] text-mute tracking-widest">
-                // morphing live
-              </div> */}
             </div>
           </div>
 

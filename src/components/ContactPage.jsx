@@ -1,4 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import emailjs from '@emailjs/browser';
+import { 
+  EMAILJS_SERVICE_ID, 
+  EMAILJS_TEMPLATE_ID, 
+  EMAILJS_PUBLIC_KEY 
+} from '../config';
 
 const CONTACT_SERVICES = [
   'Brand & Creative Services',
@@ -14,31 +20,17 @@ const CONTACT_SERVICES = [
   'Emerging Services'
 ];
 
-const BUDGET_RANGES = [
-  '< $5,000',
-  '$5,000 – $20,000',
-  '$20,000 – $50,000',
-  '$50,000+'
-];
-
-const CONTACT_MODES = [
-  'Call',
-  'Email',
-  'WhatsApp'
-];
-
 export default function ContactPage({ onBackClick }) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     company: '',
-    message: ''
+    requirement: ''
   });
   const [selectedServices, setSelectedServices] = useState([]);
-  const [selectedBudget, setSelectedBudget] = useState('');
-  const [selectedContactMode, setSelectedContactMode] = useState('');
-  const [formStatus, setFormStatus] = useState('idle'); // idle, sending, success
+  const [formStatus, setFormStatus] = useState('idle'); // idle, sending, success, error
+  const [errorMessage, setErrorMessage] = useState('');
 
   const [animate, setAnimate] = useState(false);
 
@@ -47,6 +39,16 @@ export default function ContactPage({ onBackClick }) {
     const timer = setTimeout(() => setAnimate(true), 400);
     return () => clearTimeout(timer);
   }, []);
+
+  // Automatically reset success message and button back to normal after 5 seconds
+  useEffect(() => {
+    if (formStatus === 'success') {
+      const timer = setTimeout(() => {
+        setFormStatus('idle');
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [formStatus]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -61,24 +63,44 @@ export default function ContactPage({ onBackClick }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setFormStatus('sending');
-    
-    // Simulate API request
-    setTimeout(() => {
+    setErrorMessage('');
+
+    try {
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        reply_to: formData.email,
+        phone: formData.phone,
+        company: formData.company || 'Not specified',
+        services: selectedServices.length > 0 ? selectedServices.join(', ') : 'Not specified',
+        requirement: formData.requirement,
+        message: formData.requirement,
+        to_name: 'Networq Global Team'
+      };
+
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        templateParams,
+        EMAILJS_PUBLIC_KEY
+      );
+
       setFormStatus('success');
       setFormData({
         name: '',
         email: '',
         phone: '',
         company: '',
-        message: ''
+        requirement: ''
       });
       setSelectedServices([]);
-      setSelectedBudget('');
-      setSelectedContactMode('');
-    }, 1200);
+    } catch (err) {
+      setFormStatus('error');
+      setErrorMessage(err?.text || 'Error sending message. Please try again or reach out directly.');
+    }
   };
 
   return (
@@ -148,7 +170,7 @@ export default function ContactPage({ onBackClick }) {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  placeholder="Ada Lovelace"
+                  placeholder="e.g. Alexander Vance"
                   required
                   disabled={formStatus === 'sending'}
                 />
@@ -161,7 +183,7 @@ export default function ContactPage({ onBackClick }) {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  placeholder="you@domain.com"
+                  placeholder="alex@enterprise.com"
                   required
                   disabled={formStatus === 'sending'}
                 />
@@ -174,7 +196,7 @@ export default function ContactPage({ onBackClick }) {
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
-                  placeholder="+1 (555) 012-3456"
+                  placeholder="+1 (555) 019-2834"
                   required
                   disabled={formStatus === 'sending'}
                 />
@@ -187,7 +209,7 @@ export default function ContactPage({ onBackClick }) {
                   name="company"
                   value={formData.company}
                   onChange={handleInputChange}
-                  placeholder="Brand or Organization"
+                  placeholder="e.g. Apex Global / Brand Organization"
                   disabled={formStatus === 'sending'}
                 />
               </label>
@@ -196,7 +218,7 @@ export default function ContactPage({ onBackClick }) {
             {/* Services interested in checkboxes */}
             <div className="mt-8">
               <span className="eyebrow block mb-3 text-[10px]">Services You're Interested In</span>
-              <div className="flex flex-wrap gap-2 text-xs">
+              <div className="flex flex-wrap gap-2.5">
                 {CONTACT_SERVICES.map((serv) => {
                   const isSelected = selectedServices.includes(serv);
                   return (
@@ -204,83 +226,63 @@ export default function ContactPage({ onBackClick }) {
                       key={serv}
                       type="button"
                       onClick={() => handleServiceSelect(serv)}
-                      className={`chip rounded-full px-4 py-2 transition-all duration-300 font-medium ${
-                        isSelected ? 'bg-gold/15 border-gold text-gold scale-[1.03]' : 'hover:border-gold/30'
+                      className={`rounded-full px-4 py-2 text-xs transition-all duration-300 flex items-center gap-1.5 cursor-pointer ${
+                        isSelected
+                          ? 'scale-[1.04] font-semibold text-[#0d0d0d] shadow-[0_0_20px_rgba(212,175,55,0.45),0_4px_12px_rgba(0,0,0,0.5)]'
+                          : 'font-medium text-[var(--ink)]/80 hover:text-[var(--gold)] hover:border-[var(--gold)] hover:bg-[rgba(var(--accent-rgb),0.08)] hover:-translate-y-0.5'
                       }`}
+                      style={{
+                        background: isSelected
+                          ? 'linear-gradient(135deg, #FCE8A6 0%, #D4AF37 50%, #A6820A 100%)'
+                          : 'rgba(26, 26, 26, 0.7)',
+                        border: isSelected
+                          ? '1px solid rgba(255, 235, 170, 0.9)'
+                          : '1px solid rgba(var(--accent-rgb), 0.22)',
+                        backdropFilter: 'blur(12px)',
+                        WebkitBackdropFilter: 'blur(12px)',
+                      }}
                       disabled={formStatus === 'sending'}
                       data-cursor="link"
                     >
-                      {serv}
+                      {isSelected && <span className="text-[11px] font-bold leading-none">✓</span>}
+                      <span>{serv}</span>
                     </button>
                   );
                 })}
               </div>
             </div>
 
-            {/* Budget Range */}
-            <div className="mt-6">
-              <span className="eyebrow block mb-3 text-[10px]">Budget Range (Optional)</span>
-              <div className="flex flex-wrap gap-2 text-xs">
-                {BUDGET_RANGES.map((budg) => {
-                  const isSelected = selectedBudget === budg;
-                  return (
-                    <button
-                      key={budg}
-                      type="button"
-                      onClick={() => setSelectedBudget(budg)}
-                      className={`chip rounded-full px-4 py-2 transition-all duration-300 font-medium ${
-                        isSelected ? 'bg-gold/15 border-gold text-gold scale-[1.03]' : 'hover:border-gold/30'
-                      }`}
-                      disabled={formStatus === 'sending'}
-                      data-cursor="link"
-                    >
-                      {budg}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Short Message */}
+            {/* Project Requirement */}
             <div className="mt-6">
               <label className="block">
-                <span className="eyebrow text-[10px]">Short Message About You / Your Requirement</span>
+                <span className="eyebrow text-[10px]">Your Requirement / Project Goals</span>
                 <textarea
                   rows="4"
                   className="field text-sm"
-                  name="message"
-                  value={formData.message}
+                  name="requirement"
+                  value={formData.requirement}
                   onChange={handleInputChange}
-                  placeholder="Tell us a little about your project goals and deadlines..."
+                  placeholder="Tell Networq Global about your project scope, brand vision, growth targets, or timeline..."
                   required
                   disabled={formStatus === 'sending'}
                 ></textarea>
               </label>
             </div>
 
-            {/* Preferred contact mode */}
-            <div className="mt-6">
-              <span className="eyebrow block mb-3 text-[10px]">Preferred Mode of Contact</span>
-              <div className="flex flex-wrap gap-2 text-xs">
-                {CONTACT_MODES.map((mode) => {
-                  const isSelected = selectedContactMode === mode;
-                  return (
-                    <button
-                      key={mode}
-                      type="button"
-                      onClick={() => setSelectedContactMode(mode)}
-                      className={`chip rounded-full px-4 py-2 transition-all duration-300 font-medium ${
-                        isSelected ? 'bg-gold/15 border-gold text-gold scale-[1.03]' : 'hover:border-gold/30'
-                      }`}
-                      disabled={formStatus === 'sending'}
-                      data-cursor="link"
-                    >
-                      {mode}
-                    </button>
-                  );
-                })}
+            {/* Status Feedback Messages */}
+            {formStatus === 'success' && (
+              <div className="mt-6 p-4 rounded-xl border border-emerald-500/30 bg-emerald-950/40 text-emerald-300 text-sm flex items-center gap-3">
+                <span className="text-lg">✓</span>
+                <span>Thank you! Your message has been sent successfully. We'll be in touch with you shortly.</span>
               </div>
-            </div>
+            )}
+
+            {formStatus === 'error' && (
+              <div className="mt-6 p-4 rounded-xl border border-rose-500/30 bg-rose-950/40 text-rose-300 text-sm flex items-center gap-3">
+                <span className="text-lg">⚠</span>
+                <span>{errorMessage || 'Failed to send message. Please try again or reach out directly via email.'}</span>
+              </div>
+            )}
 
             <button
               type="submit"
@@ -293,8 +295,9 @@ export default function ContactPage({ onBackClick }) {
                   Send Message <span aria-hidden="true">→</span>
                 </>
               )}
-              {formStatus === 'sending' && 'Sending...'}
+              {formStatus === 'sending' && 'Sending message...'}
               {formStatus === 'success' && 'Message Sent ✓'}
+              {formStatus === 'error' && 'Retry Sending →'}
             </button>
           </form>
         </div>

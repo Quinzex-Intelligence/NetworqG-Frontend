@@ -110,14 +110,13 @@ export default function ServicesPage({ onBackClick, onServiceClick, onContactCli
               <div>
                 <div className="flex items-center justify-between mb-6">
                   <span className="font-mono text-xs text-gold">{s.n}</span>
-                  <span className="text-gold text-lg transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">↗</span>
                 </div>
                 <h3 className="font-display text-xl lg:text-2xl mb-2 text-gold-2">{s.t}</h3>
                 <p className="text-mute text-xs leading-relaxed">{s.d}</p>
               </div>
               <div>
                 <div className="mt-6 hairline"></div>
-                <div className="flex items-center justify-between mt-4 text-[10px] font-mono uppercase tracking-widest">
+                <div className="flex items-center mt-4 text-[10px] font-mono uppercase tracking-widest">
                   <button
                     onClick={(e) => {
                       e.preventDefault();
@@ -128,9 +127,6 @@ export default function ServicesPage({ onBackClick, onServiceClick, onContactCli
                   >
                     Engage →
                   </button>
-                  <span className="text-mute">
-                    Learn More
-                  </span>
                 </div>
               </div>
             </div>

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTheme } from '../ThemeContext';
+import FontPicker from './FontPicker';
 
 const SERVICE_NAV = [
   { id: 'brand-creative',        label: 'Brand & Creative',       icon: '✦', desc: 'Identity, logo & brand strategy' },
@@ -82,8 +83,8 @@ export default function Header({ onPageChange, onLinkClick, currentPage, isAuthe
               About
             </a>
 
-            {/* Work */}
-            <a
+            {/* Work — Temporarily hidden */}
+            {/* <a
               href="#"
               data-cursor="link"
               className="nav-link px-3 py-2 rounded-lg hover:text-gold transition-colors duration-300"
@@ -91,7 +92,7 @@ export default function Header({ onPageChange, onLinkClick, currentPage, isAuthe
               onClick={(e) => { e.preventDefault(); onPageChange('work'); }}
             >
               Work
-            </a>
+            </a> */}
 
             {/* Services — mega dropdown */}
             <div
@@ -181,6 +182,17 @@ export default function Header({ onPageChange, onLinkClick, currentPage, isAuthe
               </div>
             </div>
 
+            {/* Insights / Blogs */}
+            <a
+              href="#"
+              data-cursor="link"
+              className="nav-link px-3 py-2 rounded-lg hover:text-gold transition-colors duration-300"
+              style={{ color: 'var(--ink)' }}
+              onClick={(e) => { e.preventDefault(); onPageChange('blogs'); }}
+            >
+              Insights
+            </a>
+
             {/* Careers */}
             <a
               href="#"
@@ -220,6 +232,11 @@ export default function Header({ onPageChange, onLinkClick, currentPage, isAuthe
 
           {/* Right-side controls */}
           <div className="flex items-center gap-3">
+
+            {/* Font Picker — desktop only */}
+            <div className="hidden md:block">
+              <FontPicker />
+            </div>
 
             {/* Hamburger */}
             <button
@@ -262,15 +279,15 @@ export default function Header({ onPageChange, onLinkClick, currentPage, isAuthe
               About
             </a>
 
-            {/* Work */}
-            <a
+            {/* Work — Temporarily hidden */}
+            {/* <a
               href="#"
               className="mobile-menu-link hover:text-gold transition-colors duration-300"
               style={{ color: 'var(--ink)' }}
               onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); onPageChange('work'); }}
             >
               Work
-            </a>
+            </a> */}
 
             {/* Services accordion */}
             <div>
@@ -297,6 +314,16 @@ export default function Header({ onPageChange, onLinkClick, currentPage, isAuthe
                 </div>
               )}
             </div>
+
+            {/* Insights / Blogs */}
+            <a
+              href="#"
+              className="mobile-menu-link hover:text-gold transition-colors duration-300"
+              style={{ color: 'var(--ink)' }}
+              onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); onPageChange('blogs'); }}
+            >
+              Insights
+            </a>
 
             {/* Careers */}
             <a
@@ -332,6 +359,12 @@ export default function Header({ onPageChange, onLinkClick, currentPage, isAuthe
               {isAuthenticated ? 'Dashboard' : 'Sign In'}
             </a>
 
+
+            {/* Font Picker — mobile */}
+            <div style={{ paddingTop: '8px' }}>
+              <span style={{ fontSize: '10px', fontFamily: "'JetBrains Mono', monospace", letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--mute)', display: 'block', marginBottom: '8px' }}>Typography</span>
+              <FontPicker />
+            </div>
 
             {/* Mobile CTA */}
             <a

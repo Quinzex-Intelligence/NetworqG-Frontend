@@ -149,15 +149,17 @@ export default function AboutPage({ onBackClick, onContactClick }) {
 
         {/* FAQ Section */}
         <section
-          className={`glow-card p-8 md:p-12 rounded-3xl border border-line transition-all duration-1000 ${
+          className={`glow-card p-8 md:p-12 rounded-3xl border border-line transition-all duration-1000 max-w-4xl mx-auto ${
             animate ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
           style={{ transitionDelay: '450ms' }}
         >
-          <div className="eyebrow mb-6">FAQ</div>
-          <h2 className="font-display text-3xl md:text-4xl text-gold-2 mb-10 leading-tight">
-            Common questions about Networq Global.
-          </h2>
+          <div className="text-center mb-10">
+            <div className="eyebrow mb-4 justify-center">FAQ</div>
+            <h2 className="font-display text-3xl md:text-4xl text-gold-2 leading-tight">
+              Common questions about Networq Global.
+            </h2>
+          </div>
           <div className="space-y-6">
             {[
               { q: "Why should I choose Networq Global?", a: "Our key motto is not only to build empowering digital solutions for all kinds of businesses, but also to ensure that your vision is kept alive throughout the process. Choose us to see your vision flourish the right way!" },

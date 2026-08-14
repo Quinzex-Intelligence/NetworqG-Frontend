@@ -64,7 +64,8 @@ export default function Footer({ onLinkClick, onPageChange, isSubpage = false, i
               <ul className="space-y-3 text-mute">
                 {[
                   { label: 'About', action: (e) => { e.preventDefault(); onPageChange?.('about'); } },
-                  { label: 'Work',  action: (e) => { e.preventDefault(); onPageChange?.('work'); } },
+                  { label: 'Insights', action: (e) => { e.preventDefault(); onPageChange?.('blogs'); } },
+                  // { label: 'Work',  action: (e) => { e.preventDefault(); onPageChange?.('work'); } },
                   { label: 'Careers', action: (e) => { e.preventDefault(); onPageChange?.('careers'); } },
                   { label: 'Contact', action: (e) => { e.preventDefault(); onPageChange?.('contact'); } },
                 ].map((item) => (

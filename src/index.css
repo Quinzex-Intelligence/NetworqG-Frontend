@@ -3,19 +3,23 @@
 
 
 @theme {
-  --font-display: 'Squarish Sans', sans-serif;
-  --font-sans: 'Squarish Sans', sans-serif;
+  --font-display: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
-/* Global brand font override */
+/* Global brand font override — Plus Jakarta Sans (body) + Outfit (display) */
 html, body,
-h1, h2, h3, h4, h5, h6,
 p, a, span, div,
 button, input, textarea, select,
 li, td, th, label,
 blockquote, figcaption {
   font-family: var(--main-font) !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--display-font) !important;
+  letter-spacing: -0.02em;
 }
 
 :root {
@@ -30,9 +34,9 @@ blockquote, figcaption {
   --accent-rgb: 212, 175, 55;
   --bg-rgb: 13, 13, 13;
   --bg2-rgb: 26, 26, 26;
-  --card-bg: rgba(26, 26, 26, 0.75);
-  --glass-bg: rgba(20, 20, 20, 0.55);
-  --nav-bg: rgba(13, 13, 13, 0.80);
+  --card-bg: rgba(18, 18, 18, 0.88);
+  --glass-bg: rgba(16, 16, 16, 0.82);
+  --nav-bg: rgba(13, 13, 13, 0.85);
   --drawer-bg: #1A1A1A;
 }
 
@@ -78,12 +82,12 @@ body {
 }
 
 body.has-cursor {
-  cursor: none;
+  cursor: auto;
 }
 
 body.has-cursor .cursor-dot,
 body.has-cursor .cursor-ring {
-  display: block;
+  display: none;
 }
 
 .cursor-dot,
@@ -92,7 +96,7 @@ body.has-cursor .cursor-ring {
 }
 
 .font-display {
-  font-family: 'Squarish Sans', sans-serif !important;
+  font-family: var(--font-display, 'Outfit', 'Plus Jakarta Sans', sans-serif);
   font-weight: 500;
   letter-spacing: -0.01em;
 }
@@ -269,10 +273,11 @@ body.has-cursor .cursor-ring {
 }
 
 .card {
-  background: var(--card-bg, rgba(var(--bg2-rgb), 0.65));
+  background: var(--card-bg, rgba(18, 18, 18, 0.88));
   border: 1px solid var(--line);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .glass-section {
@@ -358,8 +363,19 @@ body.has-cursor .cursor-ring {
   border-color: var(--gold);
 }
 
-.field::placeholder {
-  color: var(--mute);
+.field::placeholder,
+input::placeholder,
+textarea::placeholder {
+  color: rgba(245, 240, 232, 0.32) !important;
+  opacity: 0.35 !important;
+  font-weight: 300 !important;
+  transition: opacity 0.3s ease;
+}
+
+.field:focus::placeholder,
+input:focus::placeholder,
+textarea:focus::placeholder {
+  opacity: 0.15 !important;
 }
 
 .hero-vignette {

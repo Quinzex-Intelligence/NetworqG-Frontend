@@ -9,8 +9,6 @@ import Cursor from './components/Cursor';
 import ScrollRail from './components/ScrollRail';
 import Header from './components/Header';
 import Hero from './components/Hero';
-import Logos from './components/Logos';
-import Stats from './components/Stats';
 import Services from './components/Services';
 import Process from './components/Process';
 import Work from './components/Work';
@@ -25,6 +23,8 @@ import ContactPage from './components/ContactPage';
 import AboutPage from './components/AboutPage';
 import WorkPage from './components/WorkPage';
 import ServicesPage from './components/ServicesPage';
+import BlogsPage from './components/BlogsPage';
+import BlogDetailPage from './components/BlogDetailPage';
 import LoginPage from './components/LoginPage';
 import AdminDashboard from './components/AdminDashboard';
 import AccessDeniedPage from './components/AccessDeniedPage';
@@ -172,10 +172,14 @@ export default function App() {
         window.scrollTo({ top: 0, behavior: 'instant' });
         setTimeout(() => {
           const targetEl = document.getElementById(pageName.sectionId);
-          if (targetEl && lenisRef.current) {
-            lenisRef.current.scrollTo(targetEl, { duration: 1.1 });
+          if (targetEl) {
+            if (lenisRef.current) {
+              lenisRef.current.scrollTo(targetEl, { duration: 0.9, immediate: false });
+            } else {
+              targetEl.scrollIntoView({ behavior: 'smooth' });
+            }
           }
-        }, 80);
+        }, 120);
       }
       
       // Set fading-in: content is at scale(1.02) opacity 0, transition:none
@@ -246,6 +250,13 @@ export default function App() {
 
       if (currentPage === 'careers') {
         targetStage.bHelix = 0.7;
+      } else if (currentPage.startsWith('blog-')) {
+        targetStage.bField = 0.3;
+        targetStage.globeOpacity = 0.15;
+        targetStage.arcsOpacity = 0.1;
+        targetStage.citiesOpacity = 0.15;
+      } else if (currentPage === 'blogs') {
+        targetStage.bField = 0.7;
       } else if (currentPage === 'contact') {
         targetStage.bVortex = 0.7;
       } else if (currentPage === 'about') {
@@ -620,31 +631,24 @@ export default function App() {
         globeX: HERO.x - p * 0.4,
         globeY: HERO.y - p * 0.3,
         globeScale: HERO.s * (1 - p * 0.10),
-        globeOpacity: 1, arcsOpacity: 1
+        globeOpacity: 1,
+        arcsOpacity: 1,
+        citiesOpacity: 1,
+        bOrbit: 0,
+        bShatter: 0,
+        bConstellation: 0,
+        bField: 0,
+        bVortex: 0,
+        bWave: 0,
+        bHelix: 0,
+        bText: 0,
+        morphOpacity: 0
       })
     });
 
     ScrollTrigger.create({
-      trigger: '#stats',
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: 0.5,
-      fastScrollEnd: true,
-      onUpdate: ({ progress: p }) => {
-        const sh = Math.sin(Math.min(1, p * 1.4) * Math.PI * 0.7);
-        set({
-          bShatter: sh, bOrbit: 0,
-          globeOpacity: 1 - sh * 0.6,
-          arcsOpacity: 1 - sh, citiesOpacity: 1 - sh,
-          globeX: HERO.x * (1 - p * 0.6), globeY: 0,
-          globeScale: HERO.s * (1 - p * 0.10)
-        });
-      }
-    });
-
-    ScrollTrigger.create({
       trigger: '#services',
-      start: 'top bottom',
+      start: 'top 85%',
       end: 'bottom top',
       scrub: 0.5,
       fastScrollEnd: true,
@@ -653,8 +657,11 @@ export default function App() {
         set({
           bShatter: 0, bOrbit: o, bField: 0,
           globeOpacity: Math.max(0, 1 - o * 1.2),
-          arcsOpacity: 0, citiesOpacity: 0,
-          globeX: 0, globeY: 0, globeScale: HERO.s
+          arcsOpacity: Math.max(0, 1 - o * 1.5),
+          citiesOpacity: Math.max(0, 1 - o * 1.5),
+          globeX: HERO.x * (1 - o),
+          globeY: HERO.y * (1 - o),
+          globeScale: HERO.s
         });
       }
     });
@@ -711,34 +718,38 @@ export default function App() {
       }
     });
 
-    ScrollTrigger.create({
-      trigger: '#work',
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: 0.5,
-      fastScrollEnd: true,
-      onUpdate: ({ progress: p }) => {
-        const wVal = Math.sin(Math.min(1, p * 1.4) * Math.PI * 0.7);
-        set({ bWave: wVal, bOrbit: 0, morphOpacity: Math.max(0, 1 - p * 2.5), globeOpacity: 0 });
-      }
-    });
+    if (document.getElementById('work')) {
+      ScrollTrigger.create({
+        trigger: '#work',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 0.5,
+        fastScrollEnd: true,
+        onUpdate: ({ progress: p }) => {
+          const wVal = Math.sin(Math.min(1, p * 1.4) * Math.PI * 0.7);
+          set({ bWave: wVal, bOrbit: 0, morphOpacity: Math.max(0, 1 - p * 2.5), globeOpacity: 0 });
+        }
+      });
+    }
 
-    ScrollTrigger.create({
-      trigger: '#about',
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: 0.5,
-      fastScrollEnd: true,
-      onUpdate: ({ progress: p }) => {
-        const c = Math.sin(Math.min(1, p * 1.5) * Math.PI * 0.65);
-        set({
-          bWave: Math.max(0, 1 - p * 2), bConstellation: c,
-          globeOpacity: c * 0.45,
-          globeX: CORNER.x, globeY: CORNER.y, globeScale: CORNER.s,
-          arcsOpacity: c * 0.5, citiesOpacity: c * 0.7
-        });
-      }
-    });
+    if (document.getElementById('about')) {
+      ScrollTrigger.create({
+        trigger: '#about',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 0.5,
+        fastScrollEnd: true,
+        onUpdate: ({ progress: p }) => {
+          const c = Math.sin(Math.min(1, p * 1.5) * Math.PI * 0.65);
+          set({
+            bWave: Math.max(0, 1 - p * 2), bConstellation: c,
+            globeOpacity: c * 0.45,
+            globeX: CORNER.x, globeY: CORNER.y, globeScale: CORNER.s,
+            arcsOpacity: c * 0.5, citiesOpacity: c * 0.7
+          });
+        }
+      });
+    }
 
     ScrollTrigger.create({
       trigger: '#insights',
@@ -833,6 +844,8 @@ export default function App() {
             ? '00 · INDEX'
             : currentPage === 'careers'
             ? 'CAREERS'
+            : currentPage === 'blogs' || currentPage.startsWith('blog-')
+            ? 'FIELD NOTES'
             : currentPage === 'contact'
             ? 'CONTACT'
             : currentPage === 'about'
@@ -865,29 +878,43 @@ export default function App() {
               <>
                 <Hero
                   onStartProjectClick={() => navigateToPage('contact')}
-                  onSeeWorkClick={() => scrollToSection('work')}
+                  onSeeWorkClick={() => scrollToSection('services')}
                 />
                 <Services
                   onEngageClick={handleNavScroll}
                   onServiceClick={(serviceId) => navigateToPage(`service-${serviceId}`)}
                 />
-                <Logos />
-                <Stats />
                 <Process />
-                <Work onRequestCaseBookClick={scrollToSection} />
-                <About />
-                <Insights />
+                {/* <Work onRequestCaseBookClick={scrollToSection} /> */}
+                {/* <About /> */}
+                <Insights
+                  onExploreAllClick={navigateToPage}
+                  onBlogClick={(b) => navigateToPage(b?.id ? `blog-${b.id}` : 'blogs')}
+                />
                 <FAQ />
                 <Contact />
               </>
             ) : currentPage === 'careers' ? (
               <CareersPage onBackClick={() => navigateToPage('home')} />
+            ) : currentPage === 'blogs' ? (
+              <BlogsPage
+                onBackClick={() => navigateToPage({ type: 'home-scroll', sectionId: 'insights' })}
+                onBlogClick={(blogId) => navigateToPage(`blog-${blogId}`)}
+                onContactClick={navigateToPage}
+              />
+            ) : currentPage.startsWith('blog-') ? (
+              <BlogDetailPage
+                blogId={currentPage.replace('blog-', '')}
+                onBackClick={() => navigateToPage('blogs')}
+                onContactClick={() => navigateToPage('contact')}
+              />
             ) : currentPage === 'contact' ? (
               <ContactPage onBackClick={() => navigateToPage('home')} />
             ) : currentPage === 'about' ? (
               <AboutPage onBackClick={() => navigateToPage('home')} onContactClick={() => navigateToPage('contact')} />
             ) : currentPage === 'work' ? (
-              <WorkPage onBackClick={() => navigateToPage('home')} onRequestCaseBookClick={navigateToPage} />
+              /* Temporarily hidden — falls back to home */
+              <AboutPage onBackClick={() => navigateToPage('home')} onContactClick={() => navigateToPage('contact')} />
             ) : currentPage === 'services' ? (
               <ServicesPage onBackClick={() => navigateToPage('home')} onServiceClick={(serviceId) => navigateToPage(`service-${serviceId}`)} onContactClick={navigateToPage} />
             ) : currentPage === 'login' ? (
