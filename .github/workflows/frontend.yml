@@ -1,4 +1,4 @@
-name: Build and Deploy Frontend
+name: Networq Global Frontend Application Deployment
 
 on:
   push:
@@ -148,5 +148,3 @@ jobs:
             --command-id "$COMMAND_ID" \
             --details \
             --region $AWS_REGION
-
-      # End of the Docker File for deployment
