@@ -452,10 +452,17 @@ export default function App() {
       once: true,
       onEnter: (batch) => {
         batch.forEach((grid) => {
-          Array.from(grid.children).forEach((child, i) => {
+          const children = Array.from(grid.children);
+          children.forEach((child, i) => {
             child.style.transitionDelay = i * 0.08 + 's';
           });
           grid.classList.add('is-in');
+          // Clear transition delay after initial entrance reveal so hover responds instantly across all items
+          setTimeout(() => {
+            children.forEach((child) => {
+              child.style.transitionDelay = '';
+            });
+          }, 1200);
         });
       }
     });

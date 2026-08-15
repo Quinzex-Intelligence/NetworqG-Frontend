@@ -6,6 +6,10 @@
   --font-display: 'Outfit', 'Plus Jakarta Sans', sans-serif;
   --font-sans: 'Plus Jakarta Sans', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+  --color-gold: #D4AF37;
+  --color-gold-2: #F0C040;
+  --color-gold-deep: #B8960C;
+  --color-line: rgba(212, 175, 55, 0.35);
 }
 
 /* Global brand font override — Plus Jakarta Sans (body) + Outfit (display) */
@@ -630,10 +634,12 @@ body.js-ready [data-anim].is-in[data-anim="fade-up"] {
   }
 }
 
-/* Service tile reveal — staggered */
+/* Service tile reveal & smooth hover transitions */
 .svc-tile {
   position: relative;
-  overflow: hidden;
+  border: 1px solid #D4AF37 !important;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), outline-color 0.3s ease, border-color 0.3s ease;
+  will-change: transform;
 }
 
 .svc-tile::before {
@@ -642,15 +648,28 @@ body.js-ready [data-anim].is-in[data-anim="fade-up"] {
   inset: 0;
   background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.12), transparent 60%);
   opacity: 0;
-  transition: opacity .5s;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
 }
 
 .svc-tile:hover::before {
   opacity: 1;
 }
 
+body.js-ready [data-stagger].is-in > .svc-tile:hover,
+body.js-ready [data-stagger="3d"].is-in > .svc-tile:hover,
+.svc-tile:hover {
+  transition-delay: 0s !important;
+  transform: scale(1.035) translateY(-3px) !important;
+  z-index: 40 !important;
+  background-color: #0b0e14 !important;
+  border-color: #F0C040 !important;
+  outline: 1.5px solid #F0C040 !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.95), 0 0 25px rgba(212, 175, 55, 0.3) !important;
+}
+
 .svc-tile .svc-arrow {
-  transition: transform .5s;
+  transition: transform .45s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .svc-tile:hover .svc-arrow {
