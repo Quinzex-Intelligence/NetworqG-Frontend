@@ -139,7 +139,7 @@ export default function ContactPage({ onBackClick }) {
             <div className="mt-8 space-y-4 text-sm">
               <div className="flex items-center gap-3">
                 <span className="text-gold">◆</span>
-                <span className="text-mute">Email: hello@networqglobal.com</span>
+                <span className="text-mute">Email: networqglobal@gmail.com</span>
               </div>
               <div className="flex items-center gap-3">
                 <span className="text-gold">◆</span>

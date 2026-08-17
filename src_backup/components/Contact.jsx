@@ -137,7 +137,7 @@ export default function Contact() {
               <span className="text-gold mt-1">◆</span>
               <div>
                 <div className="text-gold-2">
-                  <a href="mailto:hello@networqglobal.com">hello@networqglobal.com</a>
+                  <a href="mailto:networqglobal@gmail.com">networqglobal@gmail.com</a>
                 </div>
                 <div className="text-mute">New business · all markets</div>
               </div>
@@ -146,7 +146,7 @@ export default function Contact() {
             <div className="flex items-start gap-3">
               <span className="text-gold mt-1">◆</span>
               <div>
-                <div className="text-gold-2">+1 (212) 555 0144</div>
+                <div className="text-gold-2">+91 9863495371</div>
                 <div className="text-mute">NYC HQ · Mon–Fri</div>
               </div>
             </div>
