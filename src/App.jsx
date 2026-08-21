@@ -32,8 +32,8 @@ import AccessDeniedPage from './components/AccessDeniedPage';
 export default function App() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [preloaderDone, setPreloaderDone] = useState(() => {
-    const isLoggingIn = sessionStorage.getItem('logging_in') === 'true';
-    const savedPage = sessionStorage.getItem('current_page');
+    const isLoggingIn = localStorage.getItem('logging_in') === 'true';
+    const savedPage = localStorage.getItem('current_page');
     let showedToday = false;
     try {
       const lastShowedDate = localStorage.getItem('ng-last-preloader-date');
@@ -48,9 +48,9 @@ export default function App() {
     if (path.includes('error') || path.includes('403') || search.includes('error') || search.includes('403') || search.includes('forbidden')) {
       return 'access-denied';
     }
-    const saved = sessionStorage.getItem('current_page');
+    const saved = localStorage.getItem('current_page');
     if (saved === 'login') {
-      sessionStorage.removeItem('current_page');
+      localStorage.removeItem('current_page');
       return 'home';
     }
     return saved || 'home';
@@ -68,30 +68,30 @@ export default function App() {
         const data = await res.json();
         setUser(data);
         setIsAuthenticated(true);
-        if (sessionStorage.getItem('logging_in') === 'true') {
-          sessionStorage.removeItem('logging_in');
+        if (localStorage.getItem('logging_in') === 'true') {
+          localStorage.removeItem('logging_in');
           setCurrentPage('admin');
-          sessionStorage.setItem('current_page', 'admin');
+          localStorage.setItem('current_page', 'admin');
           setPreloaderDone(true);
         }
       } else {
-        if (sessionStorage.getItem('logging_in') === 'true') {
-          sessionStorage.removeItem('logging_in');
+        if (localStorage.getItem('logging_in') === 'true') {
+          localStorage.removeItem('logging_in');
           setPreloaderDone(true);
           const isForbidden = res.status === 403 || window.location.search.includes('error') || window.location.pathname.includes('error');
           setCurrentPage(isForbidden ? 'access-denied' : 'login');
-          sessionStorage.removeItem('current_page');
+          localStorage.removeItem('current_page');
         }
         setUser(null);
         setIsAuthenticated(false);
       }
     } catch (err) {
-      if (sessionStorage.getItem('logging_in') === 'true') {
-        sessionStorage.removeItem('logging_in');
+      if (localStorage.getItem('logging_in') === 'true') {
+        localStorage.removeItem('logging_in');
         setPreloaderDone(true);
         const isForbidden = window.location.search.includes('error') || window.location.pathname.includes('error');
         setCurrentPage(isForbidden ? 'access-denied' : 'login');
-        sessionStorage.removeItem('current_page');
+        localStorage.removeItem('current_page');
       }
       setUser(null);
       setIsAuthenticated(false);
@@ -161,14 +161,14 @@ export default function App() {
       if (typeof pageName === 'string') {
         setCurrentPage(pageName);
         if (pageName === 'login') {
-          sessionStorage.removeItem('current_page');
+          localStorage.removeItem('current_page');
         } else {
-          sessionStorage.setItem('current_page', pageName);
+          localStorage.setItem('current_page', pageName);
         }
         window.scrollTo({ top: 0, behavior: 'instant' });
       } else if (pageName && pageName.type === 'home-scroll') {
         setCurrentPage('home');
-        sessionStorage.setItem('current_page', 'home');
+        localStorage.setItem('current_page', 'home');
         window.scrollTo({ top: 0, behavior: 'instant' });
         setTimeout(() => {
           const targetEl = document.getElementById(pageName.sectionId);

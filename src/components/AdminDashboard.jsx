@@ -271,24 +271,45 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
   const [blogNextCursor, setBlogNextCursor] = useState(null);
   const [blogHasMore, setBlogHasMore] = useState(false);
 
-  const fetchBlogs = async (cursorCreatedAt = null, cursorId = null) => {
+  const fetchBlogs = async () => {
     try {
-      let url = `${API_BASE_URL}/api/blogs/active?limit=10`;
-      if (cursorCreatedAt && cursorId) {
-        url += `&cursorCreatedAt=${encodeURIComponent(cursorCreatedAt)}&cursorId=${encodeURIComponent(cursorId)}`;
+      const [activeRes, inactiveRes] = await Promise.all([
+        fetch(`${API_BASE_URL}/api/blogs/active?limit=50`, { credentials: 'include' }),
+        fetch(`${API_BASE_URL}/api/blogs/inactive?limit=50`, { credentials: 'include' })
+      ]);
+
+      let activeItems = [];
+      let inactiveItems = [];
+
+      if (activeRes.ok) {
+        const activeData = await activeRes.json();
+        activeItems = activeData.blogs || activeData.content || (Array.isArray(activeData) ? activeData : []);
       }
-      let res = await fetch(url, { credentials: 'include' });
-      if (!res.ok) {
-        res = await fetch(`${API_BASE_URL}/api/blogs`, { credentials: 'include' });
+      if (inactiveRes.ok) {
+        const inactiveData = await inactiveRes.json();
+        inactiveItems = inactiveData.blogs || inactiveData.content || (Array.isArray(inactiveData) ? inactiveData : []);
       }
-      if (res.ok) {
-        const data = await res.json();
-        const items = data.blogs || data.content || (Array.isArray(data) ? data : []);
-        setBlogs(items);
-        setBlogHasMore(!!data.hasMore);
-        setBlogNextCursor(data.nextCursor || null);
-        setBlogTotalPages(1);
+
+      // Merge and sort by createdAt descending
+      let combinedItems = [...activeItems, ...inactiveItems].sort((a, b) => {
+        const dateA = a.createdAt ? new Date(a.createdAt) : new Date(0);
+        const dateB = b.createdAt ? new Date(b.createdAt) : new Date(0);
+        return dateB - dateA;
+      });
+
+      // Filter client-side if a search query is present
+      if (blogSearch.trim()) {
+        const query = blogSearch.toLowerCase().trim();
+        combinedItems = combinedItems.filter(blog => 
+          (blog.title && blog.title.toLowerCase().includes(query)) ||
+          (blog.description && blog.description.toLowerCase().includes(query))
+        );
       }
+
+      setBlogs(combinedItems);
+      setBlogHasMore(false);
+      setBlogNextCursor(null);
+      setBlogTotalPages(1);
     } catch (err) {
       showToast('Error connecting to blogs API', 'error');
     }
@@ -347,23 +368,7 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
     }
   };
 
-  const handleDeleteBlog = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this article?')) return;
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/blogs/${id}`, {
-        method: 'DELETE',
-        credentials: 'include'
-      });
-      if (res.ok) {
-        showToast('Article deleted successfully');
-        fetchBlogs();
-      } else {
-        showToast('Failed to delete article', 'error');
-      }
-    } catch (err) {
-      showToast('Error deleting article', 'error');
-    }
-  };
+
 
   const startEditBlog = (blog) => {
     setEditingBlog(blog);
@@ -1038,12 +1043,6 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
                           className="px-3 py-1.5 rounded border border-neutral-800 text-[10px] text-gold hover:border-gold transition-colors cursor-pointer"
                         >
                           Edit
-                        </button>
-                        <button
-                          onClick={() => handleDeleteBlog(blog.id)}
-                          className="px-3 py-1.5 rounded border border-red-500/20 text-[10px] text-red-400 hover:border-red-500 transition-colors cursor-pointer"
-                        >
-                          Delete
                         </button>
                       </div>
                     </div>

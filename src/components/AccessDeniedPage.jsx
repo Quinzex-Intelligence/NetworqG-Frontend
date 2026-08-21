@@ -13,7 +13,7 @@ export default function AccessDeniedPage({ onBackToHome, onRetryLogin }) {
     if (onRetryLogin) {
       onRetryLogin();
     } else {
-      sessionStorage.setItem('logging_in', 'true');
+      localStorage.setItem('logging_in', 'true');
       window.location.href = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/api/auth/login?prompt=select_account`;
     }
   };
