@@ -62,7 +62,7 @@ export default function BlogDetailPage({ blogId, onBackClick, onContactClick }) 
         tag: staticFound.tag || 'Field Note',
         shortDescription: staticFound.d,
         content: staticFound.d,
-        author: 'Networq Editorial',
+        author: 'Networq Global Editorial',
         readTime: staticFound.time || '5 min read',
         createdDate: new Date().toISOString(),
         coverImage: null
@@ -75,7 +75,7 @@ export default function BlogDetailPage({ blogId, onBackClick, onContactClick }) 
         tag: fallback.tag || 'Field Note',
         shortDescription: fallback.d,
         content: fallback.d,
-        author: 'Networq Editorial',
+        author: 'Networq Global Editorial',
         readTime: fallback.time || '5 min read',
         createdDate: new Date().toISOString(),
         coverImage: null
@@ -91,7 +91,7 @@ export default function BlogDetailPage({ blogId, onBackClick, onContactClick }) 
     tag: b.tag || b.category || 'Field Note',
     shortDescription: b.description || b.shortDescription || b.d || '',
     content: b.description || b.content || b.d || '',
-    author: b.author || 'Networq Editorial',
+    author: b.author || 'Networq Global Editorial',
     readTime: b.readTime || '5 min read',
     createdDate: b.createdAt || b.createdDate || null,
     coverImage: b.imageUrl || b.imageKey || b.coverImage || (b.images && b.images[0]?.imageUrl) || null
@@ -193,7 +193,7 @@ export default function BlogDetailPage({ blogId, onBackClick, onContactClick }) 
               </div>
               <div>
                 <div className="text-base font-semibold text-white tracking-wide">
-                  {blog.author || 'Networq Editorial'}
+                  {blog.author || 'Networq Global Editorial'}
                 </div>
                 <div className="text-xs font-mono text-neutral-400 flex items-center gap-2">
                   <span>Networq Global Intelligence</span>

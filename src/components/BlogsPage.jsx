@@ -44,7 +44,7 @@ export default function BlogsPage({ onBackClick, onBlogClick, onContactClick }) 
             tag: b.tag || b.category || 'Field Note',
             shortDescription: b.description ? (b.description.length > 160 ? b.description.slice(0, 160) + '...' : b.description) : (b.shortDescription || b.d || ''),
             content: b.description || b.content || b.longDescription || b.d || '',
-            author: b.author || 'Networq Editorial',
+            author: b.author || 'Networq Global Editorial',
             readTime: b.readTime || '5 min read',
             createdDate: b.createdAt || b.createdDate || null,
             coverImage: b.imageUrl || b.imageKey || b.coverImage || (b.images && b.images[0]?.imageUrl) || null,
@@ -57,20 +57,82 @@ export default function BlogsPage({ onBackClick, onBlogClick, onContactClick }) 
       }
       throw new Error('No backend blogs found, falling back to static');
     } catch (err) {
-      // Graceful fallback to static insights
-      const fallbackItems = staticInsights.map((s, idx) => ({
-        id: `static-${idx}`,
-        title: s.t,
-        tag: s.tag || 'Field Note',
-        shortDescription: s.d,
-        content: s.d,
-        author: 'Networq Editorial',
-        readTime: s.time || '5 min read',
-        createdDate: new Date().toISOString(),
-        coverImage: null,
-        active: true
-      }));
-      setBlogs(fallbackItems);
+      // Dummy insights preview for upcoming launch
+      const dummyDispatches = [
+        {
+          id: 'dispatch-1',
+          title: 'What survives the AI search shift',
+          tag: 'Search Architecture',
+          shortDescription: 'How brand demand becomes the new moat as zero-click search swallows the traditional marketing funnel.',
+          content: 'How brand demand becomes the new moat as zero-click search swallows the traditional marketing funnel.',
+          author: 'Networq Global Editorial',
+          readTime: '8 min read',
+          createdDate: new Date(Date.now() - 2 * 86400000).toISOString(),
+          coverImage: null,
+          active: true
+        },
+        {
+          id: 'dispatch-2',
+          title: 'The new luxury buyer in the Gulf',
+          tag: 'Market Signals',
+          shortDescription: 'Six strategic observations from 14 months on the ground across UAE, KSA, and Qatar consumer ecosystems.',
+          content: 'Six strategic observations from 14 months on the ground across UAE, KSA, and Qatar consumer ecosystems.',
+          author: 'Networq Global Editorial',
+          readTime: '6 min read',
+          createdDate: new Date(Date.now() - 5 * 86400000).toISOString(),
+          coverImage: null,
+          active: true
+        },
+        {
+          id: 'dispatch-3',
+          title: 'Creator economics & media yield 2026',
+          tag: 'Performance Media',
+          shortDescription: 'What top brands are investing in creator media and what is actually driving sustainable conversions across global categories.',
+          content: 'What top brands are investing in creator media and what is actually driving sustainable conversions across global categories.',
+          author: 'Networq Global Editorial',
+          readTime: '5 min read',
+          createdDate: new Date(Date.now() - 8 * 86400000).toISOString(),
+          coverImage: null,
+          active: true
+        },
+        {
+          id: 'dispatch-4',
+          title: 'The compounding leverage of programmatic creative',
+          tag: 'Brand Intelligence',
+          shortDescription: 'Why brands deploying continuous creative iteration outperform static media spend by multiple folds in saturated markets.',
+          content: 'Why brands deploying continuous creative iteration outperform static media spend by multiple folds in saturated markets.',
+          author: 'Networq Global Editorial',
+          readTime: '7 min read',
+          createdDate: new Date(Date.now() - 12 * 86400000).toISOString(),
+          coverImage: null,
+          active: true
+        },
+        {
+          id: 'dispatch-5',
+          title: 'Zero-party data frameworks for cookieless scale',
+          tag: 'Growth Strategy',
+          shortDescription: 'How enterprise brands are restructuring customer journey touchpoints to own their audience relationships directly.',
+          content: 'How enterprise brands are restructuring customer journey touchpoints to own their audience relationships directly.',
+          author: 'Networq Global Editorial',
+          readTime: '9 min read',
+          createdDate: new Date(Date.now() - 16 * 86400000).toISOString(),
+          coverImage: null,
+          active: true
+        },
+        {
+          id: 'dispatch-6',
+          title: 'Engineering brand affinity in algorithmic feeds',
+          tag: 'Creative Direction',
+          shortDescription: 'Tactical design and storytelling principles for crafting visual assets that build memorability in high-velocity feeds.',
+          content: 'Tactical design and storytelling principles for crafting visual assets that build memorability in high-velocity feeds.',
+          author: 'Networq Global Editorial',
+          readTime: '6 min read',
+          createdDate: new Date(Date.now() - 20 * 86400000).toISOString(),
+          coverImage: null,
+          active: true
+        }
+      ];
+      setBlogs(dummyDispatches);
     } finally {
       setLoading(false);
     }
@@ -115,11 +177,11 @@ export default function BlogsPage({ onBackClick, onBlogClick, onContactClick }) 
             }`}
             data-cursor="link"
           >
-            ← Back to Field Notes
+            ← Back to Home
           </button>
           
           <div className="text-xs font-mono text-neutral-400 uppercase tracking-widest bg-white/5 border border-white/10 px-4 py-1.5 rounded-full">
-            {filteredBlogs.length} {filteredBlogs.length === 1 ? 'Dispatch' : 'Dispatches'} in Archive
+            {filteredBlogs.length} {filteredBlogs.length === 1 ? 'Dispatch' : 'Dispatches'} in Preview
           </div>
         </div>
 
@@ -131,16 +193,21 @@ export default function BlogsPage({ onBackClick, onBlogClick, onContactClick }) 
         >
           <div className="laser-line" />
           <div className="absolute right-8 top-0 font-display text-[160px] leading-none text-white/[0.02] select-none pointer-events-none hidden lg:block">
-            ARCHIVE
+            INSIGHTS
           </div>
           <div className="max-w-4xl relative z-10">
-            <div className="eyebrow mb-4">03 — Complete Knowledge & Field Notes Archive</div>
+            <div className="flex flex-wrap items-center gap-3 mb-4">
+              <div className="eyebrow">03 — Knowledge & Intelligence Archive</div>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider bg-gold/10 border border-gold/30 text-gold">
+                <span>✦</span> Editorial Platform Preview · Launching in a couple of months
+              </span>
+            </div>
             <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl leading-[0.95] tracking-tight mb-6 text-white">
               All signals from the <br className="hidden sm:inline" />
               <span className="italic gold-grad">global network</span>.
             </h1>
             <p className="text-neutral-300 text-base md:text-xl leading-relaxed max-w-2xl">
-              Explore the complete directory of Networq Global dispatches on brand authority, high-performance marketing models, AI search architectures, and global market signals.
+              Explore the preview directory of Networq Global dispatches on brand authority, high-performance marketing models, AI search architectures, and global market signals. Full editorial publishing begins rolling out shortly.
             </p>
           </div>
         </header>

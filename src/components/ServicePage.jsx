@@ -111,7 +111,7 @@ function BrandCreativeMockup() {
             {sketchMode ? '🜚' : '✦'}
           </div>
           <span className={`font-mono text-sm tracking-[0.3em] uppercase ${fontStyle === 'serif' ? 'font-serif' : 'font-sans'}`}>
-            NETWORQ
+            NETWORQ GLOBAL
           </span>
         </div>
         {sketchMode && (
@@ -251,10 +251,10 @@ function SocialMediaMockup() {
 // 3. PERFORMANCE MARKETING MOCKUP
 // ============================================================================
 function PerformanceMockup() {
-  const [spend, setSpend] = useState(5000);
+  const [spend, setSpend] = useState(50000);
 
-  const estLeads = Math.round(spend / 42);
-  const estSales = (estLeads * 0.12 * 850).toLocaleString();
+  const estLeads = Math.round(spend / 350);
+  const estSales = Math.round(estLeads * 0.12 * 25000).toLocaleString('en-IN');
 
   return (
     <TiltCard className="w-full max-w-md p-6">
@@ -267,13 +267,13 @@ function PerformanceMockup() {
         <div>
           <div className="flex justify-between text-xs font-mono mb-2">
             <span className="text-[var(--mute)]">Monthly Ad Spend</span>
-            <span className="text-[var(--gold)] font-bold">${spend.toLocaleString()}</span>
+            <span className="text-[var(--gold)] font-bold">₹{spend.toLocaleString('en-IN')}</span>
           </div>
           <input 
             type="range" 
-            min="1000" 
-            max="50000" 
-            step="1000"
+            min="10000" 
+            max="500000" 
+            step="5000"
             value={spend} 
             onChange={(e) => setSpend(Number(e.target.value))}
             className="w-full accent-[var(--gold)] bg-[var(--bg)] h-1 rounded-lg cursor-pointer"
@@ -284,11 +284,11 @@ function PerformanceMockup() {
           <div className="p-4 rounded-xl border border-[var(--line)] bg-[var(--bg)]/50">
             <span className="font-mono text-[9px] text-[var(--mute)] uppercase block mb-1">Conversion Leads</span>
             <span className="text-2xl font-display text-[var(--gold)]">{estLeads}</span>
-            <span className="block text-[8px] text-[var(--mute)] font-mono mt-1">Est. $42 Cost Per Lead</span>
+            <span className="block text-[8px] text-[var(--mute)] font-mono mt-1">Est. ₹350 Cost Per Lead</span>
           </div>
           <div className="p-4 rounded-xl border border-[var(--line)] bg-[var(--bg)]/50">
             <span className="font-mono text-[9px] text-[var(--mute)] uppercase block mb-1">Est. Revenue</span>
-            <span className="text-2xl font-display text-[var(--gold)]">${estSales}</span>
+            <span className="text-2xl font-display text-[var(--gold)]">₹{estSales}</span>
             <span className="block text-[8px] text-[var(--mute)] font-mono mt-1">Based on 12% Sales Close</span>
           </div>
         </div>
@@ -615,7 +615,7 @@ function BusinessGrowthMockup() {
             funnelMode === 'optimized' ? 'border-[var(--gold)] bg-[var(--bg-2)] text-[var(--gold)]' : 'border-[var(--line)] text-[var(--mute)] bg-[var(--bg-2)]/40'
           }`}
         >
-          After Networq
+          After Networq Global
         </button>
       </div>
 
@@ -647,7 +647,7 @@ function LocalBusinessMockup() {
   const [activePin, setActivePin] = useState('nyc');
 
   const pins = {
-    nyc: { title: 'Networq NY HQ', reach: '48.2k Monthly Citations', rate: '4.9 ★★★★★' },
+    nyc: { title: 'Networq Global NY HQ', reach: '48.2k Monthly Citations', rate: '4.9 ★★★★★' },
     ldn: { title: 'London Regional Hub', reach: '24.1k Monthly Citations', rate: '4.8 ★★★★★' },
     sgp: { title: 'Singapore Central', reach: '18.9k Monthly Citations', rate: '5.0 ★★★★★' }
   };
@@ -1021,7 +1021,7 @@ export default function ServicePage({ serviceId, onBackClick, onContactClick, on
           <div className="flex items-center gap-4 mb-10">
             <span className="w-8 h-px" style={{ background: 'var(--gold)' }} />
             <h2 className="font-display text-2xl md:text-4xl text-[var(--gold)]">
-              Why It Matters
+              {data.whyItMattersTitle || "Why It Matters"}
             </h2>
           </div>
 
@@ -1106,7 +1106,9 @@ export default function ServicePage({ serviceId, onBackClick, onContactClick, on
                   <h3 className="font-display text-xl text-[var(--ink)] leading-tight">{offer.t}</h3>
                 </div>
 
-                <p className="text-[var(--mute)] text-sm leading-relaxed">{offer.d}</p>
+                {offer.d && (
+                  <p className="text-[var(--mute)] text-sm leading-relaxed">{offer.d}</p>
+                )}
 
                 {/* Bottom accent */}
                 <div
@@ -1121,11 +1123,18 @@ export default function ServicePage({ serviceId, onBackClick, onContactClick, on
         {/* ─── SEO Plans (seo-services only) ─────────────────────────── */}
         {data.plans && (
           <section className="mb-24 gsap-fade-up">
-            <div className="flex items-center gap-4 mb-10">
-              <span className="w-8 h-px" style={{ background: 'var(--gold)' }} />
-              <h2 className="font-display text-2xl md:text-4xl text-[var(--gold)]">
-                Networq's SEO Plans
-              </h2>
+            <div className="mb-8">
+              <div className="flex items-center gap-4 mb-3">
+                <span className="w-8 h-px" style={{ background: 'var(--gold)' }} />
+                <h2 className="font-display text-2xl md:text-4xl text-[var(--gold)]">
+                  Networq Global’s SEO Plans
+                </h2>
+              </div>
+              {data.plansIntro && (
+                <p className="text-[var(--mute)] text-base max-w-3xl leading-relaxed">
+                  {data.plansIntro}
+                </p>
+              )}
             </div>
             <div className="grid lg:grid-cols-3 gap-8 items-start">
               {data.plans.map((plan, idx) => (
@@ -1176,14 +1185,29 @@ export default function ServicePage({ serviceId, onBackClick, onContactClick, on
               ))}
             </div>
             {data.conclusion && (
-              <p className="mt-8 text-[var(--mute)] text-sm leading-relaxed text-center max-w-3xl mx-auto">
-                {data.conclusion}
-              </p>
+              <div className="mt-8 text-center max-w-3xl mx-auto space-y-6">
+                <p className="text-[var(--mute)] text-sm leading-relaxed">
+                  {data.conclusion.replace("Because, to build the best, you need to team up with the best!", "").trim()}
+                </p>
+                <p className="text-[var(--gold)] font-bold text-base md:text-lg">
+                  Because, to build the best, you need to team up with the best!
+                </p>
+                <div>
+                  <button
+                    onClick={onContactClick}
+                    className="px-10 py-4 rounded-full text-sm font-semibold uppercase tracking-wider inline-flex items-center gap-2 transition-all duration-300 hover:scale-105"
+                    style={{ background: 'var(--gold)', color: '#0a0a0a' }}
+                    data-cursor="link"
+                  >
+                    Connect Now →
+                  </button>
+                </div>
+              </div>
             )}
           </section>
         )}
 
-        {/* ─── Why Choose Networq ────────────────────────────────────── */}
+        {/* ─── Why Choose Networq Global ─────────────────────────────── */}
         {(data.whyChoose || data.whyChoosePoints) && (
           <section className="mb-24 gsap-fade-up">
             <div
@@ -1204,10 +1228,10 @@ export default function ServicePage({ serviceId, onBackClick, onContactClick, on
                 {glyph}
               </div>
 
-              {data.whyChoose && (
+              {!data.whyChoosePoints && data.whyChoose && (
                 <div className="text-center max-w-3xl mx-auto">
                   <h2 className="font-display text-3xl md:text-5xl mb-6 text-[var(--ink)]">
-                    Why Choose <span className="italic font-serif text-[var(--gold)]">Networq?</span>
+                    Why Choose <span className="italic font-serif text-[var(--gold)]">Networq Global?</span>
                   </h2>
                   <p className="text-[var(--mute)] text-lg leading-relaxed mb-8">{data.whyChoose}</p>
                   <button
@@ -1216,16 +1240,19 @@ export default function ServicePage({ serviceId, onBackClick, onContactClick, on
                     style={{ background: 'var(--gold)', color: '#0a0a0a' }}
                     data-cursor="link"
                   >
-                    Partner With Us →
+                    Connect Now →
                   </button>
                 </div>
               )}
 
               {data.whyChoosePoints && (
                 <div>
-                  <h2 className="font-display text-3xl md:text-4xl mb-8 text-[var(--ink)]">
-                    Why Choose <span className="italic font-serif text-[var(--gold)]">Networq?</span>
+                  <h2 className="font-display text-3xl md:text-4xl mb-6 text-[var(--ink)]">
+                    Why Choose <span className="italic font-serif text-[var(--gold)]">Networq Global?</span>
                   </h2>
+                  {data.whyChoose && (
+                    <p className="text-[var(--mute)] text-base md:text-lg leading-relaxed mb-8 max-w-3xl">{data.whyChoose}</p>
+                  )}
                   <div className="grid md:grid-cols-2 gap-4 mb-10">
                     {data.whyChoosePoints.map((point, idx) => (
                       <div key={idx} className="flex items-start gap-4">
@@ -1240,7 +1267,7 @@ export default function ServicePage({ serviceId, onBackClick, onContactClick, on
                     style={{ background: 'var(--gold)', color: '#0a0a0a' }}
                     data-cursor="link"
                   >
-                    Let's Connect →
+                    Connect Now →
                   </button>
                 </div>
               )}
@@ -1299,51 +1326,6 @@ export default function ServicePage({ serviceId, onBackClick, onContactClick, on
                 </div>
               );
             })}
-          </div>
-        </section>
-
-        {/* ─── Bottom CTA Banner ─────────────────────────────────────── */}
-        <section className="gsap-fade-up">
-          <div
-            className="relative overflow-hidden rounded-3xl p-12 md:p-16 text-center"
-            style={{
-              background: 'linear-gradient(135deg, rgba(22, 22, 22, 0.88) 0%, rgba(16, 16, 16, 0.94) 50%, rgba(10, 10, 10, 0.96) 100%)',
-              border: '1px solid rgba(var(--accent-rgb), 0.28)',
-              boxShadow: '0 30px 80px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 50px rgba(var(--accent-rgb), 0.08)',
-              backdropFilter: 'blur(36px)',
-              WebkitBackdropFilter: 'blur(36px)',
-            }}
-          >
-            {/* Background glyph */}
-            <div
-              className="absolute inset-0 flex items-center justify-center text-[300px] leading-none select-none pointer-events-none opacity-[0.03] font-display"
-              style={{ color: 'var(--gold)' }}
-            >
-              {glyph}
-            </div>
-            <div className="relative z-10">
-              <p className="font-mono text-xs uppercase tracking-[0.2em] mb-4" style={{ color: 'var(--gold)' }}>
-                Ready to scale?
-              </p>
-              <h2 className="font-display text-3xl md:text-5xl text-[var(--ink)] mb-6 max-w-2xl mx-auto leading-tight">
-                Let's build something <span className="italic font-serif text-[var(--gold)]">remarkable</span> together.
-              </h2>
-              <p className="text-[var(--mute)] text-base mb-10 max-w-xl mx-auto">
-                Talk to our team and discover what {data.t} can do for your business.
-              </p>
-              <button
-                onClick={onContactClick}
-                className="px-10 py-4 rounded-full text-base font-semibold inline-flex items-center gap-3 transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-                style={{
-                  background: 'var(--gold)',
-                  color: '#0a0a0a',
-                  boxShadow: '0 8px 32px rgba(var(--accent-rgb), 0.2)',
-                }}
-                data-cursor="link"
-              >
-                Connect Now <span aria-hidden="true">→</span>
-              </button>
-            </div>
           </div>
         </section>
 

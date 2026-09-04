@@ -134,7 +134,7 @@ export default function CareersPage({ onBackClick }) {
             }`}
             style={{ transitionDelay: '150ms' }}
           >
-            <div className="eyebrow mb-4">Careers at Networq</div>
+            <div className="eyebrow mb-4">Careers at Networq Global</div>
             <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl leading-[0.95] tracking-tight mb-6">
               Work With <span className="italic gold-grad">Us</span>
             </h1>

@@ -38,7 +38,7 @@ export default function Hero({ onStartProjectClick, onSeeWorkClick }) {
             data-anim="fade-up"
             data-parallax="-0.04"
           >
-            Networq is all about taking you to the next level in the market with brilliance and creativity.
+            Networq Global is all about taking you to the next level in the market with brilliance and creativity.
           </p>
         </div>
 

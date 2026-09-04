@@ -347,7 +347,7 @@ export default function Contact() {
           >
             {formStatus === 'idle' && (
               <>
-                Send to Networq <span aria-hidden="true">→</span>
+                Send to Networq Global <span aria-hidden="true">→</span>
               </>
             )}
             {formStatus === 'sending' && 'Sending message...'}

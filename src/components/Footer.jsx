@@ -91,8 +91,8 @@ export default function Footer({ onLinkClick, onPageChange, isSubpage = false, i
                   { label: 'Social Media',      id: 'social-media' },
                   { label: 'Performance Mktg',  id: 'performance-marketing' },
                   { label: 'SEO Services',      id: 'seo-services' },
-                  { label: 'Website Services',  id: 'website-services' },
-                  { label: 'Email & Automation',id: 'email-automation' },
+                  { label: 'Web Design',        id: 'website-services' },
+                  { label: 'Business Growth Strategy', id: 'business-growth' },
                 ].map((s) => (
                   <li key={s.id}>
                     <a

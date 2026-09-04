@@ -16,10 +16,9 @@ export default function Services({ onEngageClick, onServiceClick }) {
     "05": "website-services",
     "06": "content-marketing",
     "07": "video-multimedia",
-    "08": "email-automation",
-    "09": "business-growth",
-    "10": "local-business",
-    "11": "emerging-services"
+    "08": "business-growth",
+    "09": "local-business",
+    "10": "emerging-services"
   };
 
   return (

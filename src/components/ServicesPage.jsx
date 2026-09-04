@@ -32,10 +32,9 @@ export default function ServicesPage({ onBackClick, onServiceClick, onContactCli
     "05": "website-services",
     "06": "content-marketing",
     "07": "video-multimedia",
-    "08": "email-automation",
-    "09": "business-growth",
-    "10": "local-business",
-    "11": "emerging-services"
+    "08": "business-growth",
+    "09": "local-business",
+    "10": "emerging-services"
   };
 
   // Combine static and dynamic services

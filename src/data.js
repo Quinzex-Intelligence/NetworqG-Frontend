@@ -3,13 +3,12 @@ export const services = [
   { n: "02", t: "Social Media Marketing", d: "Creating conversations that drive real engagement and growth." },
   { n: "03", t: "Performance Marketing", d: "Data-driven campaigns that maximize ROI and business results." },
   { n: "04", t: "SEO Services", d: "Helping your brand rank higher and grow organic visibility." },
-  { n: "05", t: "Website Services", d: "Designing fast, modern websites that perform and convert." },
+  { n: "05", t: "Web Design", d: "Designing fast, modern websites that perform and convert." },
   { n: "06", t: "Content Marketing", d: "Crafting content that informs, engages and builds trust." },
   { n: "07", t: "Video & Multimedia", d: "Creating visuals that capture attention and deliver impact." },
-  { n: "08", t: "Email & Automation", d: "Automating communication that nurtures leads and drives conversions." },
-  { n: "09", t: "Business Growth Services", d: "Building strategies and systems for scalable growth." },
-  { n: "10", t: "Local Business Marketing", d: "Helping local brands become the first choice in their area." },
-  { n: "11", t: "Emerging Services", d: "Future-ready AI solutions that keep your business ahead." },
+  { n: "08", t: "Business Growth Strategy", d: "Building strategies and systems for scalable growth." },
+  { n: "09", t: "Local Business Marketing", d: "Helping local brands become the first choice in their area." },
+  { n: "10", t: "Emerging Services", d: "Future-ready AI solutions that keep your business ahead." },
 ];
 
 export const processSteps = [

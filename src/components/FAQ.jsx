@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const FAQS = [
   {
-    q: "Why should I choose Networq?",
+    q: "Why should I choose Networq Global?",
     a: "Our key motto is not only to build empowering digital solutions for all kinds of businesses, but also to ensure that your vision is kept alive throughout the process. Choose us to see your vision flourish the right way!"
   },
   {
@@ -18,7 +18,7 @@ const FAQS = [
     a: "Yes, we monitor campaigns daily to track performance and optimize every lead generated, helping us maintain consistency and continuously improve results while ensuring steady growth and strong brand value."
   },
   {
-    q: "Is Networq open to work with any kind of brands/business?",
+    q: "Is Networq Global open to work with any kind of brands/business?",
     a: "Yes, we are open to working with all business sectors globally."
   }
 ];

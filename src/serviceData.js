@@ -3,6 +3,7 @@ export const serviceDetails = {
     t: "Brand & Creative Services",
     sub: "Give Your Brand a Story Worth Remembering",
     desc: "Great brands aren't built by chance, they're built with purpose, consistency, and creativity. We help businesses craft strong brand identities that not only look good but also create lasting impressions and meaningful connections with their audience.",
+    whyItMattersTitle: "Why Is Branding Important for Your Business?",
     importance: [
       "It establishes your position and identity in the market.",
       "It helps customers recognize and remember your business.",
@@ -33,6 +34,7 @@ export const serviceDetails = {
     t: "Social Media Marketing",
     sub: "Make Your Brand Impossible to Ignore",
     desc: "Social media marketing is more than just posting content, it's about building a strong brand presence, creating meaningful engagement, and turning followers into loyal customers. We help businesses stay relevant, visible, and connected with their audience through strategic and creative content.",
+    whyItMattersTitle: "Why Is Social Media Marketing Important for Your Business?",
     importance: [
       "It helps your brand stay visible and relevant to your audience.",
       "It builds trust through consistent communication and engagement.",
@@ -49,6 +51,7 @@ export const serviceDetails = {
       { t: "Social Media Audits", d: "We analyze your existing social media presence, identify opportunities for improvement, and provide actionable recommendations to enhance performance." },
       { t: "Social Media Strategy Consulting", d: "We provide expert guidance and customized strategies based on your business goals, industry trends, and audience behavior to drive long-term growth." }
     ],
+    whyChoose: "Because we turn content into connections and visibility into growth.",
     whyChoosePoints: [
       "We create strategies tailored specifically to your business goals.",
       "We focus on building a strong and consistent brand presence.",
@@ -73,6 +76,7 @@ export const serviceDetails = {
     t: "Performance Marketing",
     sub: "Turn Clicks into Customers, Consistently",
     desc: "We design and run lead generation campaigns that focus on bringing you high-quality, conversion-ready leads, not just traffic. By combining targeted ads, audience research, and continuous optimization, we ensure every campaign is built to maximize your ROI and business growth.",
+    whyItMattersTitle: "Why Is Performance Marketing Important for Your Business?",
     importance: [
       "It ensures your marketing budget is spent on results, not just reach.",
       "It helps you attract people who are already looking for what you offer.",
@@ -102,6 +106,7 @@ export const serviceDetails = {
     t: "SEO Services",
     sub: "Your Rank 1 is Our Goal",
     desc: "We provide result-driven SEO services designed to improve your website visibility, increase organic traffic, and help your business rank higher on search engines. Our approach combines technical SEO, content strategy, and consistent optimization to ensure long-term and sustainable growth.",
+    whyItMattersTitle: "Why Is SEO Important for Your Business?",
     importance: [
       "It helps your business appear exactly when customers are searching for your services.",
       "It builds long-term organic visibility without relying on constant ad spend.",
@@ -110,14 +115,16 @@ export const serviceDetails = {
       "It strengthens your overall digital presence and brand authority over time."
     ],
     offers: [
-      { t: "Technical SEO", d: "Deep optimization of website speed, crawlability, indexation, and architecture to satisfy search engine algorithms." },
-      { t: "Local SEO", d: "Optimizing Google Business Profile and local listings to capture nearby customers at the moment of intent." },
-      { t: "E-commerce SEO", d: "Tailored strategies for product pages, collections, and structured data to drive organic store conversions." },
-      { t: "Keyword Research", d: "Analyzing high-intent keywords that align with customer needs and market opportunities." },
-      { t: "On-Page SEO", d: "Refining meta tags, heading hierarchies, content structures, and image alt texts to improve relevance." },
-      { t: "Off-Page SEO & Link Building", d: "Earning high-authority backlink profiles to raise domain credibility and search visibility." },
-      { t: "SEO Audits", d: "Comprehensive, technical reviews of site performance and optimization gaps with direct roadmaps." }
+      { t: "Technical SEO" },
+      { t: "Local SEO" },
+      { t: "E-commerce SEO" },
+      { t: "Keyword research" },
+      { t: "On-page SEO" },
+      { t: "Off-page SEO" },
+      { t: "Link building" },
+      { t: "SEO audits" }
     ],
+    plansIntro: "Become a member of our amazing SEO plans, catered well by keeping all the general requirements in mind.",
     plans: [
       {
         t: "Silver SEO Plan",
@@ -165,7 +172,7 @@ export const serviceDetails = {
         ]
       }
     ],
-    conclusion: "From strategy to execution, we focus on delivering SEO that drives real visibility, traffic, and growth. Every step is carefully optimized to ensure your business achieves consistently exceptional results, and Networq ensures your businesses get only the exceptionally best of our work. Because, to build the best, you need to team up with the best!",
+    conclusion: "From strategy to execution, we focus on delivering SEO that drives real visibility, traffic, and growth. Every step is carefully optimized to ensure your business achieves consistently exceptional results, and Networq Global ensures your businesses get only the exceptionally best of our work. Because, to build the best, you need to team up with the best!",
     faqs: [
       { q: "Can you guarantee a #1 ranking on Google?", a: "No genuine SEO agency can guarantee a #1 ranking. What we can guarantee is a strategic, data-driven approach focused on improving your visibility and long-term growth." },
       { q: "Why is my website not showing up on Google?", a: "This could be due to technical issues, poor optimization, low authority, or strong competition. We identify the gaps and create a roadmap to improve your rankings." },
@@ -175,9 +182,10 @@ export const serviceDetails = {
     ]
   },
   "website-services": {
-    t: "Website Services",
-    sub: "Creating Digital Experiences That Perform & Convert",
-    desc: "We don’t just build websites, we create digital experiences that convert, communicate, and grow your brand. From initial planning to final deployment, every step is focused on performance, accessibility, clarity, and impact.",
+    t: "Web Design",
+    sub: "We don’t just build websites, we create digital experiences that convert, communicate, and grow your brand.",
+    desc: "We begin by understanding your business, goals, and audience in detail. Based on that, we design and develop a website that reflects your brand identity and delivers a smooth user experience. From planning to launch, every step is focused on performance, clarity, and impact.",
+    whyItMattersTitle: "Why Is Website Design Important for Your Business?",
     importance: [
       "It creates the first impression of your brand in the digital world.",
       "It influences how users trust, engage, and interact with your business.",
@@ -193,13 +201,13 @@ export const serviceDetails = {
       { t: "Testing & Launch", d: "Before going live, we thoroughly test the website for speed, responsiveness, and functionality. Once everything is perfect, we launch and ensure a smooth handover." }
     ],
     offers: [
-      { t: "Website Development", d: "Clean, performant React/Vite/Next.js builds or CMS templates designed to scale." },
-      { t: "Website Design", d: "Stunning custom UI/UX mockups created specifically for your brand personality." },
-      { t: "Landing Page Creation", d: "High-converting single-page campaigns built for paid search and social funnels." },
-      { t: "E-commerce Store Development", d: "Custom Shopify, WooCommerce, or headless stores optimized for fast checkouts." },
-      { t: "Website Maintenance", d: "Regular security patches, backups, text edits, and structural health checks." },
-      { t: "Website Speed Optimization", d: "Code auditing, image compression, and hosting optimization to hit green Core Web Vitals." },
-      { t: "UX/UI Consulting", d: "Heuristic evaluations and user testing to find and patch friction points." }
+      { t: "Website development" },
+      { t: "Website design" },
+      { t: "Landing page creation" },
+      { t: "E-commerce store development" },
+      { t: "Website maintenance" },
+      { t: "Website speed optimization" },
+      { t: "UX/UI consulting" }
     ],
     whyChoose: "Build an exceptional business with us. Every business needs professional developers who can turn ideas into scalable, high-performing digital solutions that actually grow your brand, and who better than us?!",
     faqs: [
@@ -214,6 +222,7 @@ export const serviceDetails = {
     t: "Content Marketing",
     sub: "Words That Inform, Engage & Convert",
     desc: "Great content does more than fill a page - it builds trust, starts conversations, and drives action. We create purposeful content that connects with your audience, strengthens your brand voice, and supports your business goals.",
+    whyItMattersTitle: "Why Is Content Marketing Important for Your Business?",
     importance: [
       "It gives your brand a voice that feels human, not promotional.",
       "It stays with your audience long after they’ve scrolled away.",
@@ -243,6 +252,7 @@ export const serviceDetails = {
     t: "Video & Multimedia",
     sub: "Visuals That Move, Engage & Stay",
     desc: "Video and visual content are the most powerful ways to capture attention and communicate your brand message in today’s digital world. We create high-impact visuals that not only look premium but also connect emotionally and drive engagement.",
+    whyItMattersTitle: "Why Is Video & Multimedia Important for Your Business?",
     importance: [
       "Every visual that’s shot by humans, will always attract humans.",
       "It holds attention in a world where everything moves too fast.",
@@ -268,37 +278,11 @@ export const serviceDetails = {
       { q: "Do I need professional equipment to get started?", a: "Not always. Great storytelling, editing, and strategy matter more than just expensive equipment." }
     ]
   },
-  "email-automation": {
-    t: "Email & Automation",
-    sub: "Nurture Leads & Automate Your Growth",
-    desc: "Email marketing and automation help you turn attention into action. We build automated workflows, direct sequences, and custom-designed newsletters that guide prospects from discovery to conversion, keeping your business running even when you're offline.",
-    importance: [
-      "It establishes direct, personalized connection with your high-intent audience.",
-      "It automates repetitive communication to save time and resource.",
-      "It nurtures prospects at key touchpoints throughout the funnel.",
-      "It drives repeat purchases and builds long-term customer relationships.",
-      "It delivers high, highly-trackable returns on your marketing investment."
-    ],
-    offers: [
-      { t: "Email Newsletter Campaigns", d: "Designing and writing periodic newsletters that keep your audience informed, engaged, and returning." },
-      { t: "Automated Nurture Flows", d: "Sequences built to educate prospects, build familiarity, and guide them toward conversions automatically." },
-      { t: "Customer Onboarding Workflows", d: "Creating stellar first impressions with automated welcome sequences that explain brand value." },
-      { t: "Cart Abandonment Recovery", d: "Winning back lost sales with automated reminder workflows triggered by user activity." },
-      { t: "List Segmentation & Hygiene", d: "Structuring lists for higher deliverability, better open rates, and lower bounce rates." },
-      { t: "CRM Platform Management", d: "Expert setup, configuration, and integration of platforms like Klaviyo, ActiveCampaign, or HubSpot." }
-    ],
-    whyChoose: "Let's build automated communication systems that nurture leads and convert them while you sleep. Connect now!",
-    faqs: [
-      { q: "How does email automation save my business time?", a: "It sends pre-configured, highly targeted messages based on customer behavior automatically, so your team doesn't have to send them manually." },
-      { q: "What email platforms do you work with?", a: "We work with all leading platforms, including Klaviyo, Mailchimp, ActiveCampaign, HubSpot, Omnisend, and more." },
-      { q: "How often should I send marketing emails?", a: "The frequency depends on your list size and industry, but consistency and value-add content matter much more than high volume." },
-      { q: "Will email campaigns work for a B2B business?", a: "Yes, email is a highly effective channel for B2B lead nurturing, scheduling consultations, and distributing high-value resources." }
-    ]
-  },
   "business-growth": {
-    t: "Business Growth Services",
+    t: "Business Growth Strategy",
     sub: "Build Smarter Systems That Drive Real Growth",
     desc: "Business growth is not just about getting more customers, it’s about building the right systems, strategies, and insights that help your brand scale consistently and sustainably. We focus on understanding your market, refining your journey, and optimizing every stage of growth.",
+    whyItMattersTitle: "Why Is Business Growth Strategy Important for Your Business?",
     importance: [
       "It brings clarity to how your business actually grows, not just how it operates.",
       "It helps you move with direction instead of reacting to the market.",
@@ -327,6 +311,7 @@ export const serviceDetails = {
     t: "Local Business Marketing",
     sub: "Make Every Local Search Lead to You",
     desc: "Local marketing is about being visible where it matters most, in your city, your neighbourhood, and your search results. We help businesses strengthen their local presence, build trust, and attract more walk-ins and enquiries through strategic local optimization.",
+    whyItMattersTitle: "Why Is Local Business Marketing Important for Your Business?",
     importance: [
       "It puts your business in front of people who are actively searching nearby.",
       "It builds instant trust through visibility, reviews, and consistent presence.",
@@ -354,6 +339,7 @@ export const serviceDetails = {
     t: "Emerging Services",
     sub: "Conquer the Future with the Best Intelligent Automation",
     desc: "Emerging technologies are reshaping how brands connect, communicate, and convert. We help businesses stay ahead with AI-driven solutions, smarter analytics, and automated marketing systems that improve efficiency and decision-making.",
+    whyItMattersTitle: "Why Adapting to Emerging Technologies is Important for Your Business?",
     importance: [
       "It helps you stay 10 steps ahead while others are still adapting.",
       "It lets your business grow with the future instead of catching up to it.",

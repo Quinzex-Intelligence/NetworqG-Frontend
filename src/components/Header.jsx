@@ -7,11 +7,10 @@ const SERVICE_NAV = [
   { id: 'social-media',          label: 'Social Media Marketing', icon: '◈', desc: 'Content, management & ads' },
   { id: 'performance-marketing', label: 'Performance Marketing',  icon: '◎', desc: 'Google, Meta & LinkedIn ads' },
   { id: 'seo-services',          label: 'SEO Services',           icon: '◇', desc: 'Rank higher, grow organically' },
-  { id: 'website-services',      label: 'Website Services',       icon: '▣', desc: 'Design, dev & optimization' },
+  { id: 'website-services',      label: 'Web Design',             icon: '▣', desc: 'Design, dev & experiences' },
   { id: 'content-marketing',     label: 'Content Marketing',      icon: '◉', desc: 'Blogs, copy & content strategy' },
   { id: 'video-multimedia',      label: 'Video & Multimedia',     icon: '▶', desc: 'Production, reels & motion' },
-  { id: 'email-automation',      label: 'Email & Automation',     icon: '⊡', desc: 'Nurture flows & campaigns' },
-  { id: 'business-growth',       label: 'Business Growth',        icon: '◬', desc: 'Strategy, funnels & consulting' },
+  { id: 'business-growth',       label: 'Business Growth Strategy', icon: '◬', desc: 'Strategy, funnels & consulting' },
   { id: 'local-business',        label: 'Local Business',         icon: '◯', desc: 'Google profile & local ads' },
   { id: 'emerging-services',     label: 'Emerging & AI',          icon: '⬡', desc: 'AI tools & automation' },
 ];

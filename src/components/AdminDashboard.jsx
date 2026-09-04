@@ -650,7 +650,7 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
                     setEditingBlog(null);
                     setBlogFormData({
                       title: '',
-                      author: user?.name || 'Networq Editorial',
+                      author: user?.name || 'Networq Global Editorial',
                       tag: 'Playbook',
                       readTime: '5 min read',
                       shortDescription: '',
@@ -930,7 +930,7 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
                   setEditingBlog(null);
                   setBlogFormData({
                     title: '',
-                    author: user?.name || 'Networq Editorial',
+                    author: user?.name || 'Networq Global Editorial',
                     tag: 'Playbook',
                     readTime: '5 min read',
                     shortDescription: '',
@@ -977,7 +977,7 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
                       setEditingBlog(null);
                       setBlogFormData({
                         title: '',
-                        author: user?.name || 'Networq Editorial',
+                        author: user?.name || 'Networq Global Editorial',
                         tag: 'Playbook',
                         readTime: '5 min read',
                         shortDescription: '',
@@ -1021,7 +1021,7 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
                       </div>
 
                       <div className="flex items-center gap-2 text-[10px] font-mono text-neutral-500 mb-1">
-                        <span>{blog.author || 'Networq Editorial'}</span>
+                        <span>{blog.author || 'Networq Global Editorial'}</span>
                       </div>
 
                       <h3 className="text-base font-semibold text-white mb-2 leading-snug line-clamp-2">

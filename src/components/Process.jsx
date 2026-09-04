@@ -21,7 +21,7 @@ export default function Process() {
 
           <div className="relative max-w-[1400px] mx-auto px-6 lg:px-10 w-full grid lg:grid-cols-2 gap-12 items-center z-10">
             <div className="order-2 lg:order-1">
-              <div className="eyebrow mb-4">02 — The Networq Method</div>
+              <div className="eyebrow mb-4">02 — The Networq Global Method</div>
               <div id="process-stage" className="relative h-[400px]">
                 {processSteps.map((p, i) => (
                   <div
