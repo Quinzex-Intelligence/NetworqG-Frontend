@@ -125,12 +125,20 @@ export default function App() {
 
   const scrollToSection = (id) => {
     const targetEl = document.getElementById(id);
-    if (targetEl && lenisRef.current) {
-      lenisRef.current.scrollTo(targetEl, { duration: 1.1 });
+    if (targetEl) {
+      if (lenisRef.current) {
+        lenisRef.current.scrollTo(targetEl, { duration: 1.1 });
+      } else {
+        targetEl.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
   const handleNavScroll = (id) => {
+    if (id === 'about') {
+      navigateToPage('about');
+      return;
+    }
     if (currentPage !== 'home') {
       navigateToPage({ type: 'home-scroll', sectionId: id });
     } else {

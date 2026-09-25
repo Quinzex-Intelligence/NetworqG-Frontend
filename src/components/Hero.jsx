@@ -28,9 +28,9 @@ export default function Hero({ onStartProjectClick, onSeeWorkClick }) {
             data-parallax="-0.08"
           >
             Crafting <br />
-            <span className="gold-grad italic font-serif font-normal">outstanding</span> <br />
+            <span className="gold-grad italic font-display font-extrabold">outstanding</span> <br />
             digital solutions <br />
-            <span className="gold-grad italic font-serif font-normal">across the globe!</span>
+            <span className="gold-grad italic font-display font-extrabold">across the globe!</span>
           </h1>
 
           <p 
@@ -46,11 +46,11 @@ export default function Hero({ onStartProjectClick, onSeeWorkClick }) {
         <div className="mt-4 sm:mt-auto pt-2 sm:pt-6" data-anim="fade-up">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-start gap-4 max-w-sm sm:max-w-none">
             <button
-              onClick={onStartProjectClick}
+              onClick={onSeeWorkClick}
               data-cursor="link"
               className="btn-gold px-8 py-4 rounded-full text-sm sm:text-base font-semibold inline-flex items-center justify-center gap-2 cursor-pointer"
             >
-              Let's Get Started <span aria-hidden="true">→</span>
+              Explore Our Services <span aria-hidden="true">→</span>
             </button>
 
             

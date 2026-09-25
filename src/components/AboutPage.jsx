@@ -76,7 +76,7 @@ export default function AboutPage({ onBackClick, onContactClick }) {
             "If it matters to your business, it matters to us."
           </p>
           <p className="text-mute text-sm md:text-base mt-4 max-w-2xl mx-auto leading-relaxed">
-            Everything that has something to do with your business, brand or you, matters. Blending advanced technology and never-ending creativity, we aim to build all things that will make your brand the talk of the town — or the world.
+            If it shapes your brand, drives your business, or impacts your growth — it matters. Blending advanced technology and never-ending creativity, we aim to build all things that will make your brand the talk of the town — or the world.
           </p>
         </div>
 

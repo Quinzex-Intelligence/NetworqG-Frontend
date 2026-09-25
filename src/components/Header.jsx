@@ -66,7 +66,7 @@ export default function Header({ onPageChange, onLinkClick, currentPage, isAuthe
         <div className="max-w-[1400px] mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
           {/* Logo */}
           <a href="#top" className="flex items-center group" data-cursor="link" onClick={handleLogoClick}>
-            <img src={logoSrc} alt="Networq Global Logo" className="h-8 md:h-9 w-auto" />
+            <img src={logoSrc} alt="Networq Global Logo" className="h-9 md:h-10 w-auto object-contain" />
           </a>
 
           {/* Desktop Nav */}
@@ -77,7 +77,14 @@ export default function Header({ onPageChange, onLinkClick, currentPage, isAuthe
               data-cursor="link"
               className="nav-link px-3 py-2 rounded-lg hover:text-gold transition-colors duration-300"
               style={{ color: 'var(--ink)' }}
-              onClick={(e) => { e.preventDefault(); onLinkClick?.('about'); onPageChange('about'); }}
+              onClick={(e) => {
+                e.preventDefault();
+                if (currentPage === 'about') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                  onPageChange('about');
+                }
+              }}
             >
               About
             </a>
@@ -203,17 +210,6 @@ export default function Header({ onPageChange, onLinkClick, currentPage, isAuthe
               Careers
             </a>
 
-            {/* Contact */}
-            <a
-              href="#"
-              data-cursor="link"
-              className="nav-link px-3 py-2 rounded-lg hover:text-gold transition-colors duration-300"
-              style={{ color: 'var(--ink)' }}
-              onClick={(e) => { e.preventDefault(); onPageChange('contact'); }}
-            >
-              Contact
-            </a>
-
             {/* Admin/Sign-in */}
             <a
               href="#"
@@ -273,7 +269,15 @@ export default function Header({ onPageChange, onLinkClick, currentPage, isAuthe
               href="#"
               className="mobile-menu-link hover:text-gold transition-colors duration-300"
               style={{ color: 'var(--ink)' }}
-              onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); onPageChange('about'); }}
+              onClick={(e) => {
+                e.preventDefault();
+                setMobileMenuOpen(false);
+                if (currentPage === 'about') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                  onPageChange('about');
+                }
+              }}
             >
               About
             </a>
@@ -334,16 +338,6 @@ export default function Header({ onPageChange, onLinkClick, currentPage, isAuthe
               Careers
             </a>
 
-            {/* Contact */}
-            <a
-              href="#"
-              className="mobile-menu-link hover:text-gold transition-colors duration-300"
-              style={{ color: 'var(--ink)' }}
-              onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); onPageChange('contact'); }}
-            >
-              Contact
-            </a>
-
             {/* Admin/Sign-in Mobile */}
             <a
               href="#"
@@ -378,14 +372,7 @@ export default function Header({ onPageChange, onLinkClick, currentPage, isAuthe
 
           <div className="mobile-menu-footer mt-8 pt-5 border-t border-line w-full max-w-[280px] text-center flex flex-col gap-2.5">
             <span className="text-[10px] font-mono text-mute uppercase tracking-widest">Connect With Us</span>
-            <a href="mailto:hello@networq.global" className="text-xs text-ink/80 hover:text-gold transition-colors duration-200">hello@networq.global</a>
-            <div className="flex justify-center gap-4 text-[11px] font-mono text-mute mt-0.5">
-              <a href="#" className="hover:text-gold transition-colors duration-200">LN</a>
-              <span className="opacity-20">/</span>
-              <a href="#" className="hover:text-gold transition-colors duration-200">IG</a>
-              <span className="opacity-20">/</span>
-              <a href="#" className="hover:text-gold transition-colors duration-200">TW</a>
-            </div>
+            <a href="mailto:networqglobal@gmail.com" className="text-xs text-ink/80 hover:text-gold transition-colors duration-200">networqglobal@gmail.com</a>
           </div>
         </div>
       </div>

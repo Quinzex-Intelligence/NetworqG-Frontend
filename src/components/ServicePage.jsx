@@ -963,14 +963,6 @@ export default function ServicePage({ serviceId, onBackClick, onContactClick, on
                   >
                     Get Started →
                   </button>
-                  <button
-                    onClick={onContactClick}
-                    className="px-8 py-4 rounded-full text-sm font-semibold uppercase tracking-wider inline-flex items-center gap-2 border transition-all duration-300 hover:scale-105"
-                    style={{ color: 'var(--gold)', borderColor: 'rgba(var(--accent-rgb), 0.25)' }}
-                    data-cursor="link"
-                  >
-                    Talk to Us
-                  </button>
                 </div>
               </div>
 

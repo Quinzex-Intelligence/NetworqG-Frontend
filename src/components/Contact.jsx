@@ -112,7 +112,7 @@ export default function Contact() {
       id="contact"
       data-section="contact"
       data-scene="vortex"
-      data-edge-chip="07 · START A PROJECT"
+      data-edge-chip="04 · START A PROJECT"
       className="relative py-20 lg:py-24 border-t border-line overflow-hidden"
     >
       <div className="absolute inset-0 grid-overlay opacity-30" data-parallax="0.1"></div>
@@ -120,7 +120,7 @@ export default function Contact() {
       <div className="relative max-w-[1400px] mx-auto px-6 lg:px-10 flex flex-col lg:grid lg:grid-cols-12 gap-12">
         <div className="lg:col-span-5 drift-up card p-6 md:p-8 rounded-2xl border border-line">
           <div className="eyebrow mb-3" data-anim="fade-up">
-            06 — Start a Project
+            04 — Start a Project
           </div>
           <h2
             className="font-display text-4xl lg:text-6xl leading-[0.95] tracking-tight"
@@ -147,7 +147,7 @@ export default function Contact() {
               <span className="text-gold mt-1">◆</span>
               <div>
                 <div className="text-gold-2">+91 9863495371</div>
-                <div className="text-mute">NYC HQ · Mon–Fri</div>
+                <div className="text-mute">Mon–Fri</div>
               </div>
             </div>
             

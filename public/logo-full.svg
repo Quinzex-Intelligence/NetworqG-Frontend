@@ -1,50 +1,43 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1273.69 247.09">
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1332.28 247.09">
   <defs>
-    <style>
-      .cls-1 {
-        font-size: 88.38px;
-      }
-
-      .cls-1, .cls-2 {
-        fill: #ffc750;
-      }
-
-      .cls-1, .cls-3 {
-        font-family: 'Squarish Sans', Squaresharps, sans-serif;
-      }
-
-      .cls-4, .cls-3 {
-        fill: #084b6f;
-      }
-
-      .cls-5 {
-        stroke: #084b6f;
-      }
-
-      .cls-5, .cls-6 {
-        fill: #010101;
-        stroke-miterlimit: 10;
-      }
-
-      .cls-6 {
-        stroke: #ffc750;
-      }
-
-      .cls-3 {
-        font-size: 176.77px;
-      }
-    </style>
+    <!-- Authentic Networq Brand Typeface Outlines -->
+    <path id="glyph-N" d="M.125 .125V.4375H.1875L.375 .21582031V.4375H.4375V.125H.375L.1875 .33984376V.125H.125Z"/>
+    <path id="glyph-E" d="M.1875 .3125H.4375L.375 .25H.1875V.1875H.4375L.375 .125H.125V.4375H.4375L.375 .375H.1875V.3125Z"/>
+    <path id="glyph-T" d="M.1875 .4375H.4375L.375 .375H.3125V.125H.25V.375H.125L.1875 .4375Z"/>
+    <path id="glyph-W" d="M.1875 .4375V.1875H.25V.4375H.3125V.1875H.375V.4375H.4375V.125H.125V.4375H.1875Z"/>
+    <path id="glyph-O" d="M.1875 .375V.1875H.375V.375H.1875M.4375 .4375V.125H.125V.4375H.4375Z"/>
+    <path id="glyph-R" d="M.375 .3125V.375H.1875V.125H.125V.4375H.4375V.25H.32714845L.4375 .125H.36035157L.1953125 .3125H.375Z"/>
+    <path id="glyph-Q" d="M.375 .1875V.375H.1875V.1875H.375M.25 .125H.125V.4375H.4375V.125H.33007813L.39257813 .0625H.3125L.25 .125Z"/>
+    <path id="glyph-G" d="M.4375 .125H.125V.4375H.4375V.375H.1875V.1875H.375V.25H.25L.3125 .3125H.4375V.125Z"/>
+    <path id="glyph-L" d="M.375 .125H.125V.4375H.1875V.1875H.4375L.375 .125Z"/>
+    <path id="glyph-B" d="M.375 .3125V.375H.1875V.3125H.375M.1875 .25V.1875H.375V.25H.1875M.37597657 .25H.4375V.125H.125V.4375H.4375V.3125L.37597657 .25Z"/>
+    <path id="glyph-A" d="M.36621095 .125 .28125 .34375 .19628906 .125H.125L.25 .4375H.3125L.4375 .125H.36621095Z"/>
   </defs>
-  <g>
-    <path class="cls-4" d="M0,19.4v119.63s20.57-27.95,48.57-27.95,49.42,24.07,49.42,24.07l84.88,86.16c12.62,10.5,25.25,25.25,63.13,25.25h37.88l-.44-58.9L136.58,44s-19.43-25.16-66.29-24.6S0,19.4,0,19.4Z"/>
-    <polygon class="cls-4" points="174.29 19.22 283.44 126.56 283.44 19.22 174.29 19.22"/>
-    <path class="cls-2" d="M51.83,147.96c-20.87,0-37.79,15.09-37.79,33.71,0,3.2.51,6.29,1.44,9.22.57,1.81,1.2,3.6,2.2,5.22,7.75,12.66,34.15,48.98,34.15,48.98,0,0,26.4-36.33,34.15-48.98.99-1.62,1.62-3.41,2.2-5.22.93-2.93,1.44-6.02,1.44-9.22,0-18.62-16.92-33.71-37.79-33.71Z"/>
-  </g>
-  <text/>
-  <text class="cls-3" transform="translate(378.58 138.1) scale(.93 1)"><tspan x="0" y="0">NETWORQ</tspan></text>
-  <text class="cls-1" transform="translate(581.2 211.65) scale(.93 1)"><tspan x="0" y="0">GLOBAL</tspan></text>
-  <line class="cls-5" x1="340.73" y1="19.41" x2="340.73" y2="247.09"/>
-  <line class="cls-6" x1="397.11" y1="189.77" x2="568.13" y2="191.18"/>
-  <line class="cls-6" x1="894.41" y1="189.77" x2="1067.45" y2="191.18"/>
+
+  <!-- Brand Emblem -->
+  <path d="M0,19.4v119.63s20.57-27.95,48.57-27.95,49.42,24.07,49.42,24.07l84.88,86.16c12.62,10.5,25.25,25.25,63.13,25.25h37.88l-.44-58.9L136.58,44s-19.43-25.16-66.29-24.6S0,19.4,0,19.4Z" fill="#084b6f"/>
+  <polygon points="174.29 19.22 283.44 126.56 283.44 19.22 174.29 19.22" fill="#084b6f"/>
+  <path d="M51.83,147.96c-20.87,0-37.79,15.09-37.79,33.71,0,3.2.51,6.29,1.44,9.22.57,1.81,1.2,3.6,2.2,5.22,7.75,12.66,34.15,48.98,34.15,48.98,0,0,26.4-36.33,34.15-48.98.99-1.62,1.62-3.41,2.2-5.22.93-2.93,1.44-6.02,1.44-9.22,0-18.62-16.92-33.71-37.79-33.71Z" fill="#ffc750"/>
+
+  <!-- Separator & Accent Lines -->
+  <line x1="340.73" y1="19.41" x2="340.73" y2="247.09" stroke="#084b6f" stroke-width="2"/>
+  <line x1="375.00" y1="168.95" x2="618.96" y2="168.95" stroke="#ffc750" stroke-width="1.8"/>
+  <line x1="1053.32" y1="168.95" x2="1297.28" y2="168.95" stroke="#ffc750" stroke-width="1.8"/>
+
+  <!-- NETWORQ (Outlined Vector Paths) -->
+  <use xlink:href="#glyph-N" href="#glyph-N" transform="matrix(227.0231,0,0,-243.9409,375.0000,133.7242)" fill="#084b6f"/>
+  <use xlink:href="#glyph-E" href="#glyph-E" transform="matrix(227.0231,0,0,-243.9409,516.8894,133.7242)" fill="#084b6f"/>
+  <use xlink:href="#glyph-T" href="#glyph-T" transform="matrix(227.0231,0,0,-243.9409,658.7788,133.7242)" fill="#084b6f"/>
+  <use xlink:href="#glyph-W" href="#glyph-W" transform="matrix(227.0231,0,0,-243.9409,800.6682,133.7242)" fill="#084b6f"/>
+  <use xlink:href="#glyph-O" href="#glyph-O" transform="matrix(227.0231,0,0,-243.9409,942.5576,133.7242)" fill="#084b6f"/>
+  <use xlink:href="#glyph-R" href="#glyph-R" transform="matrix(227.0231,0,0,-243.9409,1084.4470,133.7242)" fill="#084b6f"/>
+  <use xlink:href="#glyph-Q" href="#glyph-Q" transform="matrix(227.0231,0,0,-243.9409,1226.3364,133.7242)" fill="#084b6f"/>
+
+  <!-- GLOBAL (Outlined Vector Paths) -->
+  <use xlink:href="#glyph-G" href="#glyph-G" transform="matrix(113.5116,0,0,-121.9705,641.0423,199.4399)" fill="#ffc750"/>
+  <use xlink:href="#glyph-L" href="#glyph-L" transform="matrix(113.5116,0,0,-121.9705,711.9871,199.4399)" fill="#ffc750"/>
+  <use xlink:href="#glyph-O" href="#glyph-O" transform="matrix(113.5116,0,0,-121.9705,782.9319,199.4399)" fill="#ffc750"/>
+  <use xlink:href="#glyph-B" href="#glyph-B" transform="matrix(113.5116,0,0,-121.9705,853.8767,199.4399)" fill="#ffc750"/>
+  <use xlink:href="#glyph-A" href="#glyph-A" transform="matrix(113.5116,0,0,-121.9705,924.8216,199.4399)" fill="#ffc750"/>
+  <use xlink:href="#glyph-L" href="#glyph-L" transform="matrix(113.5116,0,0,-121.9705,995.7664,199.4399)" fill="#ffc750"/>
 </svg>

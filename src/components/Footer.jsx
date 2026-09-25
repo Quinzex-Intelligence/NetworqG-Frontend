@@ -42,18 +42,6 @@ export default function Footer({ onLinkClick, onPageChange, isSubpage = false, i
             <p className="text-mute text-sm leading-relaxed max-w-xs">
               A full-spectrum digital marketing agency built to take your business to the next level — with brilliance, creativity, and purpose at every step.
             </p>
-            {/* Social links */}
-            <div className="flex items-center gap-5 mt-6">
-              {['LinkedIn', 'Instagram', 'Twitter'].map((s) => (
-                <a
-                  key={s}
-                  href="#"
-                  className="text-mute text-xs font-mono uppercase tracking-widest hover:text-gold transition-colors duration-300"
-                >
-                  {s.slice(0, 2)}
-                </a>
-              ))}
-            </div>
           </div>
 
           {/* Nav columns */}
@@ -112,18 +100,14 @@ export default function Footer({ onLinkClick, onPageChange, isSubpage = false, i
               <div className="eyebrow mb-5">Connect</div>
               <ul className="space-y-3 text-mute">
                 <li>
-                  <a href="mailto:hello@networq.global" className="hover:text-gold transition-colors duration-300">
-                    hello@networq.global
+                  <a href="mailto:networqglobal@gmail.com" className="hover:text-gold transition-colors duration-300">
+                    networqglobal@gmail.com
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-gold transition-colors duration-300">LinkedIn</a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-gold transition-colors duration-300">Instagram</a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-gold transition-colors duration-300">Newsletter</a>
+                  <a href="tel:+919863495371" className="hover:text-gold transition-colors duration-300">
+                    +91 9863495371
+                  </a>
                 </li>
               </ul>
             </div>
@@ -150,13 +134,6 @@ export default function Footer({ onLinkClick, onPageChange, isSubpage = false, i
             >
               {isAuthenticated ? 'Admin Dashboard' : 'Admin Portal'}
             </a>
-            <span
-              className="hidden sm:inline"
-              style={{ color: 'var(--gold)', opacity: 0.6 }}
-            >
-              ●
-            </span>
-            <span>Worldwide · Digital · First</span>
           </div>
         </div>
       </div>

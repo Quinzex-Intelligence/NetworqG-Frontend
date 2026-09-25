@@ -81,7 +81,7 @@ export default function Process() {
 
           {/* Vertical text scrolling on left edge */}
           {/* <div className="deco-vert-text" style={{ top: '18%', left: '18px' }} data-parallax="0.3">
-            THE NETWORQ METHOD · DISCOVER · STRATEGIZE · ACTIVATE · COMPOUND
+            THE NETWORQ GLOBAL METHOD · DISCOVER · STRATEGIZE · ACTIVATE · COMPOUND
           </div> */}
         </div>
       </div>

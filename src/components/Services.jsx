@@ -40,14 +40,14 @@ export default function Services({ onEngageClick, onServiceClick }) {
         <div className="card p-6 md:p-8 rounded-2xl mb-10 flex items-end justify-between flex-wrap gap-6" data-anim="fade-up">
           <div className="max-w-3xl">
             <div className="eyebrow mb-3" data-anim="fade-up">
-              If it matters to your business, it matters to us.
+              01 — What We Do
             </div>
             <h2
               className="font-display text-4xl lg:text-6xl leading-[1] tracking-tight"
               data-split=""
               data-parallax="-0.06"
             >
-              Everything that has something to do with your business, brand or you, <span className="italic gold-grad">matters</span>.
+              If it shapes your brand, drives your business, or impacts your growth — <span className="italic gold-grad">it matters</span>.
             </h2>
           </div>
           <p className="text-mute max-w-md text-sm lg:mb-2" data-anim="fade-up">
