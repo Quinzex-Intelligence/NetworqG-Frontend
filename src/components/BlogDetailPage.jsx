@@ -224,7 +224,7 @@ export default function BlogDetailPage({ blogId, onBackClick, onContactClick }) 
 
               <button
                 onClick={() => onContactClick?.('contact')}
-                className="btn-primary-gold px-8 py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider shrink-0 cursor-pointer shadow-xl hover:shadow-gold/20 transition-all active:scale-95"
+                className="btn-primary-gold px-8 py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider shrink-0 cursor-pointer shadow-xl hover:shadow-gold/20 transition-all active:scale-95 whitespace-nowrap inline-flex items-center justify-center gap-2"
               >
                 Start a Project →
               </button>

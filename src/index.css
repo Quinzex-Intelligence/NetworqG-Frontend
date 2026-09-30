@@ -1204,7 +1204,7 @@ body.js-ready [data-stagger="3d"].is-in > * {
   outline: none;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .burger-btn {
     display: flex;
   }
@@ -1391,6 +1391,39 @@ body.js-ready [data-stagger="3d"].is-in > * {
 
 .mobile-menu-link:hover {
   color: var(--gold-2);
+}
+
+.mobile-menu-cta {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  padding: 13px 32px !important;
+  font-family: inherit !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
+  border-radius: 9999px !important;
+  margin-top: 14px !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  background: var(--gold) !important;
+  color: #1a1407 !important;
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+  border: 1px solid rgba(255, 223, 120, 0.6) !important;
+  transition: all 0.3s cubic-bezier(0.2, 0.7, 0.2, 1) !important;
+}
+
+.mobile-menu-cta:hover {
+  transform: translateY(-2px) scale(1.03) !important;
+  box-shadow: 0 0 35px rgba(212, 175, 55, 0.65), 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+.mobile-menu-cta:active {
+  transform: scale(0.97) !important;
 }
 
 /* Staggered transition delays for direct children of nav list */

@@ -70,7 +70,7 @@ export default function Header({ onPageChange, onLinkClick, currentPage, isAuthe
           </a>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-1 text-[14px] font-medium">
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-2 text-[14px] font-medium">
             {/* About */}
             <a
               href="#"
@@ -229,13 +229,13 @@ export default function Header({ onPageChange, onLinkClick, currentPage, isAuthe
           <div className="flex items-center gap-3">
 
             {/* Font Picker — desktop only */}
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
               <FontPicker />
             </div>
 
             {/* Hamburger */}
             <button
-              className={`burger-btn md:hidden lg:hidden ${mobileMenuOpen ? 'open' : ''}`}
+              className={`burger-btn lg:hidden ${mobileMenuOpen ? 'open' : ''}`}
               onClick={() => setMobileMenuOpen((v) => !v)}
               aria-label="Toggle Menu"
             >
@@ -250,18 +250,18 @@ export default function Header({ onPageChange, onLinkClick, currentPage, isAuthe
             <a
               href="#"
               data-cursor="link"
-              className="btn-gold px-4 py-2 rounded-full text-sm font-medium hidden sm:inline-flex items-center gap-2"
+              className="btn-gold px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap hidden sm:inline-flex items-center justify-center gap-2 shrink-0 transition-transform active:scale-95"
               style={{ background: 'var(--gold)', color: '#1a1407' }}
               onClick={(e) => { e.preventDefault(); onPageChange('contact'); }}
             >
-              Start a project <span aria-hidden="true">→</span>
+              Start a project <span aria-hidden="true" className="text-sm sm:text-base leading-none">→</span>
             </a>
           </div>
         </div>
       </header>
 
       {/* Mobile drawer */}
-      <div className={`mobile-menu-drawer md:hidden${mobileMenuOpen ? ' open' : ''}`} data-lenis-prevent>
+      <div className={`mobile-menu-drawer lg:hidden${mobileMenuOpen ? ' open' : ''}`} data-lenis-prevent>
         <div className="mobile-menu-inner">
           <div className="mobile-menu-nav">
             {/* About */}
@@ -362,11 +362,11 @@ export default function Header({ onPageChange, onLinkClick, currentPage, isAuthe
             {/* Mobile CTA */}
             <a
               href="#"
-              className="btn-gold px-5 py-2 rounded-full text-xs tracking-wider uppercase font-semibold inline-flex items-center gap-2 mt-4 mobile-menu-link"
+              className="btn-gold mobile-menu-cta"
               style={{ background: 'var(--gold)', color: '#1a1407' }}
               onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); onPageChange('contact'); }}
             >
-              Start a project <span aria-hidden="true">→</span>
+              Start a project <span aria-hidden="true" style={{ fontSize: '15px', lineHeight: 1 }}>→</span>
             </a>
           </div>
 

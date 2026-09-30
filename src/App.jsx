@@ -691,10 +691,13 @@ export default function App() {
       const ndcY = -(((rect.top + rect.height / 2) / h) * 2 - 1);
       const halfH = Math.tan((38 * Math.PI / 180) / 2) * 7;
       const halfW = halfH * (w / h);
+      const isMobile = w < 768;
       set({
         morphPosX: ndcX * halfW * 0.7,
         morphPosY: ndcY * halfH * 0.7,
-        morphScale: Math.min((rect.width / w) * 2.2, 1.2)
+        morphScale: isMobile
+          ? Math.min((rect.height / h) * 3.2, 0.75)
+          : Math.min((rect.width / w) * 2.2, 1.2)
       });
     };
 
