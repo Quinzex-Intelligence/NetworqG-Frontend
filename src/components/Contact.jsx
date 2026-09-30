@@ -146,16 +146,10 @@ export default function Contact() {
             <div className="flex items-start gap-3">
               <span className="text-gold mt-1">◆</span>
               <div>
-                <div className="text-gold-2">+91 9863495371</div>
-                <div className="text-mute">Mon–Fri</div>
-              </div>
-            </div>
-            
-            <div className="flex items-start gap-3">
-              <span className="text-gold mt-1">◆</span>
-              <div>
-                <div className="text-gold-2">42 markets · 14 languages</div>
-                <div className="text-mute">We come to you.</div>
+                <div className="text-gold-2">Office Address</div>
+                <div className="text-mute leading-relaxed">
+                  Plot no 489, Rd Number 10, Kakatiya Hills, Guttala Begumpet, Kavuri Hills, Madhapur, Hyderabad, Telangana 500081
+                </div>
               </div>
             </div>
           </div>

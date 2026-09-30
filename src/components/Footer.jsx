@@ -104,10 +104,8 @@ export default function Footer({ onLinkClick, onPageChange, isSubpage = false, i
                     networqglobal@gmail.com
                   </a>
                 </li>
-                <li>
-                  <a href="tel:+919863495371" className="hover:text-gold transition-colors duration-300">
-                    +91 9863495371
-                  </a>
+                <li className="pt-2 text-xs leading-relaxed text-mute">
+                  Plot no 489, Rd Number 10, Kakatiya Hills, Guttala Begumpet, Kavuri Hills, Madhapur, Hyderabad, Telangana 500081
                 </li>
               </ul>
             </div>

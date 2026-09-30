@@ -998,22 +998,30 @@ export default function AdminDashboard({ user, onLogoutSuccess, onBackClick }) {
                   <div key={blog.id} className="p-6 rounded-2xl border border-neutral-900 bg-[#0d0d0d] flex flex-col justify-between hover:border-neutral-800 transition-colors">
                     <div>
                       {/* Thumbnail or Badge */}
-                      <div className="aspect-[16/9] w-full rounded-xl overflow-hidden mb-4 bg-neutral-950 border border-neutral-900 relative">
+                      <div className="aspect-[16/9] w-full rounded-xl overflow-hidden mb-4 bg-neutral-950 border border-neutral-900 relative flex items-center justify-center">
                         {blog.coverImage || (blog.images && blog.images[0]?.imageUrl) ? (
-                          <img
-                            src={blog.coverImage || blog.images[0].imageUrl}
-                            alt={blog.title}
-                            className="w-full h-full object-cover"
-                          />
+                          <>
+                            <img
+                              src={blog.coverImage || blog.images[0].imageUrl}
+                              alt=""
+                              aria-hidden="true"
+                              className="absolute inset-0 w-full h-full object-cover blur-md opacity-25 scale-110 pointer-events-none"
+                            />
+                            <img
+                              src={blog.coverImage || blog.images[0].imageUrl}
+                              alt={blog.title}
+                              className="relative z-10 w-full h-full object-contain object-center p-1.5"
+                            />
+                          </>
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-neutral-700 text-xs font-mono">
                             No Cover Image
                           </div>
                         )}
-                        <span className="absolute top-2 left-2 px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-black/70 border border-neutral-700 text-gold">
+                        <span className="absolute top-2 left-2 z-20 px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-black/70 border border-neutral-700 text-gold">
                           {blog.tag || blog.category || 'Note'}
                         </span>
-                        <span className={`absolute top-2 right-2 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest ${
+                        <span className={`absolute top-2 right-2 z-20 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest ${
                           blog.active !== false ? 'bg-emerald-950/80 text-emerald-400 border border-emerald-500/30' : 'bg-neutral-900/90 text-neutral-500 border border-neutral-800'
                         }`}>
                           {blog.active !== false ? 'Published' : 'Draft'}

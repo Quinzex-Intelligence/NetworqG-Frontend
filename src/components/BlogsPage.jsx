@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { insights as staticInsights } from '../data';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
 
@@ -18,6 +17,7 @@ export default function BlogsPage({ onBackClick, onBlogClick, onContactClick }) 
   }, []);
 
   const fetchBlogs = async () => {
+    setLoading(true);
     try {
       let res = await fetch(`${API_BASE_URL}/api/blogs/active?limit=50`);
       if (!res.ok) {
@@ -51,88 +51,13 @@ export default function BlogsPage({ onBackClick, onBlogClick, onContactClick }) 
             active: b.active !== false
           }));
           setBlogs(normalized);
-          setLoading(false);
           return;
         }
       }
-      throw new Error('No backend blogs found, falling back to static');
+      setBlogs([]);
     } catch (err) {
-      // Dummy insights preview for upcoming launch
-      const dummyDispatches = [
-        {
-          id: 'dispatch-1',
-          title: 'What survives the AI search shift',
-          tag: 'Search Architecture',
-          shortDescription: 'How brand demand becomes the new moat as zero-click search swallows the traditional marketing funnel.',
-          content: 'How brand demand becomes the new moat as zero-click search swallows the traditional marketing funnel.',
-          author: 'Networq Global Editorial',
-          readTime: '8 min read',
-          createdDate: new Date(Date.now() - 2 * 86400000).toISOString(),
-          coverImage: null,
-          active: true
-        },
-        {
-          id: 'dispatch-2',
-          title: 'The new luxury buyer in the Gulf',
-          tag: 'Market Signals',
-          shortDescription: 'Six strategic observations from 14 months on the ground across UAE, KSA, and Qatar consumer ecosystems.',
-          content: 'Six strategic observations from 14 months on the ground across UAE, KSA, and Qatar consumer ecosystems.',
-          author: 'Networq Global Editorial',
-          readTime: '6 min read',
-          createdDate: new Date(Date.now() - 5 * 86400000).toISOString(),
-          coverImage: null,
-          active: true
-        },
-        {
-          id: 'dispatch-3',
-          title: 'Creator economics & media yield 2026',
-          tag: 'Performance Media',
-          shortDescription: 'What top brands are investing in creator media and what is actually driving sustainable conversions across global categories.',
-          content: 'What top brands are investing in creator media and what is actually driving sustainable conversions across global categories.',
-          author: 'Networq Global Editorial',
-          readTime: '5 min read',
-          createdDate: new Date(Date.now() - 8 * 86400000).toISOString(),
-          coverImage: null,
-          active: true
-        },
-        {
-          id: 'dispatch-4',
-          title: 'The compounding leverage of programmatic creative',
-          tag: 'Brand Intelligence',
-          shortDescription: 'Why brands deploying continuous creative iteration outperform static media spend by multiple folds in saturated markets.',
-          content: 'Why brands deploying continuous creative iteration outperform static media spend by multiple folds in saturated markets.',
-          author: 'Networq Global Editorial',
-          readTime: '7 min read',
-          createdDate: new Date(Date.now() - 12 * 86400000).toISOString(),
-          coverImage: null,
-          active: true
-        },
-        {
-          id: 'dispatch-5',
-          title: 'Zero-party data frameworks for cookieless scale',
-          tag: 'Growth Strategy',
-          shortDescription: 'How enterprise brands are restructuring customer journey touchpoints to own their audience relationships directly.',
-          content: 'How enterprise brands are restructuring customer journey touchpoints to own their audience relationships directly.',
-          author: 'Networq Global Editorial',
-          readTime: '9 min read',
-          createdDate: new Date(Date.now() - 16 * 86400000).toISOString(),
-          coverImage: null,
-          active: true
-        },
-        {
-          id: 'dispatch-6',
-          title: 'Engineering brand affinity in algorithmic feeds',
-          tag: 'Creative Direction',
-          shortDescription: 'Tactical design and storytelling principles for crafting visual assets that build memorability in high-velocity feeds.',
-          content: 'Tactical design and storytelling principles for crafting visual assets that build memorability in high-velocity feeds.',
-          author: 'Networq Global Editorial',
-          readTime: '6 min read',
-          createdDate: new Date(Date.now() - 20 * 86400000).toISOString(),
-          coverImage: null,
-          active: true
-        }
-      ];
-      setBlogs(dummyDispatches);
+      console.error('Error fetching blogs from server:', err);
+      setBlogs([]);
     } finally {
       setLoading(false);
     }
@@ -181,7 +106,7 @@ export default function BlogsPage({ onBackClick, onBlogClick, onContactClick }) 
           </button>
           
           <div className="text-xs font-mono text-neutral-400 uppercase tracking-widest bg-white/5 border border-white/10 px-4 py-1.5 rounded-full">
-            {filteredBlogs.length} {filteredBlogs.length === 1 ? 'Dispatch' : 'Dispatches'} in Preview
+            {filteredBlogs.length} {filteredBlogs.length === 1 ? 'Dispatch' : 'Dispatches'}
           </div>
         </div>
 
@@ -196,18 +121,15 @@ export default function BlogsPage({ onBackClick, onBlogClick, onContactClick }) 
             INSIGHTS
           </div>
           <div className="max-w-4xl relative z-10">
-            <div className="flex flex-wrap items-center gap-3 mb-4">
-              <div className="eyebrow">03 — Knowledge & Intelligence Archive</div>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider bg-gold/10 border border-gold/30 text-gold">
-                <span>✦</span> Editorial Platform Preview · Launching in a couple of months
-              </span>
+            <div className="mb-4">
+              <div className="eyebrow">Knowledge & Intelligence Archive</div>
             </div>
             <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl leading-[0.95] tracking-tight mb-6 text-white">
               All signals from the <br className="hidden sm:inline" />
               <span className="italic gold-grad">global network</span>.
             </h1>
             <p className="text-neutral-300 text-base md:text-xl leading-relaxed max-w-2xl">
-              Explore the preview directory of Networq Global dispatches on brand authority, high-performance marketing models, AI search architectures, and global market signals. Full editorial publishing begins rolling out shortly.
+              Explore the Networq Global dispatches on brand authority, high-performance marketing models, AI search architectures, and global market signals.
             </p>
           </div>
         </header>
@@ -259,17 +181,23 @@ export default function BlogsPage({ onBackClick, onBlogClick, onContactClick }) 
           </div>
         ) : filteredBlogs.length === 0 ? (
           <div className="card bg-[#0b0e14]/80 backdrop-blur-xl p-12 rounded-3xl text-center border border-dashed border-line">
-            <div className="text-4xl mb-4">◈</div>
-            <h3 className="font-display text-2xl mb-2 text-white">No matching dispatches</h3>
+            <div className="text-4xl mb-4 text-gold/60">◈</div>
+            <h3 className="font-display text-2xl mb-2 text-white">
+              {blogs.length === 0 ? 'No dispatches published yet' : 'No matching dispatches'}
+            </h3>
             <p className="text-neutral-400 text-sm max-w-md mx-auto mb-6">
-              No field notes found matching your criteria. Try resetting your search filter.
+              {blogs.length === 0
+                ? 'Check back soon for new field notes and editorial releases from our network.'
+                : 'No field notes found matching your criteria. Try resetting your search filter.'}
             </p>
-            <button
-              onClick={() => { setSelectedTag('All'); setSearchQuery(''); }}
-              className="btn-gold px-6 py-2.5 rounded-full text-xs font-mono uppercase tracking-wider cursor-pointer"
-            >
-              Reset Filters
-            </button>
+            {blogs.length > 0 && (
+              <button
+                onClick={() => { setSelectedTag('All'); setSearchQuery(''); }}
+                className="btn-gold px-6 py-2.5 rounded-full text-xs font-mono uppercase tracking-wider cursor-pointer"
+              >
+                Reset Filters
+              </button>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -282,13 +210,21 @@ export default function BlogsPage({ onBackClick, onBlogClick, onContactClick }) 
               >
                 <div>
                   {/* Cover image or stylish abstract placeholder */}
-                  <div className="aspect-[16/10] relative overflow-hidden bg-gradient-to-br from-neutral-900 via-neutral-950 to-neutral-900 border-b border-white/10">
+                  <div className="aspect-[16/10] relative overflow-hidden bg-gradient-to-br from-neutral-900 via-neutral-950 to-neutral-900 border-b border-white/10 flex items-center justify-center">
                     {blog.coverImage ? (
-                      <img
-                        src={blog.coverImage}
-                        alt={blog.title}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
+                      <>
+                        <img
+                          src={blog.coverImage}
+                          alt=""
+                          aria-hidden="true"
+                          className="absolute inset-0 w-full h-full object-cover blur-xl opacity-25 scale-110 pointer-events-none"
+                        />
+                        <img
+                          src={blog.coverImage}
+                          alt={blog.title}
+                          className="relative z-10 w-full h-full object-contain object-center p-2 transition-transform duration-500 group-hover:scale-[1.02]"
+                        />
+                      </>
                     ) : (
                       <div className="w-full h-full flex flex-col justify-between p-6 relative">
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(212,175,55,0.12),transparent_70%)]" />
@@ -304,7 +240,7 @@ export default function BlogsPage({ onBackClick, onBlogClick, onContactClick }) 
                     )}
 
                     {blog.coverImage && (
-                      <div className="absolute top-4 left-4 chip rounded-full px-3 py-1 text-[11px] font-mono backdrop-blur-md">
+                      <div className="absolute top-4 left-4 z-20 chip rounded-full px-3 py-1 text-[11px] font-mono backdrop-blur-md">
                         {blog.tag}
                       </div>
                     )}

@@ -11,14 +11,6 @@ export default function Hero({ onStartProjectClick, onSeeWorkClick }) {
 
       {/* Hero Content Wrapper - Spreads across full 100svh height */}
       <div className="relative w-full px-6 sm:px-10 lg:px-16 pt-24 lg:pt-28 pb-8 sm:pb-16 drift-up flex flex-col min-h-[100svh] justify-between z-10 flex-1">
-        
-        {/* Top Eyebrow Tag */}
-        <div className="flex items-center gap-3 pt-2 sm:pt-4" data-anim="fade-up">
-          <span className="gold-dot eyebrow text-[11px] sm:text-xs tracking-[0.22em] text-[var(--gold)] font-semibold leading-snug">
-            BECAUSE EVERY CLICK <br />
-            SHOULD LEAD SOMEWHERE
-          </span>
-        </div>
 
         {/* Middle Main Copy Section */}
         <div className="max-w-3xl relative z-10 mt-auto sm:my-auto pt-6 pb-2 sm:py-10">

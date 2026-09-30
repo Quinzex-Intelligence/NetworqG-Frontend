@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { insights as staticInsights } from '../data';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
 
@@ -19,67 +18,48 @@ export default function BlogDetailPage({ blogId, onBackClick, onContactClick }) 
   const fetchBlogDetail = async () => {
     setLoading(true);
     try {
-      // 1. Fetch active blogs from backend API
-      let res = await fetch(`${API_BASE_URL}/api/blogs/active?limit=50`);
-      if (!res.ok) {
-        res = await fetch(`${API_BASE_URL}/api/blogs/public`);
-      }
-      if (!res.ok) {
-        res = await fetch(`${API_BASE_URL}/api/blogs`);
-      }
+      let found = null;
 
-      if (res.ok) {
-        const data = await res.json();
-        const items = data.blogs || data.content || (Array.isArray(data) ? data : []);
-        if (items.length > 0) {
-          // Find matching blog by ID or title
-          const found = items.find(
-            (b) => String(b.id) === String(blogId) || (b.title && b.title.toLowerCase() === decodeURIComponent(String(blogId)).toLowerCase())
-          );
-          if (found) {
-            setBlog(normalizeBlog(found));
-            setLoading(false);
-            return;
-          } else {
-            // If the ID in URL was from an old/static session, load the latest real blog from backend
-            setBlog(normalizeBlog(items[0]));
-            setLoading(false);
-            return;
+      // 1. Try direct blog endpoint first
+      try {
+        const directRes = await fetch(`${API_BASE_URL}/api/blogs/${encodeURIComponent(blogId)}`);
+        if (directRes.ok) {
+          const directData = await directRes.json();
+          if (directData && (directData.id || directData.title)) {
+            found = directData;
+          }
+        }
+      } catch (e) {}
+
+      // 2. If not found via direct endpoint, fetch list to find by ID or matching title
+      if (!found) {
+        let res = await fetch(`${API_BASE_URL}/api/blogs/active?limit=50`);
+        if (!res.ok) {
+          res = await fetch(`${API_BASE_URL}/api/blogs/public`);
+        }
+        if (!res.ok) {
+          res = await fetch(`${API_BASE_URL}/api/blogs`);
+        }
+
+        if (res.ok) {
+          const data = await res.json();
+          const items = data.blogs || data.content || (Array.isArray(data) ? data : []);
+          if (items.length > 0) {
+            found = items.find(
+              (b) => String(b.id) === String(blogId) || (b.title && b.title.toLowerCase() === decodeURIComponent(String(blogId)).toLowerCase())
+            );
           }
         }
       }
 
-      // 2. Only fallback to static insights if backend returned 0 blogs
-      const staticIdx = parseInt(String(blogId).replace('static-', ''), 10);
-      const staticFound =
-        (!isNaN(staticIdx) && staticInsights[staticIdx])
-          ? staticInsights[staticIdx]
-          : staticInsights.find((s) => s.t.toLowerCase() === decodeURIComponent(String(blogId)).toLowerCase()) || staticInsights[0];
-
-      setBlog({
-        id: blogId,
-        title: staticFound.t,
-        tag: staticFound.tag || 'Field Note',
-        shortDescription: staticFound.d,
-        content: staticFound.d,
-        author: 'Networq Global Editorial',
-        readTime: staticFound.time || '5 min read',
-        createdDate: new Date().toISOString(),
-        coverImage: null
-      });
+      if (found) {
+        setBlog(normalizeBlog(found));
+      } else {
+        setBlog(null);
+      }
     } catch (err) {
-      const fallback = staticInsights[0];
-      setBlog({
-        id: blogId,
-        title: fallback.t,
-        tag: fallback.tag || 'Field Note',
-        shortDescription: fallback.d,
-        content: fallback.d,
-        author: 'Networq Global Editorial',
-        readTime: fallback.time || '5 min read',
-        createdDate: new Date().toISOString(),
-        coverImage: null
-      });
+      console.error('Error fetching blog detail from server:', err);
+      setBlog(null);
     } finally {
       setLoading(false);
     }
@@ -206,13 +186,19 @@ export default function BlogDetailPage({ blogId, onBackClick, onContactClick }) 
 
           {/* Featured Cover Image */}
           {blog.coverImage && (
-            <div className="rounded-2xl overflow-hidden border border-white/10 aspect-[16/9] max-h-[460px] bg-neutral-950 shadow-2xl mb-10 relative">
+            <div className="rounded-2xl overflow-hidden border border-white/10 aspect-[16/9] max-h-[460px] bg-neutral-950 shadow-2xl mb-10 relative flex items-center justify-center">
+              <img
+                src={blog.coverImage}
+                alt=""
+                aria-hidden="true"
+                className="absolute inset-0 w-full h-full object-cover blur-xl opacity-25 scale-110 pointer-events-none"
+              />
               <img
                 src={blog.coverImage}
                 alt={blog.title}
-                className="w-full h-full object-cover"
+                className="relative z-10 w-full h-full object-contain object-center p-2"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none z-10" />
             </div>
           )}
 

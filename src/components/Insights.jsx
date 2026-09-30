@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { insights as fallbackInsights } from '../data';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
 
 export default function Insights({ onExploreAllClick, onBlogClick }) {
   const [blogsList, setBlogsList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchInsights();
   }, []);
 
   const fetchInsights = async () => {
+    setLoading(true);
     try {
       let res = await fetch(`${API_BASE_URL}/api/blogs/active?limit=20`);
       if (!res.ok) {
@@ -43,13 +44,14 @@ export default function Insights({ onExploreAllClick, onBlogClick }) {
           return;
         }
       }
-      throw new Error('Fallback to default static insights');
+      setBlogsList([]);
     } catch (err) {
-      setBlogsList(fallbackInsights.slice(0, 3));
+      console.error('Error fetching insights from server:', err);
+      setBlogsList([]);
+    } finally {
+      setLoading(false);
     }
   };
-
-  const displayItems = blogsList.length > 0 ? blogsList : fallbackInsights.slice(0, 3);
 
   const handleClick = (e, blog) => {
     e.preventDefault();
@@ -97,41 +99,62 @@ export default function Insights({ onExploreAllClick, onBlogClick }) {
 
         {/* 3 Most Recently Added Blogs Grid */}
         <div id="insights-grid" className="flex flex-col md:grid md:grid-cols-3 gap-6" data-stagger="3d">
-          {displayItems.map((p, idx) => (
-            <a
-              key={p.id || p.t || idx}
-              href={`#blog-${p.id}`}
-              onClick={(e) => handleClick(e, p)}
-              data-cursor="link"
-              className="card bg-[#0b0e14]/80 backdrop-blur-xl rounded-3xl overflow-hidden lift block tilt-card group border border-line hover:border-gold/50 transition-all duration-300 shadow-xl"
-            >
-              <div className="tilt-inner">
-                <div className="insight-cover aspect-[16/10] relative overflow-hidden bg-gradient-to-br from-neutral-900 to-neutral-950 border-b border-line">
-                  {p.coverImage && (
-                    <img
-                      src={p.coverImage}
-                      alt={p.t}
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                  )}
-                  <div className="absolute top-4 left-4 chip rounded-full px-3 py-1 text-[11px] font-mono backdrop-blur-md">
-                    {p.tag}
+          {loading ? (
+            <div className="col-span-full py-16 text-center">
+              <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+              <p className="text-mute font-mono text-xs uppercase tracking-widest">Streaming Dispatches...</p>
+            </div>
+          ) : blogsList.length > 0 ? (
+            blogsList.map((p, idx) => (
+              <a
+                key={p.id || p.t || idx}
+                href={`#blog-${p.id}`}
+                onClick={(e) => handleClick(e, p)}
+                data-cursor="link"
+                className="card bg-[#0b0e14]/80 backdrop-blur-xl rounded-3xl overflow-hidden lift block tilt-card group border border-line hover:border-gold/50 transition-all duration-300 shadow-xl"
+              >
+                <div className="tilt-inner">
+                  <div className="insight-cover aspect-[16/10] relative overflow-hidden bg-gradient-to-br from-neutral-900 via-neutral-950 to-neutral-900 border-b border-line flex items-center justify-center">
+                    {p.coverImage && (
+                      <>
+                        <img
+                          src={p.coverImage}
+                          alt=""
+                          aria-hidden="true"
+                          className="absolute inset-0 w-full h-full object-cover blur-xl opacity-25 scale-110 pointer-events-none"
+                        />
+                        <img
+                          src={p.coverImage}
+                          alt={p.t}
+                          className="relative z-10 w-full h-full object-contain object-center p-2 transition-transform duration-500 group-hover:scale-[1.02]"
+                        />
+                      </>
+                    )}
+                    <div className="absolute top-4 left-4 z-20 chip rounded-full px-3 py-1 text-[11px] font-mono backdrop-blur-md">
+                      {p.tag}
+                    </div>
+                  </div>
+                  
+                  <div className="p-7">
+                    <h3 className="font-display text-2xl mb-3 group-hover:text-gold transition-colors duration-300 line-clamp-2 leading-snug">
+                      {p.t}
+                    </h3>
+                    <p className="text-mute text-sm line-clamp-3 leading-relaxed mb-4">{p.d}</p>
+                    <div className="text-xs font-mono uppercase tracking-widest text-gold flex items-center gap-1.5 group-hover:translate-x-1 transition-transform duration-300">
+                      <span>Read Dispatch</span>
+                      <span>→</span>
+                    </div>
                   </div>
                 </div>
-                
-                <div className="p-7">
-                  <h3 className="font-display text-2xl mb-3 group-hover:text-gold transition-colors duration-300 line-clamp-2 leading-snug">
-                    {p.t}
-                  </h3>
-                  <p className="text-mute text-sm line-clamp-3 leading-relaxed mb-4">{p.d}</p>
-                  <div className="text-xs font-mono uppercase tracking-widest text-gold flex items-center gap-1.5 group-hover:translate-x-1 transition-transform duration-300">
-                    <span>Read Dispatch</span>
-                    <span>→</span>
-                  </div>
-                </div>
-              </div>
-            </a>
-          ))}
+              </a>
+            ))
+          ) : (
+            <div className="col-span-full py-14 text-center card bg-[#0b0e14]/60 backdrop-blur-xl border border-line/60 rounded-3xl p-8">
+              <div className="text-3xl mb-3 text-gold/60">◈</div>
+              <p className="text-white font-display text-xl mb-2">No dispatches published yet</p>
+              <p className="text-mute font-mono text-xs uppercase tracking-wider">Signals and field notes will appear here once published.</p>
+            </div>
+          )}
         </div>
 
         {/* Bottom Direct Navigation */}
@@ -140,7 +163,7 @@ export default function Insights({ onExploreAllClick, onBlogClick }) {
             onClick={() => onExploreAllClick?.('blogs')}
             className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-gold hover:text-white transition-colors cursor-pointer"
           >
-            <span>Explore All Dispatches ({displayItems.length > 0 ? 'Full Archive' : 'All Notes'})</span>
+            <span>Explore All Dispatches {blogsList.length > 0 ? `(${blogsList.length})` : ''}</span>
             <span>→</span>
           </button>
         </div>

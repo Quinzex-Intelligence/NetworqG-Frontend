@@ -139,11 +139,15 @@ export default function ContactPage({ onBackClick }) {
             <div className="mt-8 space-y-4 text-sm">
               <div className="flex items-center gap-3">
                 <span className="text-gold">◆</span>
-                <span className="text-mute">Email: networqglobal@gmail.com</span>
+                <a href="mailto:networqglobal@gmail.com" className="text-mute hover:text-gold transition-colors">
+                  Email: networqglobal@gmail.com
+                </a>
               </div>
-              <div className="flex items-center gap-3">
-                <span className="text-gold">◆</span>
-                <span className="text-mute">HQ: NYC · Dubai · Singapore · London</span>
+              <div className="flex items-start gap-3">
+                <span className="text-gold mt-1">◆</span>
+                <span className="text-mute leading-relaxed">
+                  Address: Plot no 489, Rd Number 10, Kakatiya Hills, Guttala Begumpet, Kavuri Hills, Madhapur, Hyderabad, Telangana 500081
+                </span>
               </div>
             </div>
           </div>

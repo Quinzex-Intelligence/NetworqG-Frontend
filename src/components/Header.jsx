@@ -370,9 +370,12 @@ export default function Header({ onPageChange, onLinkClick, currentPage, isAuthe
             </a>
           </div>
 
-          <div className="mobile-menu-footer mt-8 pt-5 border-t border-line w-full max-w-[280px] text-center flex flex-col gap-2.5">
+          <div className="mobile-menu-footer mt-8 pt-5 border-t border-line w-full max-w-[280px] text-center flex flex-col gap-2">
             <span className="text-[10px] font-mono text-mute uppercase tracking-widest">Connect With Us</span>
             <a href="mailto:networqglobal@gmail.com" className="text-xs text-ink/80 hover:text-gold transition-colors duration-200">networqglobal@gmail.com</a>
+            <p className="text-[11px] text-mute/80 leading-normal pt-1">
+              Plot no 489, Rd Number 10, Kakatiya Hills, Guttala Begumpet, Kavuri Hills, Madhapur, Hyderabad, Telangana 500081
+            </p>
           </div>
         </div>
       </div>

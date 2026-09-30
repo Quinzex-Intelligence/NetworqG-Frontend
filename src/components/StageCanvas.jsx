@@ -280,19 +280,23 @@ export default function StageCanvas({ stageRef }) {
       count++;
     }
 
+    // --- State & Easing forward declaration ---
+    let cur = null;
+
     // --- Text Target Generation (async — waits for fonts to be loaded) ---
     buildTextPos = () => {
       const textCanvas = document.createElement('canvas');
       const textCtx = textCanvas.getContext('2d');
-      textCanvas.width = 1400;
-      textCanvas.height = 400;
+      // Generous canvas width & height so wide display font never gets clipped at edges
+      textCanvas.width = 2400;
+      textCanvas.height = 500;
       textCtx.fillStyle = '#000000';
       textCtx.fillRect(0, 0, textCanvas.width, textCanvas.height);
       textCtx.fillStyle = '#ffffff';
       textCtx.font = 'bold 160px "Squarish Sans", Arial, sans-serif';
       textCtx.textAlign = 'center';
       textCtx.textBaseline = 'middle';
-      textCtx.fillText('Networq Global', textCanvas.width / 2, 200);
+      textCtx.fillText('Networq Global', textCanvas.width / 2, textCanvas.height / 2);
 
       const imgData = textCtx.getImageData(0, 0, textCanvas.width, textCanvas.height);
 
@@ -319,8 +323,9 @@ export default function StageCanvas({ stageRef }) {
       const visibleHeight = 2 * Math.tan((38 * Math.PI) / 360) * 7;
       const visibleWidth = visibleHeight * aspect;
 
-      // Fit within 88% of screen width, max 8.6 on desktop
-      const worldW = Math.min(8.6, visibleWidth * 0.88);
+      // Fit within 76% of screen width, max 7.2 on wide desktop screens
+      // This leaves comfortable 12% breathing room on both sides so it never crosses the screen edges
+      const worldW = Math.min(7.2, visibleWidth * 0.76);
       const textAspect = bboxW / bboxH;
       const worldH = worldW / textAspect;
 
@@ -330,7 +335,7 @@ export default function StageCanvas({ stageRef }) {
         for (let x = minX; x <= maxX; x += step) {
           const idx = (y * textCanvas.width + x) * 4;
           if (imgData.data[idx] > 128) {
-            // Map text bounding box exactly to full screen width
+            // Map text bounding box exactly to world coordinates
             textPixels.push({
               x: ((x - minX) / bboxW - 0.5) * worldW,
               y: -((y - minY) / bboxH - 0.5) * worldH,
@@ -349,6 +354,10 @@ export default function StageCanvas({ stageRef }) {
         textPos[i * 3]     = p.x + (Math.random() - 0.5) * 0.01;
         textPos[i * 3 + 1] = p.y + (Math.random() - 0.5) * 0.01;
         textPos[i * 3 + 2] = p.z;
+      }
+
+      if (cur && cur.bText > 0.05 && typeof updateDots === 'function') {
+        updateDots();
       }
     };
 
@@ -740,7 +749,7 @@ export default function StageCanvas({ stageRef }) {
 
     // --- State & Easing ---
     // Start local copies for interpolation/easing
-    const cur = {
+    cur = {
       bShatter: 0, bOrbit: 0, bConstellation: 0, bField: 0, bVortex: 0, bWave: 0, bHelix: 0, bText: 0,
       globeX: 1.6, globeY: 0.3, globeScale: 1.0,
       globeOpacity: 1, arcsOpacity: 1, citiesOpacity: 1,
@@ -980,22 +989,25 @@ export default function StageCanvas({ stageRef }) {
 
       // Position dots: lerp toward bottom-center when forming text, otherwise follow globe
       const textBlend = cur.bText;
-      dots.position.x = (cur.globeX + pCurX * 0.4) * (1 - textBlend);
-      // Push text below copyright — at FOV=16, Z=10, screen half-height ≈ 1.4 units
-      // Y = -1.05 places text fully below the copyright bar
-      // Move Y up to -1.60 to ensure the bottom is well within the screen bounds
-      // and doesn't get chopped off on different aspect ratios
+
+      // Smoothly eliminate any remaining rotation, parallax, or X drift as text reaches completion
+      // (ensures text is perfectly centered and flat even if scroll progress is near ~0.95+)
+      const snapToText = Math.max(0, (textBlend - 0.75) / 0.25);
+      const smoothSnap = snapToText * snapToText * (3 - 2 * snapToText); // smoothstep 0..1
+
+      dots.position.x = (cur.globeX + pCurX * 0.4) * (1 - textBlend) * (1 - smoothSnap);
       const globePosY = (cur.globeY + pCurY * 0.3);
-      dots.position.y = globePosY * (1 - textBlend) + (-1.60 * textBlend);
+      const targetTextY = -1.55;
+      dots.position.y = globePosY * (1 - textBlend) + (targetTextY * textBlend);
       dots.position.z = 0;
-      // NO camera animation — keep FOV=38, Z=7 (static, predictable frustum)
 
       // Scale: force 1.0 immediately so text fills full world width without lerp delay
       dots.scale.setScalar(textBlend > 0.05 ? 1.0 : cur.globeScale);
       
-      // Freeze rotation when in text mode
-      const rotY = globeGroup.rotation.y * (1 - textBlend);
-      const rotX = globeGroup.rotation.x * (1 - textBlend);
+      // Freeze rotation when in text mode:
+      const rotFactor = (1 - textBlend) * (1 - smoothSnap);
+      const rotY = globeGroup.rotation.y * rotFactor;
+      const rotX = globeGroup.rotation.x * rotFactor;
       dots.rotation.set(rotX, rotY, 0);
 
       // In text mode, boost particle size for legibility.

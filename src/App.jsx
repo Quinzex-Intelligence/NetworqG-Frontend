@@ -798,11 +798,13 @@ export default function App() {
       scrub: 0.5,
       fastScrollEnd: true,
       onUpdate: ({ progress: p }) => {
+        // Clamp to 1.0 when nearing the bottom so the particle text always fully settles cleanly
+        const effectiveP = p >= 0.95 ? 1.0 : p;
         set({
           // zero out all other shapes so only text forms
           bShatter: 0, bOrbit: 0, bConstellation: 0,
           bField: 0, bVortex: 0, bWave: 0, bHelix: 0,
-          bText: p,
+          bText: effectiveP,
           globeOpacity: 0,
           citiesOpacity: 0,
           arcsOpacity: 0,

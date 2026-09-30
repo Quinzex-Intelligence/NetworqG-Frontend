@@ -29,7 +29,7 @@ export default function About() {
               Senior <span className="italic gold-grad">operators</span>, not account farms.
             </h2>
             <p className="text-mute mt-4 max-w-md text-sm" data-anim="fade-up">
-              Founded in 2014, Networq Global is a 60-person studio of strategists, creatives, media buyers and engineers — distributed across four hub cities and on the ground in your market when it matters.
+              Networq Global is a dedicated studio of strategists, creatives, media buyers and engineers based in Hyderabad, Telangana.
             </p>
             <dl className="mt-8 grid grid-cols-2 gap-x-8 gap-y-6" data-stagger="up">
               <div>
@@ -41,8 +41,8 @@ export default function About() {
                 <dd className="font-display text-3xl text-gold-2">7 yrs</dd>
               </div>
               <div>
-                <dt className="eyebrow mb-1">Hub cities</dt>
-                <dd className="font-display text-3xl text-gold-2">NYC · LDN · DXB · SGP</dd>
+                <dt className="eyebrow mb-1">Office Location</dt>
+                <dd className="font-display text-2xl text-gold-2">Hyderabad, Telangana</dd>
               </div>
               <div>
                 <dt className="eyebrow mb-1">Languages</dt>
